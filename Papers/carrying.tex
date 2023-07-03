@@ -1,0 +1,91 @@
+
+\chapter{Collaborative carrying}
+
+\begin{figure*}[!t]
+    \centering
+    \includegraphics[width=\linewidth]{Papers/images/dual-manip-6.pdf}
+    \caption{Papers/images 1 to 4 on the right show the sequence of poses the manipulators are placed by a human operator during the course of the experiment. On left side, on the top is the graph showing the time evolution of applied manipulator forces $f_1,f_2$. The middle graph provides the evolution of the maximal applicable forces $f_{i,max}$ of each manipulator separately and their joint capacity $F_{max}$, based on the proposed polytope evaluation algorithm. In this graph,  the time periods when the constant strategy $\lambda$=$0.5$ (dashed line on all graphs) would not be feasible for at least one of the two robot are indicated with red background. The bottom graph shows the  evolution in time of the control parameter $\lambda$ for the proposed adaptive strategy.}
+    \label{fig:dual_manip}
+    \vspace*{-0.3cm}
+\end{figure*}
+
+
+\subsection{Dual arm collaborative object carrying}\label{sec:colaborative_handling}
+
+In this section, the real-time force capability evaluation is employed in the context of robot control. An experiment is designed using two \textit{Franka Emika Panda} robots involved in a collaborative load carrying task for an object of mass $M$. Each robot is contributing to the compensation of the overall gravity force $G=Mg$ applied at the end-effector by the carried object, with forces $f_1$ and $f_2$ respectively such that
+\begin{equation}
+    f_1 + f_2 = G
+\end{equation}
+Additionally, a human operator is moving the object freely through the common work-space, implicitly changing both robots positions and configurations in real-time. As a consequence, the task space trajectory and the evolution of the robot configurations are not known in advance.
+
+The experiment has been implemented using the ROS programming environment. Both robots are torque controlled at $1 kHz$. The update of the force capability estimation are performed at $40 Hz$. All the control software is run from one computer with the 1.90GHz Intel i7-8650U processor. This experiment is illustrated in the accompanying video.
+
+Panda robots are rated to a maximal carrying capacity of 3kg which corresponds to the absolute minimal carrying capacity of the robot evaluated in one of its near-singular configurations. It is, by definition, an underestimation of the real robot task space wrench capacity and relying on it, as it is commonly done, limits the scope of the possible tasks and applications.
+
+The goal of this experiment, it is to demonstrate the fact that, taking into account the true force capabilities of each robot, it is possible to considerably go beyond the robots conservative rated capacity without comprising safety nor exceeding any of the actuation limits. The weight of the object chosen for the experiments is $M=12kg$, voluntarily far above the recommended joint carrying capacity $M \le 6kg$. 
+
+Evaluating the maximal applicable force in the vertical direction can be viewed as a special case of the force polytope $\mathcal{P}_f$ vertex search problem where the task-space force of interest $f$ is a scalar and $m=1$.
+The proposed algorithm described in section \ref{sec:algorithm} is used to efficiently find $f_{i,max}$, the limits (vertices) of the maximal applicable force in $z$-axis direction, for each robot separately.  Their overall carrying capacity can be calculated as the sum of the two $F_{max} = f_{1,max} + f_{2,max}$.
+
+To efficiently distribute and adapt the carried load in between robots, each robot compensate for a part of the object's weight $G$ which is proportional to its force capacity  $f_{i,max}$  
+\begin{equation}
+   f_1 = \lambda G \quad f_2 = (1-\lambda)G,\quad \lambda = \frac{f_{1,max}}{f_{1,max} + f_{2,max}}
+\end{equation}
+
+A straightforward control strategy, requiring each robot to compensate for half of object mass $f_1=f_2=0.5G$ is taken as baseline to evaluate the performance of the new method.
+
+Figure \ref{fig:dual_manip} (right) shows one possible manipulation trajectory, where a human operator displaces the carried object in the common workspace in four discrete locations over a 20 seconds period of time. On the left side of the figure \ref{fig:dual_manip} the evaluated maximal forces and force applied by each robot during the experiment are shown. Additionally, the $0.5G$ strategy line is shown for comparison. 
+
+The proposed control strategy is successful in ensuring  compensation of the object weight during the full length of the experiment. In the starting pose $t=0s$, robot 2 (robot on the left) is close to it's singular configuration and its load carrying capacity is close to 5kg. Controlling it to compensate for half of the weight of the object would result in a security exception and could damage the robot hardware. The same is true for pose 4 at $t=17s$. Robot 1 (robot on the right) is not be able to compensate for half of the object weight but thanks to the proposed adaptive control law, the task can successfully be achieved. This may not be the case over the entire common workspace of the two robots but this example is a good illustration of the interest of accounting for the true capabilities of the system at the control level.  An additional interesting result from the experiment is the transition between pose 3 and 4 ($t \in [12s,16s]$). Even though the object is much closer to robot 2 (right), robot 1 has a much higher carrying capacity. This illustrates the fact that force capabilities are highly nonlinear functions which are very hard to predict. This provides an additional argument in favor of on-line force capacity evaluation. 
+
+
+\subsection{Collaborative object carrying}
+\antun{
+%To illustrate the potential of the proposed algorithm for the human-centered robot control, a mockup load carrying experiment is conducted. 
+An example experiment is conducted, designed as a simplified heavy object manipulation task common in the industrial assembly procedures. 
+}
+In the experiment, shown in the figure \ref{fig:experiment}, a human operator and a \textit{Franka Emika Panda} robot jointly carry $m_o\!=\!7$ kg object, each one compensating for a part of the total weight \antun{$ f_h\! +\! f_r\! =\! m_og\! =\! G_o $}. The human operator \antun{visually} navigates the object through the common workspace, passing through \antun{the set of} 4 via-points. 
+\antun{The experiment is repeated two times, 
+for two different operator positions, equally distant from the via-points, but rotated by 90° in space.}
+
+\antun{
+Naive gravity compensation strategy would be the usual choice for these experiments, making the robot carry the full weight of the object and provide the operator with full movement transparency. However, several studies have shown that the human's physical feedback during task execution improves significantly his engagement in the task \cite{rani2007operator}, improves the task execution efficiency and reduces the risk of the human error \cite{BYRNE1996249}. 
+Since the human's carrying capacity varies significantly throughout the workspace, allocating any fixed weight to the operator requires \textit{a priori} analysis of the task and determination of the, often conservative, \textit{"worst-case"} weight limits \cite{shoaf1997comprehensive}\cite{health1992manual}, often highly specific to the task in question.  
+} 
+
+
+\antun{As the human operator's carrying capacity can be expressed as the maximal force the operator's arm can generate in the $z$-axis (vertical) direction, proposed CHM algorithm can be used to calculate it in real-time.}
+% \antun{  As the proposed CHM method can be used to calculate operator's carrying capacity in real-time, as the maximal force the operator's arm can generate in the $z$-axis (vertical) direction, 
+\antun{ Inspired by} the \textit{Assist-As-Needed} (AAN)\cite{carmichael2013admittance} paradigm, \antun{a simple adaptive weight distribution strategy is designed, with goal to ensure} that the human operator's relative load remains constant with respect to its real-time capacity. The fixed ratio chosen for the experiments is 30\% of the human's carrying capacity, \antun{ensuring operator's safety and maintaining the constant level of engagement}.
+$$
+f_h = 0.3 f_{h,max}, \quad f_r = G_o - f_h
+$$
+
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=\linewidth]{Papers/images/both_pose_explanation.jpg}
+    \caption{\antun{These figures show the experimental setup. The robot end-effector is fixed to the carried object and the human operator is holding the object by the handle. The motion capture system is used to acquire the pose of the human arm. The via-points are visually indicated to the human operator with numbered stickers on the table placed at the corners of a 30 cm square. The images shows the experiment 1 (left) and the experiment 2 (rigth).}}
+    \label{fig:experiment}
+\end{figure}
+
+The human upper limb configuration is inferred in real-time using an \textit{Optitrack} motion capture system. The musculoskeletal model analysis is developed using the efficient C++ library \textit{pyomeca biorbd} \cite{Michaud2021}. The musculoskemetal model used in this experiment is the 50 muscles, 7 degrees of freedom MOBL-ARMS model \cite{saul2015benchmarking}  \antun{developed by Holzbaur et al. \cite{holzbaur2005model}. The human subject (male, 182 cm, 80 kg) and the model belong to the same 50th percentile anthropomorphic group \cite{gordon1989anthropometric} so no model scaling \cite{correa20112782} is necessary.}
+
+The robot is controlled using the direct force control
+$$
+\bm{\tau}_r = J_{ee}^T(\bm{q}) f_r + \bm{\tau}_{g,r}(\bm{q})
+$$
+where $J_{ee}$ is the end-effector Jacobian, $\bm{\tau}_{g,r}$ is robot's gravity torque vector and $\bm{\tau}_r$ are the joint torques applied to the robot. 
+\antun{The carrying capacity of the robot is calculated using the real-time algorithm} \cite{skuric:hal-02993408}, making sure that its capacity is not exceeded as well. All the algorithms are implemented in Python, integrated using the \textit{Robot operating system} (ROS) and run on a computer with 1.90GHz Intel i7-8650U processor. 
+
+Figure \ref{fig:experiment_results} confirms that the evolution of robot's carrying capacity does not change in both experiments, as the via-points' position remains fixed, \antun{whereas human's carrying capacity profile changes significantly}. The human's carrying capacity in both experiments peaks around 20 kg demonstrating that the human's force capacity is not negligible with respect to the robot's, however its large variability, from 20 kg to less than 5 kg, emphasizes the importance of measuring it in real-time.    
+
+Figure \ref{fig:experiment_results} further shows that, by calculating the operator's carrying capacity in real-time, \antun{ using the same simple control law, the robot is able to adapt its assistance strategy despite the substantial change in the operator's capacity profile.}
+To demonstrate this adaptability even further, in addition to  experiments 1 and 2 , a third experiment is included in the video attachment, where the human operator moves freely in space. 
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=\linewidth]{Papers/images/experiments.pdf}
+    \caption{This figure shows the evolution of the carrying capacity and weight carried by the operator and the robot over the course of the via-point cycle, for two experiments. The plots show mean values and the variances of the curves calculated over 10 successive cycles. The graph regions belonging to the different via-points are separated by vertical lines.  All the values are expressed in kilograms for easier readability.}
+    \label{fig:experiment_results}
+\end{figure}
