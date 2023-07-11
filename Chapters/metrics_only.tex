@@ -1,4 +1,4 @@
-\chapter{Physical ability metrics} % Main chapter title
+\chapter{Characterising physical abilities} % Main chapter title
 
 \label{ch:phisical_ability_metrics} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ChapterX}
 
@@ -7,9 +7,9 @@ This chapter starts with an an overview of various physical ability metrics for 
 
 The primary focus is put on the polytope-based family of metrics, as one of the well known physical ability metrics for both robots and humans. These metrics enable a unified and accurate representation of their individual abilities. By expressing individual abilities in a unified polytope form, the common physical abilities in collaboration scenarios can be computed using polytope algebra operations, and represented in polytope form as well.
 
-Numerous polytope-based physical ability metrics have been developed in the literature. Therefore, section \ref{ch:poly_metrics} presents a comprehensive overview of common polytope-based metrics applicable to both humans and robots. Additionally, section \ref{ch:collab_metrics} explores their application in calculating the joint physical abilities of humans and robots when engaged in physical interactions to accomplish specific tasks.
+Numerous polytope-based physical ability metrics have been developed in the literature. Therefore, section \ref{ch:poly_metrics} presents a comprehensive overview of common polytope-based metrics applicable to both humans and robots. Additionally, section \ref{ch:collab_metrics} explores their application in calculating the joint physical abilities of humans and robots when engaged in physical interactions to accomplish specific tasks. Finally the section \ref{ch:collab_metrics_overview} concludes the chapter and provides a structured synthesis of common polytope formulations.
 
-\todos{rewrite + list the chapter sections at the end}.
+% \todos{rewrite + list the chapter sections at the end}.
 
 % \todos{
 % \begin{itemize}
@@ -112,7 +112,7 @@ The main downside to the polytope based metrics with respect to the ellipsoid ba
 
 Evaluating physical abilities of humans is a much more challenging than for robotic systems, as human bodies are much more complicated systems that depend both on biological and biomechanical, as well as cognitive and psychological factors.
 
-Measuring different physical abilities of human subjects is traditionally done experimentally. The ability of human subjects to generate different physical values such as forces \cite{HODDER2016Testing,HOLZBAUR20072442}, movements \cite{Jessop2016} or stiffnesses \cite{Tsuji1995,Artemiadis2010}, is tested in laboratory environment for a set of predefined human postures or movements. These experiments enable finding precise physical abilities of one or multiple subjects, for the tested motions and postures.  Such experimental analysis are common tools for evaluation of physical abilities in sports \cite{Jessop2016}, where the motions and postures of interest are usually well define, and in rehabilitation \cite{HAISMA2006741} where the aim is to measure the progress of the human subject's recovery. However due to the large variability in human bodies and movements, it is challenging to generalise these results to the human subjects who were not part of the experiments, as well as to different postures and movements, of the same human subjects, that were not tested in the experiments.
+Measuring different physical abilities of human subjects is traditionally done experimentally. The ability of human subjects to achieve different physical quantities such as generate forces \cite{HODDER2016Testing,HOLZBAUR20072442}, reach positions \cite{CASTRO2019108}, execute movements \cite{Jessop2016} or generate stiffnesses \cite{Tsuji1995,Artemiadis2010}, is tested in laboratory environment for a set of predefined human postures or movements. These experiments enable finding precise physical abilities of one or multiple subjects, for the tested motions and postures.  Such experimental analysis are common tools for evaluation of physical abilities in sports \cite{Jessop2016}, where the motions and postures of interest are usually well define, and in rehabilitation \cite{HAISMA2006741} where the aim is to measure the progress of the human subject's recovery. However due to the large variability in human bodies and movements, it is challenging to generalise these results to the human subjects who were not part of the experiments, as well as to different postures and movements, of the same human subjects, that were not tested in the experiments.
 
 In more varied and unstructured settings, where the human postures and movements are harder to characterise, such as in factory setting, the experimental metrics are impractical. For these scenarios, instead of characterising the physical ability of human subject directly, different metrics are developed aiming to evaluate the ergonomics of human postures and movements when executing tasks. These metrics are able to account for variations in human body anthropomorphic structure as well as for different movement and forces generation requirements of the tasks. Such metrics are often defined in a form of standards, such as \textit{Rapid Entire Body Assessment} (REBA) \cite{reba}, \textit{Rapid Upper Limb Assessment} (RULA) \cite{rula} or DULA and DEBA \cite{Yazdani2022} ( their differentiable equivalents), and manuals, such as Great Britain's \textit{Manual Handling Operation Regulations} \cite{health1992manual} or NASA's \textit{Man-systems integration standards} \cite{nasa}. These metrics are designed to give a certain score or a recommendation for the human postures, movements or force generation requirements of the task, in order to evaluate if the task is well suited for human's physical abilities. Common applications of these metrics, in factory settings, have for a goal to evaluate and improve the ergonomics of human's tasks \cite{Busch2017} and workplace layouts\cite{ORE20161, Lietaert2019}. However, these metrics, in order to be task and human subject agnostic, make coarse approximations of human physical abilities which are constraining when it comes to the online human robot collaboration scenarios\cite{maurice2015}. 
 %\todo{motivate better, a sentence about problems} 
@@ -229,24 +229,22 @@ For example, by evaluating different physical abilities relevant to the task, it
 \subsection{Why polytopes?}
 
 As described in the previous sections, polytope representation of physical abilities accurately 
-characterises the physical abilities of robotic manipulators, at the same time being the most complete approximation of human physical abilities based on musculoskeletal models. 
+characterises the physical abilities of robotic manipulators, at the same time being the most complete approximation of human physical abilities based on musculoskeletal models. Additionally, since most of the well known polytope formulations for robotic systems can be formulated as polytopes for musculoskeletal models as well, they enable evaluating and comparing human's and robot's physical abilities in a unified manner. Furthermore, the polytope algebra enables operations over multiple polytopes and, in that way, has a potential to enable characterising common physical abilities of humans and robots involved in different physical collaboration scenarios. 
 
-Additionally, since most of the well known polytope formulations for robotic systems can be formulated as polytopes for musculoskeletal models as well, they enable evaluating and comparing human's and robot's physical abilities in a unified manner. Furthermore, the polytope algebra enables operations over multiple polytopes and, in that way, enables characterising joint physical abilities of humans and robots involved in different physical collaboration scenarios. 
+When it comes to using polytopes in practical applications, there are two standard ways of representing them: as a set of vertices (vertex representation) or as a set of inequality constraints corresponding to its faces (half-plane representation) \cite{fukuda2004frequently}. Transforming a polytope into these standard representations enables using different efficient tools from computational geometry and polytope algebra in order to do operations over polytopes, for example find minimal distance between polytopes \cite{Ong1997gjk}, polytope volume \cite{Lawrence1991Volume} or calculate the convex hulls \cite{Barber1996}, Minkowski sums \cite{BARKI2009525}, intersections and unions of multiple polytopes \cite{Tiwary2008}. Additionally, it opens doors for different simplification strategies of polytopes, by finding the inner and outer approximations of polytopes using spheres \cite{Botkin1994} or cubes \cite{BEMPORAD2004151}.
 
-% Having a set of accurate tools for evaluating physical abilities of humans, robots and their interactions could potentially 
+Furthermore, as discussed by Finotello et al. \cite{Finotello1998}, polytopes enable calculating many other local different performance metrics, such as Maximum Available Value (MAV) corresponding to the highest achievable magnitude of the task space variable (velocity, acceleration, force, static error, etc.), Maximal Isotropic Value (MIV) corresponding to the maximal value achievable in all the directions in space or Directional Index (DI) \cite{boschetti_minto_2023} corresponding to the maximum achievable task space variable in certain direction in space or calculating. Additionally, polytope volume and major (preferred) axis can be used as performance metrics as well \cite{chiacchio_global_1991, Long2018Evaluating}.
 
-% Being able to have an accurate information about robot's physical abilities enables creating robot's tasks capable of fully exporting robot's abilities, while making sure that they are not surpassed. This is particularly important with collaborative robots, which have limited performance due to their high safety requirements, and using more traditional global metrics, for example robot's payload, might not be practical.
-% On the other hand, having accurate information about 
+In case of characterising physical abilities, transforming the polytopes to the vertex representation enables using efficient triangulation algorithms from computational geometry. Most of the standard visualisation tools can visualise such triangulated meshes in very efficient manner, even in real time. 
+In the context of human-robot collaboration, an example application of polytope visualisation was proposed by Zolotas et al. \cite{Zolotas2021}, where the robot's velocity polytopes were used to inform the operator about the robot's movement capacity during the teleportation task. Similar application was recently proposed by Weistroffer et al. \cite{Weistroffer2022Using}, where the polytopes of robot's force capacity were visualised to the operator designing the collaborative workspace with the aim to improve its safety and ergonomics. 
 
+Polytopes can be expressed as a set of linear inequalities $A\bm{x}\leq\bm{b}$, that can be integrated into different optimisation problems in a form of linear inequality constraints. Most of the standard Quadratic Programming (QP) \cite{boggs_tolle_1995} and Linear Programming (LP) \cite{GOLDFARB198973} solvers support the inequality constraints in an efficient manner. A typical example applications often based on different optimisation strategies are robot control and trajectory planning applications. In the context of human-robot collaboration, being able to consider both robot's and human's physical abilities with in those contexts, opens doors for creating more human-centred robot control (or trajectory planning) strategies where robot's behaviour is adapted (planned), not just with respect to its own physical abilities, but also to the ones of the human.
+Potential benefits of considering human's physical abilities for creating human-centred robot control were demonstrated in the context of assistive exoskeletons. In these scenarios, the robot provides the assistance to the operator adapted to his current physical ability, so called \textit{Assist As Needed} (AAN)\cite{carmichael2013admittance} control paradigm.
+However, as the polytope representation of human physical abilities based on musculoskeletal models results in a highly complex computational problem to solve, in order to be used in real-time applications, so far all solutions proposed in the literature use different approximations of human's physical abilities. In the work by Carmichael et al. \cite{carmichael_towards_2011}, a coarse approximation of human's force capacity was used, Aldini et al.\cite{Aldini2021RealTime} have used a learning based approach to estimate human's force ability using polynomial fitting, while in the work by Petric et al.\cite{petric2019assistive}, similar strategy was used where human's force abilities were approximated using ellipsoids.
 
-Having a metric with the convex polytope form has several other benefits as well. Polytopes can be represented as a set of vertices, that can be easily triangulated and visualised as a triangulated mesh. Most of the standard visualisation tools can visualise triangulated meshes in very efficient manner, even in real time.
-Polytopes can be expressed as a set of linear inequalities $A\bm{x}\leq\bm{b}$, that can be integrated in different optimisation problems in a form of linear inequality constraints. Inequality constraints can be easily integrated with most of standard quadratic (QP) 
-\cite{boggs_tolle_1995} and linear (LP) program \cite{GOLDFARB198973} solvers.
+Therefore, polytope representation provides an accurate representation of both humans' and robots' physical abilities in a unified manner. Additionally, it enables characterising the common physical abilities of humans and robots interacting physically when executing certain task as well. Representing these capacities in the polytope form enables using many efficient tools form the polytope algebra and computational geometry to perform operations over polytopes and to extract useful information concerning the tasl, for example different performance indicators. Additionally, polytopes can be transformed to more standard forms such as a set of vertices or set of inequalities which can then be used with standard visualisation tools and integrated in different optimisation problems, opening many doors in human-robot collaborative applications.
 
-% \todo{many algos in literature}
-
-However, the computational cost of evaluating polytopes is much higher than other local metrics, such as ellipsoids, which makes their use in time-critical applications still relatively less common, especially for human physical ability evaluation due to the added complexity of musculoskeletal models. 
-
+This chapter further brings an overview of common polytope formulations for characterising different physical abilities of robots in section \ref{ch:robot_metrics} and humans in section \ref{ch:human_metrics}. Section \ref{ch:collab_metrics} then discusses combining their individual polytopes using polytope algebra, in order to characterise their common physical abilities when interacting physically in the context of the object manipulation. Finally, section \ref{ch:collab_metrics_overview} brings the structured view on the introduced polytope formulations and their use in characterising the human-robot interaction abilities.
 
 
 % \todos{
@@ -309,34 +307,18 @@ were $J(\bm{q}) $ is the jacobian matrix
 \end{equation}
 while $\dot{J}(\bm{q},\dot{\bm{q}})$ and $\ddot{J}(\bm{q},\dot{\bm{q}},\ddot{\bm{q}})$ are its first and second time derivatives.
 
+
+It is worth noting that in general case, $m$ dimensional task space might include positions and orientations, for example if the task space corresponds to the Cartesian space, where $m=6$. When the task space includes orientations, the task space pose (including the position and orientation) is often expressed is the homogeneous matrix form $\bm{x}\in SE(3)$. Then the task space velocity vector $\dot{\bm{x}}\in\mathbb{R}^6$ becomes the Cartesian space \textit{twist vector} $\bm{\nu}$, expressing the translation and rotation velocity at the same time. However, in such cases, the twist $\bm{\nu}$ does no longer correspond to the time derivative of the task space pose $\bm{\nu}\neq\frac{d\bm{x}}{dt}$. Despite this distinction, for simplicity reasons, this work uses the notation $\dot{\bm{x}}$, $\ddot{\bm{x}}$, and $\dddot{\bm{x}}$ to represent velocity, acceleration, and jerk of the task space variables, respectively.
+
 When considering certain fixed robot state $\{\bm{q},\dot{\bm{q}},\ddot{\bm{q}}\}$, robot's dynamical model (\ref{eq:dyn_model_rob}) and the joint to task space mapping (\ref{eq:js_to_cs_vaj}) become linear, as the state dependent matrices become fixed. Using these linear and affine mappings the achievable sets of different task space variables (ex. velocity $\dot{\bm{x}}$, accelerations $\ddot{\bm{x}}$ or wrenches $\bm{f}$), given the range of robot's actuator limits (\ref{eq:dyn_limits}), can be found through the equations (\ref{eq:dyn_model_rob}) and (\ref{eq:js_to_cs_vaj}). The obtained achievable sets then have a form of convex polytopes as the mapping between the robot limits and the task space variables is linear.
 
-\paragraph*{Considering orientations}
-It is worth noting that in general case, $m$ dimensional task space might include positions and orientations, for example if the task space corresponds to the Cartesian space, where $m=6$. When the task space includes orientations, the generalised task space position (including the position and orientation) is often expressed is the homogeneous matrix form $\bm{x}\in SE(3)$. Then the task space generalised velocity vector $\dot{\bm{x}}\in\mathbb{R}^6$ becomes the Cartesian space \textit{twist vector} $\bm{\nu}$, expressing the translation and rotation velocity at the same time. However, in such cases the twist $\bm{\nu}$ does no longer correspond to the time derivative of the task space generalised position $$\bm{\nu}\neq\frac{d\bm{x}}{dt}.$$ The correspondence between the generalised position, having a matrix form $\bm{x} \in \mathbb{R}^{4\times4}$, and the twist, having a vector form $\bm{\nu} \in \mathbb{R}^{6}$, is expressed through the matrix exponential and logarithm operations, as described in detail in \cite[Chapter 3.3]{modernrobotics}. 
-
-Hence, a more generic mapping (\ref{eq:js_to_cs_vaj}) can be expressed as 
-\begin{subequations}
-\begin{align}
-\bm{\nu}&= {J}(\bm{q})\dot{\bm{q}} \label{eq:js_to_cs_vaj:vel}\\
-\dot{\bm{\nu}}&= J(\bm{q})\ddot{\bm{q}} + \dot{J}(\bm{q},\dot{\bm{q}})\dot{\bm{q}} \label{eq:js_to_cs_vaj:accel}\\
-\ddot{\bm{\nu}}&= J(\bm{q})\dddot{\bm{q}} + 2\dot{J}(\bm{q},\dot{\bm{q}})\ddot{\bm{q}} + \ddot{J}(\bm{q},\dot{\bm{q}},\ddot{\bm{q}})\dot{\bm{q}}\label{eq:js_to_cs_vaj:jerk}
- \end{align} \label{eq:js_to_cs_vaj_twist}
-\end{subequations}
-where $\bm{\nu}\in\mathbb{R}^m$ corresponds to generalised task space velocities, while $\dot{\bm{\nu}}\in\mathbb{R}^m$ are $\ddot{\bm{\nu}}\in\mathbb{R}^m$ are generalised accelerations and jerks, allowing for considering both their translation and rotation components.
-
-\todos{
-In this work however, for simplicity reasons, the notation for task space variables representing the velocity as $\dot{\bm{x}}$, acceleration as $\ddot{\bm{x}}$ and jerk as $\dddot{\bm{x}}$ is used for both cases. 
-}
 
 \paragraph*{Kinematic joint limits} As a precise robot's dynamical model is sometimes hard to obtain, instead of specifying the actuator torque limits (\ref{eq:dyn_limits:torque}), the manufacturers often rather specify robot's actuator limits in a kinematic form, considering them to have limited and constant acceleration $\ddot{\bm{q}} \in \mathbb{R}^n$ and jerk $\dddot{\bm{q}} \in \mathbb{R}^n$ limits.
-\begin{subequations}
-\begin{align}
-\bm{q} &\in [\bm{q}_{min},  \bm{q}_{max}],\quad\dot{\bm{q}} \in [\dot{\bm{q}}_{min},  \dot{\bm{q}}_{max}],\\
-\ddot{\bm{q}} &\in [\ddot{\bm{q}}_{min}, \ddot{\bm{q}}_{max}], ~~ \dddot{\bm{q}} \in [ \dddot{\bm{q}}_{min}, \dddot{\bm{q}}_{max}] 
-\end{align}
+\begin{equation}
+\ddot{\bm{q}} \in [\ddot{\bm{q}}_{min}, \ddot{\bm{q}}_{max}], ~~ \dddot{\bm{q}} \in [ \dddot{\bm{q}}_{min}, \dddot{\bm{q}}_{max}] 
 \label{eq:kin_limits}
-\end{subequations}
-Using the mappings (\ref{eq:js_to_cs_vaj}) and above described actuator limits, for any fixed robot state $\{\bm{q},\dot{\bm{q}},\ddot{\bm{q}}\}$, mappings (\ref{eq:js_to_cs_vaj}) become linear, resulting in  a polytope shaped achievable sets of task space variables (ex. velocity $\dot{\bm{x}}$, acceleration $\ddot{\bm{x}}$, jerk $\dddot{\bm{x}}$). 
+\end{equation}
+Using these kinematic actuator limits, the linearisation procedure of the mapping (\ref{eq:js_to_cs_vaj}) around given robot state $\{\bm{q},\dot{\bm{q}},\ddot{\bm{q}}\}$, can then be used to obtain the polytope shaped achievable sets of kinematic task space variables (ex. velocity $\dot{\bm{x}}$, acceleration $\ddot{\bm{x}}$, jerk $\dddot{\bm{x}}$).
 
 
 
@@ -607,10 +589,7 @@ These, now linear, equations can be used to evaluate the influence of different 
 
 \subsubsection{Parallel with Multi-link cable-driven robots}
 
-Multi-link cable-driven robots (MCDRs) \cite{Wang2019} is a family of robotic manipulators which is actuated by cable actuators. Th
-
-
-are robotic systems combining the serial and parallel robots. They have relatively large workspace compared to parallel robots and much lower inertia than the serial robots, resulting in higher achievable velocities and better back-drivability. 
+Multi-link cable-driven robots (MCDRs) \cite{Wang2019} are a family of robotic systems having the serial robotic manipulator structure while being actuated by cables. As the cable actuators are capable of applying unidirectional tensile forces, there is a natural parallel with musculoskeletal models. Lau et al. \cite{Lau2013} have even proposed a generalised modelling framework for MCDR modelling and demonstrated that it can be used for musculoskeletal models as well. An simplified planar example of a human musculoskeletal model and the MCDR model is shown on Figure \ref{fig:muscle_mcdrs}.
 
 \begin{wrapfigure}{r}{0.5\linewidth}
     \centering
@@ -618,7 +597,8 @@ are robotic systems combining the serial and parallel robots. They have relative
     \caption{An illustrative planar example of a human musculoskeletal model and a Multi-link cable-driven robot (MCDR). On the left human arm is modeled with two joints and six muscles, where each muscle can apply contraction forces $F_i$. On the right, a MCDR robot is modeled with 3 joints and 6 cables, which can apply tension forces $t_i$.  }
     \label{fig:muscle_mcdrs}
 \end{wrapfigure}
-As this family of robots is actuated by cable actuators that are capable of applying unidirectional tensile forces, there is a natural parallel with musculoskeletal models. Lau et al. \cite{Lau2013} have even proposed a generalised modelling framework for MCDR modelling and demonstrated that it can be used for musculoskeletal models as well. An simplified planar example of a human musculoskeletal model and the MCDR model is shown on Figure \ref{fig:muscle_mcdrs}.
+
+
  
 
 
@@ -783,15 +763,113 @@ These polytope based metrics however, to the best of our knowledge, have yet to 
 
 Physical ability metrics are an important tool for analysing how robots and humans comply with different requirements of tasks. In human-robot collaboration scenarios, these metrics can be used is to decide if the robot, or the human, is better suited to execute a certain task, by evaluating their different physical abilities (movement, forces, precision etc.) to the ones required by the task\cite{Edoardo2019Capability}. 
 
-However, when it comes to the physical collaboration, where the task is executed jointly by the human and the robot physically interacting, expressing their common phisical abilities is much more challenging. As their common physical ability is a combination of their individual abilities, to be able to calculate their common physical ability, they need to be expressed in a unified form.
+However, when it comes to the physical collaboration, where the task is executed jointly by the human and the robot physically interacting, expressing their common physical abilities is much more challenging. As their common physical ability is a combination of their individual abilities, to be able to calculate their common physical ability, they need to be expressed in a unified form.  
 
-Expressing the physical ability metrics, for both humans and robots, in the polytope form, enables using the polytope algebra to do different operations, such as sum, intersection and convex-hull, which are well defined and can be calculated efficiently. Combining the individual polytopes using the polytope algebra can be used to describe different physical collaboration scenarios and enables characterisation of the common physical abilities of the collaboration in the convex polytope form as well.
+Many different physical abilities for humans and robots, can be represented in the polytope form, as described in section \ref{ch:poly_metrics}. Expressing their physical abilities in this unifying form enables using different efficient tools from the polytope algebra to combine their individual polytopes, such as Minkowski sums, intersections and convex-hulls.
+Therefore, given their individual polytopes of different physical abilities and the physics of their physical interaction scenario, different polytope algebra operations can be leveraged to express their common physical ability in the polytope form as well.
 
-One example of such metric has been developed by Jihong Lee, in his work \cite{lee2001velocity}, showing how polytopes can be used to describe the common velocity capacity of multi-arm collaborative robotic system.
+One example of such characterisation has been developed by Jihong Lee, in his work \cite{lee2001velocity}, showing how polytopes can be used to describe the common velocity capacity of multi-arm collaborative robotic system, by intersecting their individual polytopes. However, this approach is yet to used for characterising the common capacity of the human-robot interaction, as well as to be extended to other physical abilities and other collaboration scenarios. 
 
-Following two sections, \ref{ch:force_collab} and \ref{ch:velocity_collab}, give an example of calculation of joint force and velocity capacity of a physical human-robot collaboration based on polytope algebra. Both examples are based on a common physical collaboration scenario where two actors (usually human and robot) are interacting physically to manipulate an object that is rigidly fixed in the end-effector of the robot and in the hand of the human. Different versions of this scenario are shown on Figure \ref{fig:collaboration_types}, ranging from human-robot interaction to the interaction of the two arms of a human subject, that can be seen as two separate musculoskeletal models collaborating.
 
-Finally, chapter \ref{ch:collab_metrics_overview} gives an overview of polytope based metrics for humans and robots and how to combine them to obtain the joint capacity of multiple actors in the discussed collaboration scenario. 
+Therefore, following sections describe the characterisation of different common physical abilities of the human-robot interaction, based on one classical example of human-robot collaboration scenario, where the two actors interact physically to manipulate an object that is rigidly fixed in the end-effector of the robot and in the hand of the human. First, section \ref{ch:which_metric_which} introduces the physical relationships describing this collaboration scenario, followed by the two sections, \ref{ch:force_collab} and \ref{ch:velocity_collab}, giving more specific examples of how these relationships are exploited to calculate the common force and velocity capacity of a physical human-robot collaboration leveraging the polytope algebra. 
+Different versions of this scenario are shown on Figure \ref{fig:collaboration_types}, ranging from human-robot interaction to the interaction of the two arms of a human subject, that can be seen as two separate musculoskeletal models collaborating.
+
+\todos{Even though the following sections are focusing on one collaboration scenario, similar approach can be used to characterising any other collaboration scenario as well.}
+
+\subsection{Human-robot collaboration scenario}
+\label{ch:which_metric_which}
+\begin{wrapfigure}{r}{0.5\textwidth}
+    \centering
+    \includegraphics{Chapters/imgs/example_inter.pdf}
+    \caption{A collaborative example scenario where a human and a robot interact over an object fixed rigidly in the end-effector of the robot and in the hand of the human.}
+    \label{fig:table_inter}
+\end{wrapfigure}
+
+A classical human-robot physical interaction scenario is considered, where the human operator and the robot are physically interacting in order to manipulate an object which is rigidly fixed both in the robot's end-effector and the human's hand. A simplified view of this collaboration scenario is shown on Figure \ref{fig:table_inter}, while a more general view of this scenario, with different actors (humans and robots), is shown on Figure \ref{fig:collaboration_types}.
+
+When it comes to commonly manipulating an object held by both human and the robot, the supposition of rigid contact with the object can be used to formulate the force equilibrium equation and the relative motion constraints \cite{Prattichizzo2016}. 
+
+As they both apply forces on the object, the resulting force $\bm{f}$ the object will exert on the environment (if in contact with it) or transform into motion follows from the force equilibrium ( sum of all forces $\bm{f}_i$ is equal to zero ), and is equal to the sum of the applied forces by the robot $\bm{f}_r$ and the human $\bm{f}_h$. 
+\begin{equation}
+    \bm{f} = \bm{f}_r + \bm{f}_h, \qquad  m_o\ddot{\bm{x}} = \bm{f} 
+\end{equation}
+If the object is not in contact with the environment, the force $\bm{f}$ will generate object's acceleration $\ddot{\bm{x}}$  in space proportional to its mass $m_o$.
+
+Furthermore, as the object is rigidly attached to both robot and the human, there is no relative movement possible between the object, human's hand and robot's end-effector. According to this condition, the movement of the object (velocity $\dot{\bm{x}}$, acceleration $\ddot{\bm{x}}$, jerk $\dddot{\bm{x}}$, etc.) is equivalent to the movement of both the human's hand $\{\dot{\bm{x}}_h,\ddot{\bm{x}}_h,\dddot{\bm{x}}_h\}$ and the robot's end-effector $\{\dot{\bm{x}}_r,\ddot{\bm{x}}_r,\dddot{\bm{x}}_r\}$.
+\begin{equation}
+    \dot{\bm{x}}_h=\dot{\bm{x}}_r=\dot{\bm{x}}, \qquad
+    \ddot{\bm{x}}_h=\ddot{\bm{x}}_r=\ddot{\bm{x}}, \qquad
+    \dddot{\bm{x}}_h=\dddot{\bm{x}}_r=\dddot{\bm{x}}
+    \label{eq:kinematic_condition_contact}
+\end{equation}
+
+These two relationships, considering the rigid contact between the robot, human and the object, can be used to describe different physical abilities of the human-robot collaboration in the described scenario. Section \ref{ch:force_collab} describes exploiting this relationship to calculate the common force capacity while section \ref{ch:velocity_collab} described the calculation of their common velocity capacity.
+
+
+% where each one of the forces is bounded in withing the polytope $\bm{f}_i \in \mathcal{P}_{fi}$. 
+% \begin{equation}
+%     \mathcal{P}_f = \{\bm{f}\in \mathbb{R}^m ~|~\bm{f} = \bm{f}_r + \bm{f}_h , \quad\bm{f}_r \in \mathcal{P}_{fr},~\bm{f}_h \in \mathcal{P}_{fh}\}
+% \end{equation}
+% Therefore their common wrench capacity can be expressed as a sum of their individual wrench capacities, corresponding to the Minkowski sum $\oplus$ in polytope algebra 
+% \begin{equation}
+%     \mathcal{P}_f = \mathcal{P}_{fr}\oplus \mathcal{P}_{fh}
+% \end{equation}
+
+
+% %the maximal velocity capacity of the object will be limited by the actor (human or robot) with the least velocity capacity. 
+
+% On the other hand, in the proposed collaboration scenario, as both robot and the human are rigidly attached to the object, the velocity of the object $\dot{\bm{x}}$ is equal to the velocity of the human's hand $\dot{\bm{x}}_h$ and the robot's end-effector $\dot{\bm{x}}_r$ \cite{Prattichizzo2016}
+% \begin{equation}
+%     \dot{\bm{x}}_h=\dot{\bm{x}}_r=\dot{\bm{x}}
+%     \label{eq:kinematic_condition_contact}
+% \end{equation}
+% as both of them have their own limited velocity capacity $\dot{\bm{x}}_h \in \mathcal{P}_{vh},\dot{\bm{x}}_r \in \mathcal{P}_{vr}$ the object velocity has to respect all of them
+% \begin{equation}
+%     \mathcal{P}_v = \{\dot{\bm{x}}\in \mathbb{R}^m ~|~ \dot{\bm{x}} \in \mathcal{P}_{vr},~\dot{\bm{x}} \in \mathcal{P}_{vh}\}
+% \end{equation}
+% Geometrically, this operation can be represented as an intersection of their velocity capacities, and the intersection $\cap$ operation can be calculated efficiently using polytope algebra. 
+% \begin{equation}
+%     \mathcal{P}_v =  \mathcal{P}_{vh} \cap \mathcal{P}_{vr}
+% \end{equation}
+
+
+
+% More generally, all the polytope formulations that require calculating the wrench/force capacity, for both robot's and human's, will be combined using Minkowski sum $\oplus$. Such metrics are human's and robot's wrench/force polytope and stiffness region polytope.
+
+% More generally, all polytope metrics characterising robot's or human's movement capacity (velocity $\dot{\bm{x}}$, acceleration $\ddot{\bm{x}}$, etc.) will be subject to the same condition (\ref{eq:kinematic_condition_contact}) and will be combined using the intersection $\cap$ operation.
+
+
+
+
+% The further discussed procedures for calculating joint physical ability polytopes are valid for the considered collaboration scenario (showed on Figure \ref{fig:table_inter} or more generally on Figure \ref{fig:collaboration_types}), however the same methodology can be used to any other collaboration scenario as well.
+
+% \begin{table}
+% \centering
+% \begin{tabular}{|l|c | c| c| c|}
+% \hline
+% Polytope Metric & Equation & Dynamics & Collaboration operator \\
+% \hline
+%  \multicolumn{5}{c}{Robotic manipulators }  \\
+% \hline
+% Velocity  &  \ref{eq:poly_vel_rob}& No & $\cap$ \\
+% Kinematic Acceleration  & \ref{eq:poly_accel_kin} & No & $\cap$ \\
+% Kinematic Jerk  &  \ref{eq:poly_jerk_kin}& No &  $\cap$ \\
+% Precision  & \ref{eq:poly_precision_rob} & No&  $\cap$ \\
+% Force/Wrench  & \ref{eq:poly_force_rob} & Yes &$\oplus$ \\
+% Acceleration  & \ref{eq:pol_accleration_rob} & Yes &   $\cap$ \\
+% Stiffness feasibility  &  \ref{eq:pol_sfr_rob} & Yes& $\oplus$ \\
+% \hline
+%  \multicolumn{5}{c}{Human musculoskeletal models}  \\
+% \hline
+% Velocity  & \ref{eq:velocity_polytope_human} & No &  $\cap$ \\
+% Force/Wrench & \ref{eq:human_force_poly} & Yes & $\oplus$ \\
+% Acceleration  & \ref{eq:poly_acceleration_hum} & Yes &  $\cap$ \\
+% Stiffness feasibility  & \ref{eq:stiffness_human_all}  & Yes&  $\oplus$ \\
+% \hline
+% \end{tabular}
+% \caption{The list of common polytope based physical ability metrics alongside their polytope algebra operator for the example collaborative scenario (Figure \ref{fig:table_inter}), as well as the indication of their capacity to account for the dynamics effects.}
+% \label{tab:table_comparisson_colloboration}
+% \end{table}
 
 
 \subsection{Force polytope}
@@ -803,15 +881,20 @@ Finally, chapter \ref{ch:collab_metrics_overview} gives an overview of polytope 
     \label{fig:collaboration_force}
 \end{figure}
 
-If for example, a human operator and a robot are physically interacting in order to manipulate an object which is rigidly fixed both in the robot's end-effector and the human hand, the final force exerted on the object will be the sum of the forces of the human $\bm{f}_h$ and the force of the robot $\bm{f}_r$.
+When a human operator and a robot are physically interacting in order to manipulate an object, which is rigidly fixed both in the robot's end-effector and the human hand, the final force exerted on the object will be the sum of the forces of the human $\bm{f}_h$ and the force of the robot $\bm{f}_r$.
 \begin{equation}
     \bm{f} = \bm{f}_h + \bm{f}_r
 \end{equation}
 
-Their individual force capacity can be expressed in a polytope form, for the human  $\mathcal{P}_{fh}$ and the robot  $\mathcal{P}_{fr}$ respectively. Finally, as their forces acting on the object are summed, their common force capacity on the object can be calculated as the Minkowski sum of the polytopes
+Their individual force capacity can be expressed in a polytope form, for the human  $\mathcal{P}_{fh}$ and the robot  $\mathcal{P}_{fr}$ respectively. Finally, as their forces acting on the object are summed, their common force capacity on the object can be expressed as
 \begin{equation}
-    \mathcal{P}_f =  \mathcal{P}_{fh} \oplus \mathcal{P}_{fr}
+    \mathcal{P}_f = \{\bm{f}\in \mathbb{R}^m ~|~\bm{f} = \bm{f}_r + \bm{f}_h , \quad\bm{f}_r \in \mathcal{P}_{fr},~\bm{f}_h \in \mathcal{P}_{fh}\}
 \end{equation}
+Therefore their common wrench capacity can be expressed as a sum of their individual wrench capacities, corresponding to the Minkowski sum $\oplus$ in polytope algebra 
+\begin{equation}
+    \mathcal{P}_f = \mathcal{P}_{fr}\oplus \mathcal{P}_{fh}
+\end{equation}
+
 A planar example of this collaboration scenario and the polytopes obtained is in shown on Figure \ref{fig:collaboration_force}. 
 
 In more general case, if a collaboration is composed of $N$ actors rigidly holding an object, where their force capacity is expressed in a polytope form $\mathcal{P}_{fi}$, then their common force capacity can be calculated as the Minkowski sum of the $N$ polytopes.
@@ -819,6 +902,8 @@ In more general case, if a collaboration is composed of $N$ actors rigidly holdi
 \begin{equation}
     \mathcal{P}_f =  \mathcal{P}_{f1} \oplus \mathcal{P}_{f2} \oplus ~\ldots ~\oplus  \mathcal{P}_{fN}
 \end{equation}
+
+Furthermore, the polytope formulations that require calculating the wrench/force capacity, for both robot's and human's, will be combined using Minkowski sum $\oplus$. Such metrics are human's and robot's wrench/force polytope and stiffness region polytope, as shown in table \ref{tab:merged_table}.
 
 \subsection{Velocity polytope}
 \label{ch:velocity_collab}
@@ -829,85 +914,12 @@ In more general case, if a collaboration is composed of $N$ actors rigidly holdi
     \label{fig:collaboration_vel}
 \end{figure}
 
-If the same example as for the force capacity \ref{ch:force_collab} is considered, where a human operator and a robot are physically interacting in order to manipulate an object which is rigidly fixed both in the robot's end effector and the human hand. The maximal velocity the object can achieve in a certain direction $\bm{v}_{max}$ will be limited by the actor who has the lower maximal velocity in that direction. It can be found as the minimum value of the maximal velocity the human arm can achieve $\bm{v}_{h,max}$ and the robot's end-effector can achieve $\bm{v}_{r,max}$
+When a human operator and a robot are physically interacting in order to manipulate an object which is rigidly fixed both in the robot's end effector and the human hand, there is no relative movement of the object with respect to the human's hand and the robot's end effector
 \begin{equation}
-    \bm{v}_{max}= \min \{\bm{v}_{h,max}, \bm{v}_{r,max}\}
+    \dot{\bm{x}}_h=\dot{\bm{x}}_r=\dot{\bm{x}},
 \end{equation}
 
-Once their individual velocity capacity is expressed in polytope form $\mathcal{P}_{vh}$ and $\mathcal{P}_{vr}$, their common velocity capacity $\mathcal{P}_v$ (the achievable velocities of the object) can then be calculated as the intersection of their polytopes
-\begin{equation}
-    \mathcal{P}_v =  \mathcal{P}_{vr} \cap \mathcal{P}_{vh}
-\end{equation}
-
-In a more general case where there are $N$ actors (robots and humans) collaborating by rigidly holding the object, and where their velocity capacity is expressed in a polytope form $\mathcal{P}_{vi}$, the common velocity capacity can be calculated as their intersection
-\begin{equation}
-    \mathcal{P}_v =  \mathcal{P}_{v1} \cap \mathcal{P}_{v2} \cap ~~ \ldots ~~\cap \mathcal{P}_{vN}
-\end{equation}
-
-A planar example of this collaboration scenario and the polytopes obtained is in shown on Figure \ref{fig:collaboration_vel}. 
-
-\subsection{Calculating different joint physical ability polytopes}
-\label{ch:which_metric_which}
-\begin{wrapfigure}{r}{0.5\textwidth}
-    \centering
-    \includegraphics{Chapters/imgs/example_inter.pdf}
-    \caption{A collaborative example scenario where a human and a robot interact over an object fixed rigidly in the end-effector of the robot and in the hand of the human.}
-    \label{fig:table_inter}
-\end{wrapfigure}
-
-This section gives an overview of the common polytope based physical ability metrics for robotic systems, described in section \ref{ch:robot_metrics}, and for humans, described in section \ref{ch:human_metrics}, with respect to the polytope algebra operation necessary to calculate joint physical abilities in collaboration scenarios. 
-
-For this comparison a human-robot physical interaction scenario from previous chapters, where the human operator and the robot are physically interacting in order to manipulate an object which is rigidly fixed both in the robot's end-effector, is chosen as a representative of a classic collaboration scenario. A simplified view of this collaboration scenario is shown on Figure \ref{fig:table_inter}, while a more general view of this scenario, with different actors (humans and robots), is shown on Figure \ref{fig:collaboration_types}.
-
-\begin{table}
-\centering
-\begin{tabular}{|l|c | c| c| c|}
-\hline
-Polytope Metric & Equation & Dynamics & Collaboration operator \\
-\hline
- \multicolumn{5}{c}{Robotic manipulators }  \\
-\hline
-Velocity  &  \ref{eq:poly_vel_rob}& No & $\cap$ \\
-Kinematic Acceleration  & \ref{eq:poly_accel_kin} & No & $\cap$ \\
-Kinematic Jerk  &  \ref{eq:poly_jerk_kin}& No &  $\cap$ \\
-Precision  & \ref{eq:poly_precision_rob} & No&  $\cap$ \\
-Force/Wrench  & \ref{eq:poly_force_rob} & Yes &$\oplus$ \\
-Acceleration  & \ref{eq:pol_accleration_rob} & Yes &   $\cap$ \\
-Stiffness feasibility  &  \ref{eq:pol_sfr_rob} & Yes& $\oplus$ \\
-\hline
- \multicolumn{5}{c}{Human musculoskeletal models}  \\
-\hline
-Velocity  & \ref{eq:velocity_polytope_human} & No &  $\cap$ \\
-Force/Wrench & \ref{eq:human_force_poly} & Yes & $\oplus$ \\
-Acceleration  & \ref{eq:poly_acceleration_hum} & Yes &  $\cap$ \\
-Stiffness feasibility  & \ref{eq:stiffness_human_all}  & Yes&  $\oplus$ \\
-\hline
-\end{tabular}
-\caption{The list of common polytope based physical ability metrics alongside their polytope algebra operator for the example collaborative scenario (Figure \ref{fig:table_inter}), as well as the indication of their capacity to account for the dynamics effects.}
-\label{tab:table_comparisson_colloboration}
-\end{table}
-
-
-As discussed in section \ref{ch:force_collab}, when it comes to commonly manipulating an object, as all the actors apply forces on the object the resulting force the object will exert on the environment (if in contact with it) or transform into the motion, will be the sum of the applied forces by the robot $\bm{f}_r$ and the human $\bm{f}_h$. 
-\begin{equation}
-    \bm{f} = \bm{f}_r + \bm{f}_h
-\end{equation}
-where each one of the forces is bounded in withing the polytope $\bm{f}_r \in \mathcal{P}_{fh}$. 
-\begin{equation}
-    \mathcal{P}_f = \{\bm{f}\in \mathbb{R}^m ~|~\bm{f} = \bm{f}_r + \bm{f}_h , \quad\bm{f}_r \in \mathcal{P}_{fr},~\bm{f}_h \in \mathcal{P}_{fh}\}
-\end{equation}
-Therefore their common wrench capacity can be expressed as a sum of their individual wrench capacities, corresponding to the Minkowski sum in polytope algebra $\oplus$.
-\begin{equation}
-    \mathcal{P}_f = \mathcal{P}_{fr}\oplus \mathcal{P}_{fh}
-\end{equation}
-
-More generally, all the polytope formulations that require calculating the wrench/force capacity, for both robot's and human's, will be combined using Minkowski sum $\oplus$. Such metrics are human's and robot's wrench/force polytope and stiffness region polytope.
-
-On the other hand, as discussed in section \ref{ch:velocity_collab}, in the proposed collaboration scenario, the maximal velocity capacity of the object will be limited by the actor (human or robot) with the least velocity capacity. This is due to the fact that both robot and the human are rigidly attached to the object and the velocity of the object $\dot{\bm{x}}$ is equal to the velocity of the human and the robot $\dot{\bm{x}}_h=\dot{\bm{x}}_r=\dot{\bm{x}}$
-\begin{equation}
-    \dot{\bm{x}}_h=\dot{\bm{x}}_r=\dot{\bm{x}}
-\end{equation}
-as both of them have their own limited velocity capacity $\dot{\bm{x}}_h \in \mathcal{P}_{vh},\dot{\bm{x}}_r \in \mathcal{P}_{vr}$ the object velocity has to respect all of them
+Once their individual velocity capacity is expressed in polytope form $\mathcal{P}_{vh}$ and $\mathcal{P}_{vr}$, their common velocity capacity $\mathcal{P}_v$ (the achievable velocities of the object) can then be calculated as 
 \begin{equation}
     \mathcal{P}_v = \{\dot{\bm{x}}\in \mathbb{R}^m ~|~ \dot{\bm{x}} \in \mathcal{P}_{vr},~\dot{\bm{x}} \in \mathcal{P}_{vh}\}
 \end{equation}
@@ -915,65 +927,109 @@ Geometrically, this operation can be represented as an intersection of their vel
 \begin{equation}
     \mathcal{P}_v =  \mathcal{P}_{vh} \cap \mathcal{P}_{vr}
 \end{equation}
-More generally, all polytope metrics characterising robot's or human's movement capacity (velocity $\dot{\bm{x}}$, acceleration $\ddot{\bm{x}}$, etc.) will be combined using the intersection $\cap$ operation.
 
-The list of the common polytope based metrics, for humans and robots along with their discussed polytope algebra operator is shown in Table \ref{tab:table_comparisson_colloboration}.
+A planar example of this collaboration scenario and the polytopes obtained is in shown on Figure \ref{fig:collaboration_vel}. 
 
-The discussed procedures for calculating joint physical ability polytopes are valid for the considered collaboration scenario (showed on Figure \ref{fig:table_inter} or more generally on Figure \ref{fig:collaboration_types}), however the same methodology can be used to any other collaboration scenario as well.
 
+% The maximal velocity the object can achieve in a certain direction $\bm{v}_{max}$ will be limited by the actor who has the lower maximal velocity in that direction. It can be found as the minimum value of the maximal velocity the human arm can achieve $\bm{v}_{h,max}$ and the robot's end-effector can achieve $\bm{v}_{r,max}$
+% \begin{equation}
+%     \bm{v}_{max}= \min \{\bm{v}_{h,max}, \bm{v}_{r,max}\}
+% \end{equation}
+
+In a more general case where there are $N$ actors (robots and humans) collaborating by rigidly holding the object, and where their velocity capacity is expressed in a polytope form $\mathcal{P}_{vi}$, the common velocity capacity can be calculated as their intersection
+\begin{equation}
+    \mathcal{P}_v =  \mathcal{P}_{v1} \cap \mathcal{P}_{v2} \cap ~~ \ldots ~~\cap \mathcal{P}_{vN}
+\end{equation}
+
+Furthermore, the polytope formulations characterising robot's or human's movement capacity (velocity $\dot{\bm{x}}$, acceleration $\ddot{\bm{x}}$, etc.) will be subject to the same condition (\ref{eq:kinematic_condition_contact}) and will be combined using the intersection $\cap$ operation, as shown in table \ref{tab:merged_table}.
 
 \section{Conclusion and synthesis}
 \label{ch:collab_metrics_overview}
 
-This chapter brings a comprehensive overview of different physical ability metrics for humans and robots, with the aim to find an unifying view of their abilities and provide a framework for characterising their joint physical abilities. The focus of this chapter is therefore placed on polytope based representations of physical abilities as they are the most complete and the most accurate metrics for both humans and robots. Additionally, polytope algebra enables efficient operations over polytopes, such as sum and intersection, providing tools for characterising their common physical abilities when they are interacting physically to execute a task.
+This chapter brings an overview of different ways of characterising physical abilities for humans and robots, with the aim to find a unified view of their abilities and provide a base for characterising their common physical abilities. Even though many different metrics have been developed for human and robot physical ability characterisation, they are often very different in scope, accuracy, physical interpretation and in many cases specific to only robots or only humans. The focus of this chapter, as well as this thesis, is therefore placed on polytope based representations of physical abilities as they are arguably the most complete and the most accurate characterisations for both robots and humans, based on their musculoskeletal models.
 
+An overview of the common polytope based representations of humans' and robots' physical abilities is then provided in section \ref{ch:poly_metrics}, in the attempt to present a systematic view on their formulations. In this overview, different physical abilities of humans (based on musculoskeletal models) and robots are characterised by finding the relationships between their actuation limits and the achievable sets of different task-related variables. As these relationships are usually described through robot's and human's highly nonlinear dynamics and kinematics relationships, in order to obtain the polytope-shaped representations, the dynamics and kinematics equations are linearised around a specific state, yielding linear and affine transformations of the actuator limits to the achievable sets of desired task space variables.
 
-Characterising the physical abilities of humans (based on musculoskeletal models) and robots consists in describing the relationship between actuation limits and the achievable sets of task-related variables. As these relationships are usually given through robot's and human's highly nonlinear dynamics and kinematics relationships, in order to obtain the polytope-shaped sets, the dynamics and kinematics equations are linearised around a specific state $\{\bm{q},\dot{\bm{q}}\}$. Yielding linear and affine transformations of the actuator limits to the desired task space variables which can be represented with polytopes.
-
-%The resulting polytope formulations involve a combination of equality equations (representing linearised dynamics and kinematics) and inequality equations (representing different actuation limits).
-
-The section \ref{ch:poly_metrics} brings an overview of common polytope representations of physical abilities for robots and humans. 
-Common polytope formulations, involving different linearised dynamics and kinematics equations and different actuator limits, can be represented using a generic formulation
+Common polytope formulations, described in section \ref{ch:robot_metrics} for robots and in section \ref{ch:human_metrics} for humans, involve different linearised dynamics and kinematics equations, as well as different actuation limits. However, they can be represented using a generic formulation
 \begin{equation}
     \mathcal{P}_x = \{\bm{x}\in\mathbb{R}^m ~|~ A\bm{x}=B\bm{y} + \bm{b}, ~ \bm{y}\in\mathcal{I}\}
+    \label{eq:generic_polyt_view}
 \end{equation}
-where the polytope $\mathcal{P}_x$ of represents the achievable set of the task space variable $\bm{x}\in\mathbb{R}^m$, $\bm{y}\in\mathbb{R}^n$ is the input variable limited within actuator limits $\mathcal{I}$. The linearised dynamics and kinematics equations can be represented using the equation $A\bm{x}=B\bm{y} + \bm{b}$, where 
+where the polytope $\mathcal{P}_x$ represents the achievable set of the task space variable $\bm{x}\in\mathbb{R}^m$, $\bm{y}\in\mathbb{R}^d$ is the input (actuator) variable limited within input set (actuator limits) $\mathcal{I}$. The input set $\mathcal{I}$ is often defined in the form of intervals of different input (actuator) variables, however in general case it can have a polytope shape as well. The linearised dynamics and kinematics equations can be represented, in a generic case, using the equation $A\bm{x}\!\!=\!\!B\bm{y}\!+\!\bm{b}$, where the matrix $A\in\mathbb{R}^{n\times m}$ is a linear transformation matrix from the $m$ dimensional output (task) space to the $n$ dimensional intermediate space, the matrix $B\in\mathbb{R}^{n\times d}$ is a transformation matrix from the $d$ dimensional input space to the intermediate space and the $\bm{b}\in\mathbb{R}^n$ is a bias vector expressed in the intermediate space. Furthermore, the dimensions of output (task) space $m$ is lower than the intermediate space dimension $n\!\geq\! m$ , which is in term lower than the input (actuator) space dimension $d\!\geq\! n\!\geq\! m$.
 
-\begin{table}[!h]
+\begin{table}[!b]
+\scalefont{0.9}
 \centering
-\begin{tabular}{|l|c|c|c|c|c|c|c|}
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|c|}
 \hline
-Polytope Metric & Eqn. & $\bm{x}$ & $A$ & $B$ & $\bm{y}$ & Input set $\mathcal{I}$ & $\bm{b}$ \\
+Polytope capacity & Eqn. & $\bm{x}$ & $A$ & $B$ & $\bm{y}$ & Input set $\mathcal{I}$ & $\bm{b}$ & Cond. & Collab. \\
 \hline
- \multicolumn{8}{c}{Robotic manipulators} \\
+\multicolumn{10}{c}{Robotic manipulators} \\
 \hline
-Velocity  & \ref{eq:poly_vel_rob}& $\dot{\bm{x}}$ & - & $J$ & $\dot{\bm{q}}$& $[\dot{\bm{q}}_{min},\dot{\bm{q}}_{max}]$  & - \\
-Kin. Acceleration  & \ref{eq:poly_accel_kin} & $\ddot{\bm{x}}$ & - & $J$ & $\ddot{\bm{q}}$ & $[\ddot{\bm{q}}_{min},\ddot{\bm{q}}_{max}]$   & $\bm{a}_b$ \\
-Kin. Jerk  &\ref{eq:poly_jerk_kin} & $\dddot{\bm{x}}$ & - & $J$ & $\dddot{\bm{q}}$& $[\dddot{\bm{q}}_{min},\dddot{\bm{q}}_{max}]$   & $\bm{j}_b$ \\
-Precision  & \ref{eq:poly_precision_rob} & $\delta\dot{\bm{x}}$ & - & $J$ & $\delta\bm{q}$ &$[\delta{\bm{q}}_{min},\delta{\bm{q}}_{max}]$ &  - \\
-Force/Wrench &  \ref{eq:poly_force_rob} & $\bm{f}$ & $J^T$ & - & $\bm{\tau}$ &$[\bm{\tau}_{min},\bm{\tau}_{max}]$ &  -$\bm{\tau}_b$ \\
-Acceleration  & \ref{eq:pol_accleration_rob} & $\ddot{\bm{x}}$ & - & $JM^{-1}$ & $\bm{\tau}$ &$[\bm{\tau}_{min},\bm{\tau}_{max}]$  &  -$\bm{a}_b$ \\
-Stiffness feasibility  &  \ref{eq:pol_sfr_rob}& $\Delta\bm{x}$ & $J^T$ & - & $\bm{\tau}$ &$[\bm{\tau}_{min},\bm{\tau}_{max}]$ &  -$\bm{\tau}_b$  \\
+Velocity & \ref{eq:poly_vel_rob}& $\dot{\bm{x}}$ & $I_{m\times m}$ & $J$ & $\dot{\bm{q}}$& $[\dot{\bm{q}}_{min},\dot{\bm{q}}_{max}]$ & - & Kin & $\cap$ \\
+Kin. Acceleration & \ref{eq:poly_accel_kin} & $\ddot{\bm{x}}$ & $I_{m\times m}$ & $J$ & $\ddot{\bm{q}}$ & $[\ddot{\bm{q}}_{min},\ddot{\bm{q}}_{max}]$ & $\bm{a}_b$ & Kin & $\cap$ \\
+Kin. Jerk &\ref{eq:poly_jerk_kin} & $\dddot{\bm{x}}$ & $I_{m\times m}$ & $J$ & $\dddot{\bm{q}}$& $[\dddot{\bm{q}}_{min},\dddot{\bm{q}}_{max}]$ & $\bm{j}_b$ & Kin & $\cap$ \\
+Precision & \ref{eq:poly_precision_rob} & $\delta\dot{\bm{x}}$ & $I_{m\times m}$ & $J$ & $\delta\bm{q}$ &$[\delta{\bm{q}}_{min},\delta{\bm{q}}_{max}]$ & - & Kin & $\cap$ \\
+Force/Wrench & \ref{eq:poly_force_rob} & $\bm{f}$ & $J^T$ & $I_{n\times n}$ & $\bm{\tau}$ &$[\bm{\tau}_{min},\bm{\tau}_{max}]$ & -$\bm{\tau}_b$ & Dyn & $\oplus$ \\
+Acceleration & \ref{eq:pol_accleration_rob} & $\ddot{\bm{x}}$ & $I_{m\times m}$ & $JM^{-1}$ & $\bm{\tau}$ &$[\bm{\tau}_{min},\bm{\tau}_{max}]$ & -$\bm{a}_b$ & Dyn & $\cap$ \\
+Stiffness & \ref{eq:pol_sfr_rob}& $\Delta\bm{x}$ & $J^T$ & $I_{n\times n}$ & $\bm{\tau}$ &$[\bm{\tau}_{min},\bm{\tau}_{max}]$ & -$\bm{\tau}_b$ & Dyn & $\oplus$ \\
 \hline
- \multicolumn{8}{c}{Human musculoskeletal models} \\
+\multicolumn{10}{c}{Human musculoskeletal models} \\
 \hline
-Velocity &\ref{eq:velocity_polytope_human}  & $\dot{\bm{x}}$ & - & $J$ & $\dot{\bm{q}}$ & $\mathcal{P}_{\dot{\bm{q}}}$  & - \\
-% Force/Wrench & $\bm{f}$ & $J^T$ & $N$ & $[\bm{F}_{min},\bm{F}_{max}]$ & $\bm{F}$ & $\bm{\tau}_b$ \\
-Force/Wrench & \ref{eq:human_force_poly} &  $\bm{f}$ & $J^T$ & $N$  & $\bm{F}$ & $[\bm{F}_{min},\bm{F}_{max}]$ &  -$\bm{\tau}_b$ \\
-Acceleration  & \ref{eq:poly_acceleration_hum} & $\ddot{\bm{x}}$ & - & $JM^{-1}N$  & $\bm{F}$ & $[\bm{F}_{min},\bm{F}_{max}]$ &  -$\bm{a}_b$ \\
-% Stiffness feasibility  &$\Delta\bm{x}$ & $J^T$ & $N$ & $[\bm{F}_{min},\bm{F}_{max}]$ & $\bm{F}$ & $\bm{\tau}_b$ \\
-Stiffness feasibility & \ref{eq:stiffness_human_all}  &$\Delta\bm{x}$ & $J^TK_c$ & $N$ & $\bm{F}$ & $[\bm{F}_{min},\bm{F}_{max}]$ &  -$\bm{\tau}_b$ \\
+Velocity &\ref{eq:velocity_polytope_human} & $\dot{\bm{x}}$ & $I_{m\times m}$ & $J$ & $\dot{\bm{q}}$ & $\mathcal{P}{\dot{\bm{q}}}$ & - & Kin & $\cap$ \\
+Force/Wrench & \ref{eq:human_force_poly} & $\bm{f}$ & $J^T$ & $N$ & $\bm{F}$ & $[\bm{F}_{min},\bm{F}_{max}]$ & -$\bm{\tau}_b$ & Dyn & $\oplus$ \\
+Acceleration & \ref{eq:poly_acceleration_hum} & $\ddot{\bm{x}}$ & $I_{m\times m}$ & $JM^{-1}N$ & $\bm{F}$ & $[\bm{F}_{min},\bm{F}_{max}]$ & -$\bm{a}_b$ & Dyn & $\cap$ \\
+Stiffness & \ref{eq:stiffness_human_all} &$\Delta\bm{x}$ & $J^TK_c$ & $N$ & $\bm{F}$ & $[\bm{F}_{min},\bm{F}_{max}]$ & -$\bm{\tau}_b$ & Dyn & $\oplus$ \\
 \hline
 \end{tabular}
-\caption{Comparison of Polytope-based Physical Ability Metrics}
-\label{tab:unifying_metrics_human_robot}
+\caption{The list of common polytope formulations for characterising physical abilities of robots and humans introduced in section \ref{ch:poly_metrics}. The table shows the correspondence of the common formulations to the generic formulation described by the equation (\ref{eq:generic_polyt_view}). The table further specifies if the polytope formulations is specified in kinematic or dynamic conditions. Finally, the table shows the necessary polytope algebra operator in order to characterise the common abilities in the collaboration scenario described in section \ref{ch:which_metric_which}.}
+\label{tab:merged_table}
 \end{table}
 
+Table \ref{tab:merged_table} brings a list of the polytope formulations for robots and humans, introduced in section \ref{ch:poly_metrics}, in a condensed view. The table brings shows how different polytope formulations correspond with the generic polytope formulation (\ref{eq:generic_polyt_view}), in terms of system matrices $A,B$, input, output and bias vectors $\bm{x},\bm{y},\bm{b}$ and the input limits $\mathcal{I}$.
 
-Additionally, apart from being able to represent accurately both human's and robot's physical abilities, polytope algebra enables efficient operations over polytopes, such as sum and intersection, providing tools for characterising their common physical abilities when they are interacting physically to execute a task. As the resulting joint physical ability has a polytope form as well, the polytope metrics enable expressing human's, robot's, and collaborative physical abilities in a unified manner. In that way, they are providing opportunities to create more advanced collaboration scenarios, for example by being able to evaluate if different tasks are more suitable for robots, human operators or are they more suitable for their collaboration.
-
-In addition, as polytopes can be represented in a form of triangulated meshes, they are straightforward to visualise using commonly available visualization tools, even in real-time scenarios. This visualization capability might enable providing operators with valuable information about the robot's state, in a form of different physical ability metrics. Furthermore, the representation of polytopes as sets of linear inequalities $A\bm{x}\leq\bm{b}$, allows for integration with various optimization problems, facilitating their utilization in practical applications such as robot control or motion planning.
-
-However, polytope metrics are relatively computationally complex, making their use relatively limited to off-line use-cases. New polytope resolution methods are necessary in order to reduce the complexity of their evaluation and to bring these metrics to the real-time applications.
+Polytopes, apart from being able to accurately represent both human's and robot's physical abilities, enable combining their individual polytopes for characterising the common physical abilities when interacting physically to execute different task. Given the physical ability of interest and the physics of the human-robot physical interaction scenario, different polytope algebra tools, such as Minkowski sum or intersection, can be used to express the common physical ability of their interaction in the polytope form as well.
 
 
+Section \ref{ch:collab_metrics}, demonstrates the use of different polytope algebra operations to characterise force and movement capacity of the human-robot collaboration in one classical collaboration scenario, where the human and the robot jointly manipulate an object. In the context of the same scenario, table \ref{tab:merged_table} shows the polytope algebra operators (Minkowski sum $\oplus$ and intersection $\cap$) used to combine their individual polytopes to characterise their different physical abilities as one system.
+
+
+In summary, polytopes enable accurate representation of human's and robot's physical abilities, as well as characterising their common physical abilities when collaborating physically to execute a task. In that way, this representation provides tools to create more advanced collaboration scenarios. 
+Accurate representation of robot's physical abilities enables exploiting its abilities fully when designing its tasks, creating the adapted robot control strategies or planning for its trajectories. On the other hand, accurate representation of human's abilities enables assessing the task ergonomics and making sure that human's capacity is never surpassed. Additionally, it enables creating more human-centered robot behaviours, where the robot adapts its assistance level to the lacking physical abilities of the human operator. 
+Finally, a unified representation of their individual and common physical abilities might enable new task scheduling techniques capable of assessing if different tasks are more suitable for robots, human operators or are they more suitable for their collaboration. 
+
+However, polytope formulations, as introduced in section \ref{ch:poly_metrics}, need to be transformed to more standard representations in order to  be used in practical implementations. The two most common ways to represent a polytope are as a set of vertices, or as a set of inequality constraints corresponding to its faces. Depending on the polytope formulation structure different transformation strategies, to the one of these forms, need to be employed, where the computational efficiency of the transformation operation can vary significantly with respect to the formulation complexity. Therefore following chapter focuses on providing a generic view on different formulation families present when characterising physical abilities of humans and robots, with the aim to specify different polytope transformation strategies applicable to each of the families as well as to discuss their computational complexity.
+
+
+% \pagebreak
+
+% \begin{landscape}
+% \centering
+% \begin{table}[!h]
+% \centering
+% \begin{tabular}{|l|c|c|c|c|c|c|c|c|c|}
+% \hline
+% Polytope capacity & Equation & $\bm{x}$ & $A$ & $B$ & $\bm{y}$ & Input set $\mathcal{I}$ & $\bm{b}$ & Conditions & Collaboration \\
+% \hline
+% \multicolumn{10}{c}{Robotic manipulators} \\
+% \hline
+% Velocity & \ref{eq:poly_vel_rob}& $\dot{\bm{x}}$ & - & $J$ & $\dot{\bm{q}}$& $[\dot{\bm{q}}_{min},\dot{\bm{q}}_{max}]$ & - & Kin & $\cap$ \\
+% Kin. Acceleration & \ref{eq:poly_accel_kin} & $\ddot{\bm{x}}$ & - & $J$ & $\ddot{\bm{q}}$ & $[\ddot{\bm{q}}_{min},\ddot{\bm{q}}_{max}]$ & $\bm{a}_b$ & Kin & $\cap$ \\
+% Kin. Jerk &\ref{eq:poly_jerk_kin} & $\dddot{\bm{x}}$ & - & $J$ & $\dddot{\bm{q}}$& $[\dddot{\bm{q}}_{min},\dddot{\bm{q}}_{max}]$ & $\bm{j}_b$ & Kin & $\cap$ \\
+% Precision & \ref{eq:poly_precision_rob} & $\delta\dot{\bm{x}}$ & - & $J$ & $\delta\bm{q}$ &$[\delta{\bm{q}}_{min},\delta{\bm{q}}_{max}]$ & - & Kin & $\cap$ \\
+% Force/Wrench & \ref{eq:poly_force_rob} & $\bm{f}$ & $J^T$ & - & $\bm{\tau}$ &$[\bm{\tau}_{min},\bm{\tau}_{max}]$ & -$\bm{\tau}_b$ & Dyn & $\oplus$ \\
+% Acceleration & \ref{eq:pol_accleration_rob} & $\ddot{\bm{x}}$ & - & $JM^{-1}$ & $\bm{\tau}$ &$[\bm{\tau}_{min},\bm{\tau}_{max}]$ & -$\bm{a}_b$ & Dyn & $\cap$ \\
+% Stiffness & \ref{eq:pol_sfr_rob}& $\Delta\bm{x}$ & $J^T$ & - & $\bm{\tau}$ &$[\bm{\tau}_{min},\bm{\tau}_{max}]$ & -$\bm{\tau}_b$ & Dyn & $\oplus$ \\
+% \hline
+% \multicolumn{10}{c}{Human musculoskeletal models} \\
+% \hline
+% Velocity &\ref{eq:velocity_polytope_human} & $\dot{\bm{x}}$ & - & $J$ & $\dot{\bm{q}}$ & $\mathcal{P}{\dot{\bm{q}}}$ & - & Kin & $\cap$ \\
+% Force/Wrench & \ref{eq:human_force_poly} & $\bm{f}$ & $J^T$ & $N$ & $\bm{F}$ & $[\bm{F}_{min},\bm{F}_{max}]$ & -$\bm{\tau}_b$ & Dyn & $\oplus$ \\
+% Acceleration & \ref{eq:poly_acceleration_hum} & $\ddot{\bm{x}}$ & - & $JM^{-1}N$ & $\bm{F}$ & $[\bm{F}_{min},\bm{F}_{max}]$ & -$\bm{a}_b$ & Dyn & $\cap$ \\
+% Stiffness & \ref{eq:stiffness_human_all} &$\Delta\bm{x}$ & $J^TK_c$ & $N$ & $\bm{F}$ & $[\bm{F}_{min},\bm{F}_{max}]$ & -$\bm{\tau}_b$ & Dyn & $\oplus$ \\
+% \hline
+% \end{tabular}
+% \caption{Comparison of Polytope-based Physical Ability Metrics}
+% \label{tab:merged_table}
+% \end{table}
+% \end{landscape}

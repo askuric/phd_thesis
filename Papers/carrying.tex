@@ -1,7 +1,10 @@
 
-\chapter{Collaborative carrying}
+\chapter{Polytopes for collaborative applications}
 
-\begin{figure*}[!t]
+
+\section{Collaborative object carrying}
+
+\begin{figure*}[!h]
     \centering
     \includegraphics[width=\linewidth]{Papers/images/dual-manip-6.pdf}
     \caption{Papers/images 1 to 4 on the right show the sequence of poses the manipulators are placed by a human operator during the course of the experiment. On left side, on the top is the graph showing the time evolution of applied manipulator forces $f_1,f_2$. The middle graph provides the evolution of the maximal applicable forces $f_{i,max}$ of each manipulator separately and their joint capacity $F_{max}$, based on the proposed polytope evaluation algorithm. In this graph,  the time periods when the constant strategy $\lambda$=$0.5$ (dashed line on all graphs) would not be feasible for at least one of the two robot are indicated with red background. The bottom graph shows the  evolution in time of the control parameter $\lambda$ for the proposed adaptive strategy.}
@@ -10,7 +13,7 @@
 \end{figure*}
 
 
-\subsection{Dual arm collaborative object carrying}\label{sec:colaborative_handling}
+\subsection{Dual robotic arm collaborative object carrying}\label{ch:robot_robot_carrying}
 
 In this section, the real-time force capability evaluation is employed in the context of robot control. An experiment is designed using two \textit{Franka Emika Panda} robots involved in a collaborative load carrying task for an object of mass $M$. Each robot is contributing to the compensation of the overall gravity force $G=Mg$ applied at the end-effector by the carried object, with forces $f_1$ and $f_2$ respectively such that
 \begin{equation}
@@ -39,7 +42,8 @@ Figure \ref{fig:dual_manip} (right) shows one possible manipulation trajectory, 
 The proposed control strategy is successful in ensuring  compensation of the object weight during the full length of the experiment. In the starting pose $t=0s$, robot 2 (robot on the left) is close to it's singular configuration and its load carrying capacity is close to 5kg. Controlling it to compensate for half of the weight of the object would result in a security exception and could damage the robot hardware. The same is true for pose 4 at $t=17s$. Robot 1 (robot on the right) is not be able to compensate for half of the object weight but thanks to the proposed adaptive control law, the task can successfully be achieved. This may not be the case over the entire common workspace of the two robots but this example is a good illustration of the interest of accounting for the true capabilities of the system at the control level.  An additional interesting result from the experiment is the transition between pose 3 and 4 ($t \in [12s,16s]$). Even though the object is much closer to robot 2 (right), robot 1 has a much higher carrying capacity. This illustrates the fact that force capabilities are highly nonlinear functions which are very hard to predict. This provides an additional argument in favor of on-line force capacity evaluation. 
 
 
-\subsection{Collaborative object carrying}
+\subsection{Human-robot collaborative object carrying}
+\label{ch:human_robot_carrying}
 \antun{
 %To illustrate the potential of the proposed algorithm for the human-centered robot control, a mockup load carrying experiment is conducted. 
 An example experiment is conducted, designed as a simplified heavy object manipulation task common in the industrial assembly procedures. 
@@ -89,3 +93,12 @@ To demonstrate this adaptability even further, in addition to  experiments 1 and
     \caption{This figure shows the evolution of the carrying capacity and weight carried by the operator and the robot over the course of the via-point cycle, for two experiments. The plots show mean values and the variances of the curves calculated over 10 successive cycles. The graph regions belonging to the different via-points are separated by vertical lines.  All the values are expressed in kilograms for easier readability.}
     \label{fig:experiment_results}
 \end{figure}
+
+
+\section{Reachable space shaping}
+\label{ch:human_robot_reachable_space}
+
+
+\section{Perceived mass shaping}
+\label{ch:human_robot_percieved_mass}
+

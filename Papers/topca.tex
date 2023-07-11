@@ -1,10 +1,9 @@
 
-\chapter{TOPCA}
+\chapter{Capacity aware cartesian space trajectory planning}
 
 \newcommand{\DD}[1]{\textcolor{teal}{[dd] #1}}
 \newcommand{\redo}[1]{\todo[inline]{[redo] #1}}
 
-\begin{abstract}
 With many promising collaborative robot applications in dynamical and unstructured human environments, there is an increasing need for real-time adaptable robot motion planning strategies. To reach the real-time execution times needed to ensure online adaptations, common techniques often make assumptions on robot's movement capacity considering them constant during the movement execution. However, robot's task-space movement capacity is state dependant and thus can evolve significantly during the execution of the movement.
 To adapt to the real-time evolution of the robot's capacity, this paper proposes a method for real-time trajectory planning based on time-optimal Trapezoidal acceleration profile (TAP) trajectories. 
 In each planning step, the robot's movement capacity is evaluated using an efficient approach for projecting the robot's kinematic limits in the trajectory direction, leveraging the convex polytope algebra.
@@ -12,7 +11,6 @@ In each planning step, the robot's movement capacity is evaluated using an effic
 
 \textcolor{red}{
 The method has been compared with state-of-the-art time-optimal joint space planning method TOPP-RA and traditional task-space TAP planning assuming constant movement capacity, given by the manufacturer. Results show that the proposed method has a comparable trajectory execution time as TOPP-RA, while exploiting the robot's movement capacity better and having lower tracking error than the traditional TAP approach. A mockup experiment is presented where the proposed method is used for collaborative waste sorting using a Franka Emika Panda robot, showing the efficiency of the approach in a real-world application.}
-\end{abstract}
 
 \section{Introduction}
 
