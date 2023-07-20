@@ -907,6 +907,7 @@ Furthermore, the polytope formulations that require calculating the wrench/force
 
 \subsection{Velocity polytope}
 \label{ch:velocity_collab}
+
 \begin{figure}[!h]
     \centering
     \includegraphics[width=0.7\linewidth]{Chapters/imgs/velocity_collab.pdf}
@@ -952,17 +953,17 @@ An overview of the common polytope based representations of humans' and robots' 
 
 Common polytope formulations, described in section \ref{ch:robot_metrics} for robots and in section \ref{ch:human_metrics} for humans, involve different linearised dynamics and kinematics equations, as well as different actuation limits. However, they can be represented using a generic formulation
 \begin{equation}
-    \mathcal{P}_x = \{\bm{x}\in\mathbb{R}^m ~|~ A\bm{x}=B\bm{y} + \bm{b}, ~ \bm{y}\in\mathcal{I}\}
+    \mathcal{P}_x = \{\bm{x}\in\mathbb{R}^m ~|~ A\bm{x}=B\bm{y} + \bm{b}, ~ \bm{y}\in\mathcal{P}_y\}
     \label{eq:generic_polyt_view}
 \end{equation}
-where the polytope $\mathcal{P}_x$ represents the achievable set of the task space variable $\bm{x}\in\mathbb{R}^m$, $\bm{y}\in\mathbb{R}^d$ is the input (actuator) variable limited within input set (actuator limits) $\mathcal{I}$. The input set $\mathcal{I}$ is often defined in the form of intervals of different input (actuator) variables, however in general case it can have a polytope shape as well. The linearised dynamics and kinematics equations can be represented, in a generic case, using the equation $A\bm{x}\!\!=\!\!B\bm{y}\!+\!\bm{b}$, where the matrix $A\in\mathbb{R}^{n\times m}$ is a linear transformation matrix from the $m$ dimensional output (task) space to the $n$ dimensional intermediate space, the matrix $B\in\mathbb{R}^{n\times d}$ is a transformation matrix from the $d$ dimensional input space to the intermediate space and the $\bm{b}\in\mathbb{R}^n$ is a bias vector expressed in the intermediate space. Furthermore, the dimensions of output (task) space $m$ is lower than the intermediate space dimension $n\!\geq\! m$ , which is in term lower than the input (actuator) space dimension $d\!\geq\! n\!\geq\! m$.
+where the polytope $\mathcal{P}_x$ represents the achievable set of the task space variable $\bm{x}\in\mathbb{R}^m$, $\bm{y}\in\mathbb{R}^k$ is the input (actuator) variable limited within input set (actuator limits) $\mathcal{P}_y$. The input set $\mathcal{P}_y$ is often defined in the form of intervals of different input (actuator) variables, however in general case it can have a polytope shape as well. The linearised dynamics and kinematics equations can be represented, in a generic case, using the equation $A\bm{x}\!=\!B\bm{y}\!+\!\bm{b}$, where the matrix $A\in\mathbb{R}^{k\times m}$ is a linear transformation matrix from the $m$ dimensional output (task) space to the $k$ dimensional intermediate space, the matrix $B\in\mathbb{R}^{k\times d}$ is a transformation matrix from the $n$ dimensional input space to the intermediate space and the $\bm{b}\in\mathbb{R}^k$ is a bias vector expressed in the intermediate space. Furthermore, the dimensions of output (task) space $m$ is lower than the intermediate space dimension $k\!\geq\! m$ , which is in term lower than the input (actuator) space dimension $n\!\geq\! k\!\geq\! m$. This condition comes from the fact that when characterising the physical abilities, the polytopes map higher dimensional input space (ex. joint space or muscle force space) to the lower dimensional output space (ex. Cartesian space).
 
 \begin{table}[!b]
 \scalefont{0.9}
 \centering
 \begin{tabular}{|l|c|c|c|c|c|c|c|c|c|}
 \hline
-Polytope capacity & Eqn. & $\bm{x}$ & $A$ & $B$ & $\bm{y}$ & Input set $\mathcal{I}$ & $\bm{b}$ & Cond. & Collab. \\
+Polytope capacity & Eqn. & $\bm{x}$ & $A$ & $B$ & $\bm{y}$ & Input set $\mathcal{P}_y$ & $\bm{b}$ & Cond. & Collab. \\
 \hline
 \multicolumn{10}{c}{Robotic manipulators} \\
 \hline
@@ -972,7 +973,7 @@ Kin. Jerk &\ref{eq:poly_jerk_kin} & $\dddot{\bm{x}}$ & $I_{m\times m}$ & $J$ & $
 Precision & \ref{eq:poly_precision_rob} & $\delta\dot{\bm{x}}$ & $I_{m\times m}$ & $J$ & $\delta\bm{q}$ &$[\delta{\bm{q}}_{min},\delta{\bm{q}}_{max}]$ & - & Kin & $\cap$ \\
 Force/Wrench & \ref{eq:poly_force_rob} & $\bm{f}$ & $J^T$ & $I_{n\times n}$ & $\bm{\tau}$ &$[\bm{\tau}_{min},\bm{\tau}_{max}]$ & -$\bm{\tau}_b$ & Dyn & $\oplus$ \\
 Acceleration & \ref{eq:pol_accleration_rob} & $\ddot{\bm{x}}$ & $I_{m\times m}$ & $JM^{-1}$ & $\bm{\tau}$ &$[\bm{\tau}_{min},\bm{\tau}_{max}]$ & -$\bm{a}_b$ & Dyn & $\cap$ \\
-Stiffness & \ref{eq:pol_sfr_rob}& $\Delta\bm{x}$ & $J^T$ & $I_{n\times n}$ & $\bm{\tau}$ &$[\bm{\tau}_{min},\bm{\tau}_{max}]$ & -$\bm{\tau}_b$ & Dyn & $\oplus$ \\
+Stiffness & \ref{eq:pol_sfr_rob}& $\Delta\bm{x}$ & $J^TK_c$ & $I_{n\times n}$ & $\bm{\tau}$ &$[\bm{\tau}_{min},\bm{\tau}_{max}]$ & -$\bm{\tau}_b$ & Dyn & $\oplus$ \\
 \hline
 \multicolumn{10}{c}{Human musculoskeletal models} \\
 \hline
@@ -986,7 +987,7 @@ Stiffness & \ref{eq:stiffness_human_all} &$\Delta\bm{x}$ & $J^TK_c$ & $N$ & $\bm
 \label{tab:merged_table}
 \end{table}
 
-Table \ref{tab:merged_table} brings a list of the polytope formulations for robots and humans, introduced in section \ref{ch:poly_metrics}, in a condensed view. The table brings shows how different polytope formulations correspond with the generic polytope formulation (\ref{eq:generic_polyt_view}), in terms of system matrices $A,B$, input, output and bias vectors $\bm{x},\bm{y},\bm{b}$ and the input limits $\mathcal{I}$.
+Table \ref{tab:merged_table} brings a list of the polytope formulations for robots and humans, introduced in section \ref{ch:poly_metrics}, in a condensed view. The table brings shows how different polytope formulations correspond with the generic polytope formulation (\ref{eq:generic_polyt_view}), in terms of system matrices $A,B$, input, output and bias vectors $\bm{x},\bm{y},\bm{b}$ and the input limits $\mathcal{P}_y$.
 
 Polytopes, apart from being able to accurately represent both human's and robot's physical abilities, enable combining their individual polytopes for characterising the common physical abilities when interacting physically to execute different task. Given the physical ability of interest and the physics of the human-robot physical interaction scenario, different polytope algebra tools, such as Minkowski sum or intersection, can be used to express the common physical ability of their interaction in the polytope form as well.
 

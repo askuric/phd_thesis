@@ -57,7 +57,7 @@ headsepline, % Uncomment to get a line under the header
 \usepackage{wrapfig}
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
-\usepackage{algorithmic}
+\usepackage[noend]{algorithmic}
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
@@ -91,6 +91,15 @@ pdfstartview={FitV},
 
 
 \renewcommand*{\repr}[1]{\mathscr{#1}}
+\renewcommand*{\conv}[1]{\mathcal{C}onv\left(#1\right)}
+\renewcommand*{\img}[1]{\mathcal{I}m\left(#1\right)}
+\renewcommand*{\ker}[1]{\mathcal{K}er\left(#1^T\right)}
+
+
+\usepackage{amsthm}
+\newtheorem*{remark}{Remark}
+
+\usepackage{cancel}
 %----------------------------------------------------------------------------------------
 %	MARGIN SETTINGS
 %----------------------------------------------------------------------------------------
@@ -283,25 +292,26 @@ pdfstartview={FitV},
 
 % alternative view
 \include{Chapters/Intro}
-\part{Polytope based physical ability metrics}
+% \part{Polytopes of physical abilities}
 \include{Chapters/metrics_only}
 \include{Chapters/generic_view}
 
-\part{Theoretic contribution}
-\include{Papers/icra2021}
-\include{Papers/icra2022}
-\include{Papers/hfr2022}
+% \part{Theoretic contribution}
+% \include{Papers/icra2021}
+% \include{Papers/icra2022}
+% \include{Papers/hfr2022}
 % \part{Polytope applications}
 % \include{Chapters/force}
 % \include{Chapters/motion}
 
-\part{Applications}
+% \part{Applications}
 % \include{Chapters/force}
-\include{Papers/carrying}
-\include{Papers/topca}
+% \include{Papers/carrying}
+% \include{Papers/topca}
 % \include{Chapters/motion}
 
 \chapter{Software - pycapacity}
+\label{ch:software}
 \chapter{Conclusion}
 
 % \include{Papers/icra2021}
@@ -316,8 +326,8 @@ pdfstartview={FitV},
 % Include the appendices of the thesis as separate files from the Appendices folder
 % Uncomment the lines as you write the Appendices
 
-% \include{Appendices/AppendixA}
-%\include{Appendices/AppendixB}
+\include{Appendices/appendix_image}
+\include{Appendices/appendix_operation}
 %\include{Appendices/AppendixC}
 
 %----------------------------------------------------------------------------------------
