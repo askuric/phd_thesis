@@ -219,6 +219,7 @@ Physical ability metrics described in chapter \ref{ch:poly_metrics} contain two 
 \todos{See if this stays or not.}
 
 \subsubsection{Intersection-projection formulation}
+\label{ch:inter_proj_form}
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{Chapters/imgs/spec_int_proj.pdf}
@@ -694,28 +695,38 @@ $$N_h = \binom{n}{m-1}$$
 
 \subsection{Polytope approximation strategies}
 \label{ch:approximation_algos}
- 
-\begin{figure}[!htb]
-    \centering
-    \includegraphics[width=\linewidth]{Chapters/imgs/ray_shooting.pdf}
-    \caption{This figure shows the procedure of successive approximation of the polytope $\mathcal{P}_x$ using the CHM algorithm. The face normal vectors $\bm{n}_i$ of the convex-hull $\mathcal{C}$ are used with Linear programming (LP) to find new vertices which are then used to update the convex-hull $\mathcal{C}$ and furthermore improve the approximation of the polytope.}
-    \label{fig:rsm}
-\end{figure}
-
 
 Exact vertex and facet enumeration methods, such the standard representation conversion methods described in section \ref{ch:standard_represtantion_conversion} or more specific methods for the projection and the intersection formulation described in \ref{ch:intersection_algos} and \ref{ch:projection_algos}, rely on different versions of exhaustive search in the $n$-dimensional input space, which is often higher dimensional than the output space $n> m$. Their execution time is typically exponential, or polynomial in the best case, with respect to the dimension of the input space $n$, the number of vertices and the faces of the input set $\mathcal{P}_y$ and the final polytope $\mathcal{P}_x$ \cite{Dyer1983}. Therefore, in cases where the input space is much higher dimensional than output space $n\gg m$ or when the polytopes $\mathcal{P}_x$ and $\mathcal{P}_y$ have complex geometries (large number of faces and vertices), such approaches may not be practically viable for interactive, in-the-loop, applications. 
 
-For such use-cases, the polytope approximation methods often called Convex-Hull Methods (CHM), first introduced by Lassez et al. \cite{lassez1992quantifier, Huynh2005PracticalIO}, often provide better performance.
-These methods propose an efficient iterative approximation of the polytope $\mathcal{P}_x$, while at the same time avoiding the complexity of the exhaustive search and simplifying the final polytope $\mathcal{P}_x$ geometry by removing the need to find all the faces and vertices of the polytope. Such algorithms are usually defined in the lower-dimensional output space $\bm{x}\in \mathbb{R}^m$ making them \textit{output sensitive}, having the execution time proportional to the number of vertices and the faces of the output space polytope $\mathcal{P}_x$. In addition to searching in the lower $m$ dimensional output space, they enable finding an efficient inner (or outer) approximation of the polytope $\mathcal{P}_x$, while satisfying the different measures of approximation accuracy. Finally, they find both the vertices and the faces of the polytope $\mathcal{P}_x$ at the same time, providing both $\repr{V}$ and $\repr{H}$-representation \cite{Gl_le_2018}.
+\begin{wrapfigure}{r}{0.35\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{Papers/images/rsm.pdf}
+    \caption{An example of the approximation $\mathcal{C}$ of the 2D ($m\!=\!2$) polytope $\mathcal{P}_x$ using a RSM algorithm. The input space is sampled with 8 rays. }
+    \label{fig:rsm}
+\end{wrapfigure}
+To overcome this issue, various approximate approaches, such as the  \textit{Ray Shooting Method} (RSM)  \cite{agarwal1993ray} and the \textit{Convex-Hull Method} (CHM) \cite{lassez1992quantifier}, have been developed, reducing the complexity and improving the execution time. 
 
-The execution of typical CHM algorithm consists in two phases. In the first phase an initial approximation of the polytope $\mathcal{P}_x$ is constructed finding a subset of $m+1$ vertices forming an initial $m$-dimensional convex-hull $\mathcal{C}$ approximation of the polytope $\mathcal{P}_x$. In the second phase, the convex-hull approximation $\mathcal{C}$ is refined iteratively until the desired accuracy is reached. The CHM algorithms use a sequence of linear programs (LP) to find new vertices of the polytope (shooting rays) in each iteration, followed by the convex-hull algorithm to group them to the faces. An example of the CHM algorithm iterations in for $m=2$ output space is shown on Figure \ref{fig:rsm}.   
 
-CHM algorithms have several limitations though. The resolution of the CHM algorithms relies on iterative application of the convex-hull algorithm which complexity grows exponentially for $m > 3$ \cite{Barber1996}. As a result, the applications of these methods have so far been limited to the low-dimensional output spaces $m\leq3$. Additionally, as different polytope formulations require different LP formulations, the implementations of these methods are often somewhat specific to their respective applications. 
+The RSM algorithms are relatively simple to setup as they rely on different forms of sampling (shooting rays) of the polytope $\mathcal{P}_x$, in the low dimensional output space. Their execution time is proportional to the number of sampling directions (rays shot), therefore by choosing an appropriate sampling strategy the RSM algorithms can provide an efficient approximation of the polytope $\mathcal{P}_x$. However, these algorithms do not provide any bound on their estimation error and rely highly on hand tuned initial parameters. Figure \ref{fig:rsm} shows a visual example of a RSM approximation of a polygon $\mathcal{P}_x$ using uniform sampling in the output space with 8 rays.
 
-There are several examples in the literature where the CHM based methods were used for improving the efficiency of different computationally expensive polytope evaluation problems. Bretl et al. \cite{Bretl2008} have proposed a CHM based algorithm for approximating 2D ($m\!=\!2$) polytopes in the context of legged robot locomotion. Del Prete el al. \cite{DelPrete2016Fast} recently proposed an efficiency improvement of this algorithm, and Audren et al. \cite{Herve2018} extended it to the 3D ($m\!=\!3$) use-cases. This algorithm calculates the inner and outer approximation of the polytope $\mathcal{P}_x$ at the same time, while its accuracy condition can be set a as desired ratio between the inner and outer approximation volumes. Ponce and Faverjon \cite{Ponce1995} have introduced a derivative of the CHM algorithm to calculate the 2D, 3D and 4D ($m\!=\!2,3,4$) polytopes in the context of grasping objects with multiple fingers. While Xu et al. \cite{Xu2008projection} used a CHM algorithm in the context in the context of information theory. Both of these algorithms find all vertices and faces of the output polytope $\mathcal{P}_x$, without exploiting CHM's approximation capacity.
-Furthermore, Carmicahel et al. \cite{carmichael2011Towards, carmichael_estimating_2013} used a simplified CHM algorithm for the calculation of the 2D ($m\!=\!2$) force capacity polytope of the human arm, based on its musculoskeletal model. Due to the complexity of the underlying polytope formulation, in order to enable real-time execution, in their implementation they rely on the uniform output space sampling rather than on iterative approximation refinement. 
+The CHM algorithms, first introduced by Lassez et al. \cite{lassez1992quantifier, Huynh2005PracticalIO}, propose an efficient iterative approximation of the polytope $\mathcal{P}_x$, while at the same time avoiding the complexity of the exhaustive search and simplifying the final polytope $\mathcal{P}_x$ geometry by removing the need to find all the faces and vertices of the polytope. Such algorithms are usually defined in the lower-dimensional output space $\bm{x}\in \mathbb{R}^m$ making them \textit{output sensitive}, having the execution time proportional to the number of vertices and the faces of the output space polytope $\mathcal{P}_x$. In addition to searching in the lower $m$ dimensional output space, they enable finding an efficient inner (or outer) approximation of the polytope $\mathcal{P}_x$, while satisfying different measures of the approximation accuracy. Finally, they find both the vertices and the faces of the polytope $\mathcal{P}_x$ at the same time, providing both $\repr{V}$ and $\repr{H}$-representation \cite{Gl_le_2018}.
 
-Therefore, CHM based algorithms are a promising tool for reducing complexity and improving efficiency of the polytope evaluation when the dimension $n$ of the input space is high (and/or input space limits $\mathcal{P}_y$ have a complex geometry) while the dimension of the output space $m$ is reasonably low $m\leq3$.
+
+The execution of typical CHM algorithm consists in two phases. In the first phase an initial approximation of the polytope $\mathcal{P}_x$ is constructed finding a subset of $m+1$ vertices forming an initial $m$-dimensional convex-hull $\mathcal{C}$ approximation of the polytope $\mathcal{P}_x$. In the second phase, the convex-hull approximation $\mathcal{C}$ is refined iteratively until the desired accuracy is reached. The CHM algorithms use a sequence of linear programs (LP) to find new vertices of the polytope in each iteration, followed by the convex-hull algorithm to group them to the faces. An example of the CHM algorithm iterations in for $m=2$ output space is shown on Figure \ref{fig:chm}.   
+
+ 
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=\linewidth]{Papers/images/chm_algo.pdf}
+    \caption{This figure shows the procedure of successive approximation of the polytope $\mathcal{P}_x$ using the CHM algorithm. The face normal vectors $\bm{n}_i$ of the convex-hull $\mathcal{C}$ are used with Linear programming (LP) to find new vertices which are then used to update the convex-hull $\mathcal{C}$ and furthermore improve the approximation of the polytope.}
+    \label{fig:chm}
+\end{figure}
+
+The CHM algorithms have several limitations though. The resolution of the algorithms relies on the iterative application of the convex-hull algorithm which complexity grows exponentially for output space dimensions $m > 3$ \cite{Barber1996}. As a result, the applications of these methods have so far been limited to the low-dimensional output spaces $m\leq3$. Additionally, as different polytope formulations require different LP formulations, the implementations of these methods are often somewhat specific to their respective applications. 
+
+There are several examples in the literature where the approximation based methods were used for improving the efficiency of different computationally expensive polytope evaluation problems. Bretl et al. \cite{Bretl2008} have proposed a CHM based algorithm for approximating 2D ($m\!=\!2$) polytopes in the context of legged robot locomotion. Del Prete el al. \cite{DelPrete2016Fast} recently proposed an efficiency improvement of this algorithm, and Audren et al. \cite{Herve2018} extended it to the 3D ($m\!=\!3$) use-cases. This algorithm calculates the inner and outer approximation of the polytope $\mathcal{P}_x$ at the same time, while its accuracy condition can be set a as desired ratio between the inner and outer approximation volumes. Ponce and Faverjon \cite{Ponce1995} have introduced a derivative of the CHM algorithm to calculate the 2D, 3D and 4D ($m\!=\!2,3,4$) polytopes in the context of grasping objects with multiple fingers. While Xu et al. \cite{Xu2008projection} used a CHM algorithm in the context in the context of information theory. Both of these algorithms find all vertices and faces of the output polytope $\mathcal{P}_x$, without exploiting CHM's approximation capacity. Furthermore, Carmicahel et al. \cite{carmichael_estimating_2013,carmichael2011Towards} used an RSM algorithm for approximating 2D and 3D ($m\! =\! 2,3$) polytopes in the context of human force capacity estimation, based on his musculoskeletal model. In order to enable real-time execution, their RSM implementation relies on the uniform sampling in the output space.
+
+In summary, when the the complexity of the polytope $\mathcal{P}_x$ transformation does not permit using standard exact methods in the practical applications, especially when the dimension $n$ of the input space is high while the dimension of the output space $m$ is reasonably low $m\leq3$, polytope approximation methods, such as RSM and CHM algorithms, provide a more efficient solutions. The RSM algorithms provide a fast sampling based approximation, however without any guarantees on the approximation error or accuracy. On the other hand, CHM algorithms use an efficient iterative approach to the polytope approximation, while at the same time being capable of guaranteeing the maximal approximation error.
 
 \section{New vertex finding algorithm for intersection formulation}
 \label{sec:algorithm_vea}
@@ -831,12 +842,13 @@ Therefore, in order to find all the vertices $\bm{y}_{v}$ of the intersection $\
 where, $\bm{y}_o$ is the origin of the $n\!-\!m$ dimensional face, spanned by the scalar $n\!-\!m$ scalars $\alpha_i\in\bm{\alpha}_x$.
 Then, for each face, a linear system derived from equation~(\ref{eq:step2}) can be solved to find the $n\!-\!m$ scalars $\alpha_i\in\bm{\alpha}_{x}$ and the corresponding polytope vertex $\bm{x}_{vi}$
 \begin{equation}
-    \underbrace{\begin{bmatrix}A&-\bm{y}_{m}_{+1} \, \dots \, -\bm{y}_{n} \end{bmatrix}}_{Z_{n\times n}} \begin{bmatrix}\bm{x}_{v}\\ \alpha_{m+1} \\ \vdots\\\alpha_{n} \end{bmatrix} = \bm{y}_o, \qquad \begin{bmatrix}\bm{x}_{v}\\ \bm{\alpha}_{x} \end{bmatrix} = Z^{-1}\bm{y}_o, 
+    \underbrace{\begin{bmatrix}A&-\bm{y}_{m+1} \, \dots \, -\bm{y}_{n} \end{bmatrix}}_{Z_{n\times n}} \begin{bmatrix}\bm{x}_{v}\\ \alpha_{m+1} \\ \vdots\\\alpha_{n} \end{bmatrix} =\begin{bmatrix}A &Y_{x} \end{bmatrix}\begin{bmatrix}\bm{x}_{v}\\ \bm{\alpha}_{x} \end{bmatrix}  = \bm{y}_o, \qquad \begin{bmatrix}\bm{x}_{v}\\ \bm{\alpha}_{x} \end{bmatrix} = Z^{-1}\bm{y}_o, 
     \label{eq:linear_system_full}
 \end{equation}
 Matrix $Z\in\mathbb{R}^{n\times n}$ is a square matrix where each one of the vectors $\bm{y}_i$ is independent. If the matrix $Z$ is singular, geometrically, the image $\img{A}$ is parallel to the face being tested, therefore no intersections exist. If $Z$ is invertible and the $n-m$ scalars $\alpha_i\in\bm{\alpha}_x$ are obtained, a simple check if $\bm{\alpha}_x \in [\bm{0},\bm{1}]$ can be used to determine if $\bm{x}_{v}$ is a vertex of the polytope $\mathcal{P}_x$. Geometrically, the condition $\bm{\alpha}_x \in [\bm{0},\bm{1}]$ ensures that the intersection point between the $\img{A}$ and the $n\!-\!m$ dimensional face, is also inside $\mathcal{I}_y$.
 
 \begin{wrapfigure}{r}{0.25\linewidth}
+\vspace{-1.5cm}
     \centering
     \includegraphics[width=\linewidth]{Papers/images/parallel.pdf}
     \caption{All the parallel edges of the 3D hyperrectangle shown in differing colours. It has 3 (red, blue, yellow) sets of 4 parallel edges, 12 edges in total.}
@@ -891,7 +903,7 @@ When the computed $\bm{\alpha}_x \in [\bm{0},\bm{1}]$,  the corresponding force 
 This new approach requires the calculation of the SVD and the Jacobian matrix pseudo-inverse $A^{+}$. Nevertheless, since the pseudo-inverse can be efficiently calculated from the SVD as $A^{+} = U\Sigma^{T+}V^T$ and since both the SVD and pseudo-inverse are calculated once per algorithm run, the computation efficiency is greatly improved due to the matrix dimension reduction from $n$ to $(n-m)$ when inverting $T$ instead of $Z$.
 
 \begin{wrapfigure}{r}{0.35\linewidth}
-\vspace{-1.7cm}
+\vspace{-1.2cm}
     \centering
     \includegraphics[width=\linewidth]{Papers/images/matrix_condition.pdf}
     \caption{The bounding-box calculated using the equation (\ref{eq:bounds_condition}). The size of the example system is $n\!-\!m\!=\!2$, where $\bm{t}_1,\bm{t}_2$ are column vectors of the matrix $T$.}
@@ -954,7 +966,7 @@ To demonstrate the efficiency of the proposed polytope vertex search algorithm, 
 \end{table}
 
 
-The three algorithms have been tested on finding the $\repr{V}$-representation of the three different systems, inspired by the force ($\bm{f}\in\mathbb{R}^3$, $m=3$) polytope $\mathcal{P}_f$ enumeration for three different robots: a 4R planar robot ($n$=$4$,$m$=$2$), the \textit{Universal Robots} UR5 6DoF robot ($n$=$6$,$m$=$3$) and the \textit{Franka Emika Panda} 7DoF robot ($n$=$7$,$m$=$3$). The results are averaged over 1000 randomly generated matrices $A$ and input sets $\mathcal{I}_y$. All algorithms have been implemented in the programming language Python and tested on a laptop equipped with a 1.90GHz Intel i7-8650U processor. 
+The three algorithms have been tested on finding the $\repr{V}$-representation of the three different systems, inspired by the force ($\bm{f}\in\mathbb{R}^3$, $m=3$) polytope $\mathcal{P}_f$ enumeration for three different robots: a 4R planar robot ($n$=$4$, $m$=$2$), the \textit{Universal Robots} UR5 6DoF robot ($n$=$6$, $m$=$3$) and the \textit{Franka Emika Panda} 7DoF robot ($n$=$7$,$m$=$3$). The results are averaged over 1000 randomly generated matrices $A$ and input sets $\mathcal{I}_y$. All algorithms have been implemented in the programming language Python and tested on a laptop equipped with a 1.90GHz Intel i7-8650U processor. 
 
 Table \ref{tab:complexity_results} shows the results of this complexity evaluation. The proposed vertex search algorithm substantially reduces the number of matrix inversions and thus reduces the processing time considerably: $4$-$10\times$ faster execution than Chiacchio's algorithm and on average 30\% faster than Sasaki's. Results show that even for the generic cases that correspond to the 6DoF ($n=6$,$m=3$) and 7DoF ($n=7$,$m=3$) industrial robots the proposed approach is capable of evaluating the polytope vertices under $3ms$. Such a low processing time opens numerous opportunities for the on-line use of polytope based capacity evaluation especially in the area of robot control.
 
@@ -966,16 +978,8 @@ The algorithm has two computational bottlenecks: the number of matrix $T$ invers
 If the system has high dimensional input space and low dimensional output space ($n\gg m$) then the number of matrix inversions $N_i=\binom{n}{m}$ will be large, while the number of checks $N_c=2^m$  will be low. 
 On the other hand, if the system has both high dimensional input space and the high dimensional output space ($n\approx m$ and $n,m\gg0$), then the number of matrix inversions $N_i=\binom{n}{m}$ will be relatively low and will not be the limiting factor, but the number of checks $N_c=2^m$ which will be very high. Therefore, although the algorithm is created in a generic form and can find the $\repr{V}$-representation of any polytope belonging to this family, it is particularly efficient when the dimensions of the input and the output space are relatively low. 
 
-Furthermore, as the proposed algorithm exploits the null-space $\ker{A}$ of the matrix $A$ to gain on efficiency, it is not suitable for the systems where the matrix $A$ is square ($m\!=\!n$), as in that case the null-space does not exist $\ker{A}=\{\bm{0}\}$. However, as discussed in the section \ref{par:equivalent_proj}, this specific case of interval projection is much easier to work with as it corresponds to the projection formulation, which $\repr{V}$-representation can be determined in a straight-forward manner, as described in section \ref{ch:proj_algos_v}.
+Furthermore, as the proposed algorithm exploits the null-space $\ker{A}$ of the matrix $A$ to gain on efficiency, it is not suitable for the systems where the matrix $A$ is square ($m\!=\!n$), as in that case the null-space does not exist $\ker{A}=\{\varnothing\}$. However, as discussed in the section \ref{par:equivalent_proj}, this specific case of interval projection is much easier to work with as it corresponds to the projection formulation, which $\repr{V}$-representation can be determined in a straight-forward manner, as described in section \ref{ch:proj_algos_v}, by projecting the vertices of the hyperrectangle to the output space.
 
-\subsection{Algorithm summary}
-This section introduces a new vertex search algorithm for efficient finding of $\repr{V}$-representation of polytopes with the intersection formulation (\ref{eq:inter_poly}) and the interval input set $\mathcal{I}_y$. The algorithm exploits the geometry of the hyperrectangle structure of the interval input set $\mathcal{I}_y$ in order reduce the complexity of the vertex search. The algorithm is based on the algorithm proposed by Sasaki et al.~\cite{sasaki2011vertex} which is based on the extensive search in the $n$ dimensional input space. The proposed algorithm, by further leveraging the geometry of the problem, reduces the search space for the extensive search and significantly reduces both the computational complexity and the execution time of the original method.
-
-The algorithm is particularly well suited for the polytope formulations with relatively low input and output dimensions, that are very common when characterising the physical abilities of robotic manipulators. For example for enumerating the vertices of the wrench capacity polytope of the robotic systems, as described in section \ref{ch:poly_force}. As shown in the comparative analysis with the state-of-the-art methods, in section \ref{sec:complexity},  in the case of enumerating the wrench capacity polytopes of standard robotic manipulators, the algorithm has the execution time of a couple of milliseconds (implemented in python), opening doors for their use in online applications.
-
-The pseudo-code is describe in Algorithm \ref{alg:algo_1}, while an efficient open-source python implementation is publicly available within the package \textsc{pycapacity}\footnote{https://auctus-team.github.io/pycapacity/}, which is described more in detail in chapter \ref{ch:software}.
-
-Finally, section \ref{ch:robot_robot_carrying} brings the application of the proposed for the real-time robot control in the human-robot collaboration scenario, where the algorithm is exploited in order to calculate the robot's wrench capacity polytope in online. 
 
 \begin{algorithm}[!h]
 \caption{The proposed vertex search algorithm pseudo-code}
@@ -986,24 +990,24 @@ Finally, section \ref{ch:robot_robot_carrying} brings the application of the pro
 \STATE $V_1,\, V_2  \leftarrow V $
 \STATE calculate $n$ base vectors $\bm{y}_1 \dotsc \bm{y}_n$ (Eq. \ref{eq:torque_new})
 
-\STATE create an empty $\repr{V}$-rep: $X_v$, $Y_v$
+\STATE init $\repr{V}$-rep: $X_v$, $Y_v$ $\!\leftarrow\! []$
 
 \FORALL{  $\big(\begin{smallmatrix}n\\m\end{smallmatrix}\big)$ combinations of $m$ fixed $\alpha_i$ } 
 \STATE construct matrices $Y_o$ and $Y_x$
 \STATE $T = V_2^TY_x$
 \IF{matrix T invertible}
 \STATE find bounds $\bm{t}_{lb},\bm{t}_{ub}$ (Eq. \ref{eq:bounds_condition})
-\STATE create an empty list $C_o$ of candidate origins $\bm{y}_o$ satisfying the condition (Eq. \ref{eq:necesassry_condition})
+\STATE init list of origins $\bm{y}_o$ satisfying the condition (Eq. \ref{eq:necesassry_condition}): $L_o$ $\!\leftarrow\! []$ 
 \FORALL{   $2^m$ vectors $\bm{\alpha}_o$ }
 \STATE $\bm{y}_o = \bm{y}_{min} +  Y_o\bm{\alpha}_o$ 
 \IF{$ V_2^T\bm{y}_o \in [\bm{t}_{lb},\bm{t}_{ub}] $}
-\STATE update list of candidates: $C_o \!\leftarrow\! [C_o,~ \bm{y}_o]$
+\STATE update candidates: $L_o \!\leftarrow\! [L_o,~ \bm{y}_o]$
 \ENDIF
 \ENDFOR
 
-\IF{$C_o$ not empty}
+\IF{$L_o$ not empty}
 \STATE calculate the inverse $T^{-1}$
-\FORALL{   $\bm{y}_o$ in $C_o$ }
+\FORALL{   $\bm{y}_o$ in $L_o$ }
 \STATE $\bm{\alpha}_x = T^{-1}V_2^T\bm{y}_o $
 \IF{$ \bm{\alpha}_x \in [\bm{0},\bm{1}] $}
 \STATE $\bm{y}_{v} = \bm{y}_o + Y_x\bm{\alpha}_x$ 
@@ -1023,91 +1027,155 @@ Finally, section \ref{ch:robot_robot_carrying} brings the application of the pro
 \label{alg:algo_1}
 \end{algorithm}
 
+\subsection{Algorithm summary}
+This section introduces a new vertex search algorithm for efficient finding of $\repr{V}$-representation of polytopes with the intersection formulation (\ref{eq:inter_poly}) and the interval input set $\mathcal{I}_y$. The algorithm exploits the geometry of the hyperrectangle structure of the interval input set $\mathcal{I}_y$ in order reduce the complexity of the vertex search. The algorithm is based on the algorithm proposed by Sasaki et al.~\cite{sasaki2011vertex} which is based on the extensive search in the $n$ dimensional input space. The proposed algorithm, by further leveraging the geometry of the problem, reduces the search space for the extensive search and significantly reduces both the computational complexity and the execution time of the original method.
+
+The algorithm is particularly well suited for the polytope formulations with relatively low input and output dimensions, that are very common when characterising the physical abilities of robotic manipulators. For example for enumerating the vertices of the wrench capacity polytope of the robotic systems, as described in section \ref{ch:poly_force}. As shown in the comparative analysis with the state-of-the-art methods, in section \ref{sec:complexity},  in the case of enumerating the wrench capacity polytopes of standard robotic manipulators, the algorithm has the execution time of a couple of milliseconds (implemented in python), opening doors for their use in online applications.
+
+The pseudo-code of the proposed algorithm is given in Algorithm \ref{alg:algo_1}, while an efficient open-source python implementation is publicly available within the package \textsc{pycapacity}\footnote{https://auctus-team.github.io/pycapacity/}, which is described more in detail in chapter \ref{ch:software}.
+
+Finally, section \ref{ch:robot_robot_carrying} brings the application of the proposed algorithm for the real-time robot control in the human-robot collaboration scenario, where the algorithm is exploited in order to calculate the robot's wrench capacity polytope online. 
+
+% In this section, a new algorithm for polytope approximation is introduced, developed for the generic polytope formulation
+% \begin{equation}
+%     \mathcal{P}_x = \big\{ \bm{x}\in \mathbb{R}^{m}\, |\,A\bm{x} = B\bm{y} + \bm{b}, \quad  \bm{y}\in\mathcal{P}_y  \big\}
+%     \label{eq:generic_polyt_view_revisit2}
+% \end{equation}
+% where the input set $\mathcal{P}_y$ can be expressed with its $\repr{H}$-representation
+% \begin{equation}
+%     \mathcal{P}_y = \big\{ \bm{y}\in \mathbb{R}^{n}\, |\,H_y\bm{y} \leq \bm{d_y}\big\}
+%     \label{eq:generic_poly_input_set_revisit2}
+% \end{equation} 
+% The algorithm is based on the Convex Hull Methods (CHM) \cite{lassez1992quantifier}, described in section \ref{ch:approximation_algos}. The CHM algorithms are approximation methods that refine the final polytope approximation iteratively until the approximation error is reduced within user defined level. 
+% As discussed in section \ref{ch:collab_metrics_overview}, the generic polytope formulation (\ref{eq:generic_polyt_view_revisit2}) unifies the formulations of all the common polytope characterisations of human's and robot's physical abilities, making the algorithm applicable to the transformation of all of their polytope formulations described in section \ref{ch:poly_metrics}. The correspondence of different physical ability polytopes and the generic formulation (\ref{eq:generic_polyt_view_revisit2}) is described in table \ref{tab:merged_table}. Even thought the algorithm can be applied to all the polytope formulations corresponding to (\ref{eq:generic_polyt_view_revisit2}) and its special cases, it is particularly well suited for cases where the dimension of the input space is high ($n\gg m$) and the dimension of the output space is relatively low ($m\leq3$). 
+
+% The generic polytope formulation (\ref{eq:generic_polyt_view_revisit2}) has an implicit form $A\bm{x}=B\bm{y}$ which is not suitable for standard polytope transformation strategies described in section \ref{ch:polytope_algorithms}. Its formulaiton corresponds to the intersection-projection formulation, introduced in section \ref{ch:inter_proj_form}, which can be seen as a special case of the intersection formulation 
+% \begin{equation}
+%     \mathcal{P}_x \in \{\bm{x}\in \mathbb{R}^m~|~A \bm{x} = \bm{z} + \bm{b},~ \bm{z} \in \mathcal{P}_z\} 
+% \end{equation}
+% where the input set polytope $\mathcal{P}_z\in\mathbb{R}^k$ is defined using the projection formulation
+% \begin{equation}
+%     \mathcal{P}_z \in \{\bm{z}\in \mathbb{R}^k~|~z = B\bm{y},~ \bm{y} \in \mathcal{P}_y\} 
+% \end{equation}
+
+% Finding the $\repr{V}$ and $\repr{H}$-representation of this polytope, using the standard methods, requires separating the problem and first transforming the input set $\mathcal{P}_z$ in a suitable representation, followed by the second step of transforming the final polytope $\mathcal{P}_x$. 
+
+% When the input space is high dimensional $n\gg0$, both polytope $\mathcal{P}_z$ and $\mathcal{P}_x$ have complex geometries, consisting in large number of vertices and faces. In such cases, the exact polytope transformation methods have intractable computation times, relaying on the exhaustive search in the high $n$ dimensional input space. 
+
+% As discussed in section \ref{ch:approximation_algos}, different polytope approximation methods, in such cases, enable an efficient polytope transformation by operating in the low ($n\gg m$) dimensional output space. The approximation methods based on CHM algorithms, provide an efficient incremental approximation of the polytope $\mathcal{P}_x$ while at the same time guaranteeing an user defined bound on the approximation accuracy. Furthermore, these methods find the $\repr{H}$ and $\repr{V}$-representation at the same time. However, the CHM methods in their original form are not suitable to the implicit polytope formulation (\ref{eq:human_force_poly_revisit2}). 
+
+% Therefore this section proposes a CHM based iterative algorithm for polytope approximation adapted to the generic polytope formulation (\ref{eq:human_force_poly_revisit2}).
+
+
+
 
 \section{New algorithm for polytope approximation}
-\label{ch:algorihtm}
+\label{ch:algorihtm_ichm}
 
-Given the generic formulation of problem (\ref{eq:eq_general}) the set of all feasible $\bm{x}$ forms a convex polytope 
+This section introduces a new Convex Hull Method (CHM) based algorithm for polytope approximation tailored specifically for the generic polytope formulation
 \begin{equation}
-    \mathcal{P}_x = \big\{ \bm{x}\in \mathbb{R}^{m}\, |\,A\bm{x} = B\bm{y},\quad  \bm{y}\in \left[\unum{\bm{y}}, \onum{\bm{y}}\right]  \big\}
-    \label{eq:poly_init_2}
+    \mathcal{P}_x = \big\{ \bm{x}\in \mathbb{R}^{m}\, |\,A\bm{x} = B\bm{y} + \bm{b}, \quad  \bm{y}\in\mathcal{P}_y  \big\}
+    \label{eq:generic_polyt_view_revisit2}
 \end{equation}
+where the input set $\mathcal{P}_y$ can be expressed with its $\repr{H}$-representation
+\begin{equation}
+    \mathcal{P}_y = \big\{ \bm{y}\in \mathbb{R}^{n}\, |\,H_y\bm{y} \leq \bm{d_y}\big\}
+    \label{eq:generic_poly_input_set_revisit2}
+\end{equation} 
+This polytope formulation, as discussed in section \ref{ch:collab_metrics_overview}, unifies the formulations of all the common polytope characterisations of human's and robot's physical abilities. The correspondence of different physical ability polytopes and the formulation (\ref{eq:generic_polyt_view_revisit2}) can be found in table \ref{tab:merged_table}. 
 
-%In the \ref{ch:lp_adapt}, new LP formation is proposed adapting it to the implicit formulation (\ref{eq:full_polytope}) of the polytope $\mathcal{P}_f$. In the section \ref{ch:method}, the proposed algorithm overview is given, as well as the pseudo-code and the geometrical representation.
+The generic polytope formulation (\ref{eq:generic_polyt_view_revisit2}) has an implicit form $A\bm{x}=B\bm{y}$ which cannot be used directly with standard polytope transformation strategies described in section \ref{ch:polytope_algorithms}. More specifically, its formulation corresponds to the intersection-projection, introduced in section \ref{ch:inter_proj_form}, a special case of the intersection formulation 
+\begin{equation}
+    \mathcal{P}_x \in \{\bm{x}\in \mathbb{R}^m~|~A \bm{x} = \bm{z} + \bm{b},~ \bm{z} \in \mathcal{P}_z\} 
+\end{equation}
+where the input set polytope $\mathcal{P}_z\in\mathbb{R}^k$ is defined using the projection formulation
+\begin{equation}
+    \mathcal{P}_z \in \{\bm{z}\in \mathbb{R}^k~|~z = B\bm{y},~ \bm{y} \in \mathcal{P}_y\} 
+\end{equation}
+Finding the $\repr{V}$ and $\repr{H}$-representation of the polytope $\mathcal{P}_x$, using the standard methods, requires separating the problem and first transforming the input set $\mathcal{P}_z$ in a suitable representation (usually $\repr{H}$), followed by the second step of transforming the final polytope $\mathcal{P}_x$. 
 
-The polytope evaluation can either be done by finding the set of all the vertices \antun{ ($\repr{V}$-rep)} or by finding its half-space representation \antun{($\repr{H}$-rep)}. Most of the commonly used polytope evaluation algorithms are very efficient for finding the exact solution to very specific problems: \cite{fukuda_dd}\cite{skuric:hal-02993408}\cite{sasaki2011vertex} calculate the $\repr{V}$-rep of $A\bm{x}\!=\!\bm{b},\bm{b}\!\in\![\bm{b}]$ and \cite{hyper_psm}\cite{dantzig1973fourier}\cite{jones2004equality} calculate the $\repr{H}$-rep of $\bm{x}\!=\! A\bm{y},\bm{y}\!\in\![\bm{y}]$. However since the number of faces and vertices of the polytopes augments exponentially with the size of the system, when the size of the problem becomes high, searching for the exact solution of the combined sub-problems becomes practically intractable \cite{Huynh2005PracticalIO}. 
-%An example of such high-dimensional systems are the musculoskeletal models, where the number of muscles is usually large and even though the output space is low-dimensional Cartesian space the exact solution may take hours to calculate. 
+However, when the input space is high dimensional $n\gg1$, both polytope $\mathcal{P}_z$ and $\mathcal{P}_x$ have complex geometries, consisting in large number of vertices and faces. The high dimensional input space (and low dimensional output spaces $n\gg m$) are very common when it comes to characterising the physical abilities of humans, based on their musculoskeletal modes. The musculoskeletal models often have large number of muscles $n\gg1$, often more than 50, while the output space usually corresponds to the 3D cartesian space ($m=3$). In such cases, the exact polytope transformation methods have intractable computation times, as they relay on the exhaustive search in the high dimensional input space.
 
-To overcome this issue, various approximative approaches, such as the  \textit{Ray Shooting Method} (RSM)  \cite{agarwal1993ray} and the \textit{Convex-Hull Method} (CHM) \cite{lassez1992quantifier}, have been developed, reducing the complexity and improving the execution time. 
-Although RSM algorithms are relatively simple to setup and have already been used for evaluating the capacity of musculoskeletal models \cite{carmichael2011Towards}, these algorithms do not provide any bound on their estimation error and highly rely on hand tuned initial parameters. 
-CHM \cite{lassez1992quantifier} algorithms on the other hand, have shown to be very efficient while at the same time maintaining the bound of the user defined estimation error. CHM uses  \textit{linear-programming} (LP) repetitively to find new vertices and the convex-hull algorithm to group them to faces, augmenting the precision of the approximation successively. Additionally, CHM finds the $\repr{V}$-rep and the $\repr{H}$-rep of the polytope at the same time.  However in its standard formulation, the CHM is not suitable for the family of problems given with equation (\ref{eq:eq_general}). 
+To overcome the complexity of the exhaustive search, various approximate approaches, such as the Ray Shooting Method (RSM)  \cite{agarwal1993ray} and the Convex Hull Method (CHM) \cite{lassez1992quantifier} described in section \ref{ch:approximation_algos}, have been developed, reducing the computation complexity and improving the execution time. 
+Although RSM algorithms are relatively simple to setup they do not provide any bound on their estimation error and highly rely on hand tuned initial parameters. 
+CHM \cite{lassez1992quantifier} algorithms on the other hand, perform a very efficient iterative approximation,  while at the same time guaranteeing the bound of the user defined approximation error. In each iteration CHM refines the approximation, by using the Linear Programming (LP) to find new vertices of the polytope and Convex-Hull to group them to faces. Furthermore, CHM finds the $\repr{V}$ and the $\repr{H}$-representation of the polytope at the same time. However in its standard formulation, the CHM is not suitable for the family of problems given with equation (\ref{eq:generic_polyt_view_revisit2}). 
 
-Therefore, Section \ref{ch:lp_adapt} introduces an LP formulation adapting the CHM approach to the implicit problem formulation (\ref{eq:eq_general}) and in Section \ref{ch:method}, the proposed algorithm overview is given, as well as the pseudo-code and the geometrical representation.
-
-
-%The geometrical representation of solving the linear programming (LP) problem is finding a vertex of a polytope \cite{vajda_gass_1964}. However, in its implicit formation (\ref{eq:poly_init_2}) the polytope $\mathcal{P}_x$ is not suitable for the LP optimisation.
-
-
-
+Therefore, this section proposes a new algorithm extending the CHM algorithm to the generic polytope formulation (\ref{eq:generic_polyt_view_revisit2}). Section \ref{ch:lp_adapt} introduces the LP formulation adapting the CHM approach to the implicit problem formulation (\ref{eq:generic_polyt_view_revisit2}), while section \ref{ch:method} brings proposed algorithm overview, as well as the pseudo-code and the geometrical representation. Finally, section \ref{ch:chm_performance} brings the performance analysis of the proposed method and comparison to the state-of-the-art methods on the example of finding the $\repr{V}$-representation of the human wrench capacity polytope based on the musculoskeletal models, which is particularly challenging both due its implicit formulation and high dimensional input space $n\gg m$.
 
 \subsection{Linear programming formulation}
 \label{ch:lp_adapt}
 
-
-\begin{figure}[!t]
+\begin{wrapfigure}{r}{0.32\linewidth}
     \centering
-    \includegraphics[width=0.70\linewidth]{Papers/images/poly_lp_vert_sample.pdf}
-    \vspace{-0.2cm}
-    \caption{Left figure demonstrates the LP based vertex search by choosing two different vectors $\bm{c}$. Right figure exemplifies the polytope face condition from equations (\ref{eq:normal_coplanar_test}) and (\ref{eq:normal_distance}), where  face $\mathcal{F}_i$ of the convex-hull $\mathcal{C}$ is considered to be the face of $\mathcal{P}_x$, because $\delta_i\! < \!\varepsilon$.  }
-    \label{fig:sample_problems}
-\end{figure}
-
-From a geometrical point of view, solving a linear programming (LP) problem boils down to finding a vertex of a polytope \cite{vajda_gass_1964}. However, in order for the polytope $\mathcal{P}_x$ to be suitable for LP optimisation in the $m$-dimensional output space, its implicit formulation (\ref{eq:poly_init_2}) needs to be expressed in explicit form.
-
-In the general case, $n\geq m$ and $A$ is not square. To find an explicit form of equation (\ref{eq:eq_general}), the pseudo-inverse $A^+$ can be used as a solution only if $B\bm{y}$ belongs to the \textit{image} of $A$ \cite{klema_singular_1980}. Therefore, equation (\ref{eq:eq_general}) can be transformed to 
-\begin{equation}
-    \bm{x} = A^{+} B \bm{y}, \quad B\bm{y} \in \mathcal{I}m(A)
-    \label{eq:eq_general_red}
-\end{equation} 
-Using the \textit{Singular value decomposition} \cite{klema_singular_1980} of  $A = U\Sigma V^T$, an equality constraint can be devised for $B\bm{y}$ to belong to the \textit{image} of $A$
-\begin{equation}
-    U_2^TB\bm{y} = \bm{0}
-    \label{eq:nullspace_gen}
-\end{equation}
-where rotation matrix $U \in \mathbb{R}^{n\times n }$ is separated into  $U_1\in \mathbb{R}^{n\times m}$, a projector to the  \textit{image} of $A$, and $U_2\in \mathbb{R}^{n\times(n-m)}$, a projector to its \textit{null-space}.
-
-Finally, combining equations (\ref{eq:nullspace_gen}), (\ref{eq:eq_general_red}) and (\ref{eq:eq_general}), one can create a linear program \cite{vajda_gass_1964} capable of reaching all  vertices of the polytope $\mathcal{P}_x$
+    \includegraphics[width=\linewidth]{Papers/images/lp_explication.pdf}
+    \caption{The figure demonstrates the LP based vertex search by choosing two different vectors $\bm{c}$.}
+    \label{fig:lp_explication}
+\end{wrapfigure}
+From a geometrical point of view, solving a linear programming (LP) problem boils down to finding a vertex of a polytope \cite{vajda_gass_1964}. 
 \begin{equation}
 \begin{aligned}
-    \max_{\bm{y}} \quad &  \bm{c}^TA^{+}B\bm{y} \\
-     \textrm{s.t.} \quad &  U_2^TB\bm{y} = \bm{0} \\
-          & \unum{\bm{y}} \leq \bm{y} \leq \onum{\bm{y}} \\
+    \bm{x}_v = \text{arg}\max_{\bm{x}} \quad &  \bm{c}^T\bm{x} \\
+     \textrm{s.t.} ~~&\bm{x} \in \mathcal{P}_x \\
 \end{aligned}
 \label{eq:lin_prog}
 \end{equation}
-by appropriately choosing the projection $\bm{c}$, as demonstrated on figure \ref{fig:sample_problems}.
+However, in order for the polytope $\mathcal{P}_x$ to be suitable for LP optimisation in the $m$-dimensional output space, its implicit formulation $A\bm{x}=B\bm{y}$ needs to be expressed in explicit form.
+
+In the general case, input space is higher dimensional $n\geq m$ and the matrix $A$ is not square. As discussed in section \ref{par:equivalent_proj}, , to find an explicit form of equation (\ref{eq:generic_polyt_view_revisit2}), the pseudo-inverse $A^+$ can be used as a solution only if $B\bm{y}+\bm{b}$ belongs to the image $\img{A}$ of $A$ \cite{klema_singular_1980}. Therefore, equation 
+\begin{equation}
+    A\bm{x} = B\bm{y} + \bm{b}
+\end{equation} 
+can be transformed to 
+\begin{equation}
+    \bm{x} = A^{+} (B \bm{y} + \bm{b}), \qquad \text{where} \quad B\bm{y} + \bm{b} \in \mathcal{I}m(A)
+    \label{eq:eq_general_red}
+\end{equation} 
+
+Using the Singular Value Decomposition (SVD) \cite{klema_singular_1980} of the matrix $A$ transposes produces $A^T = U\Sigma V^T$. The rotation matrix $V \in \mathbb{R}^{n\times n }$ is separated into  $V_1\in \mathbb{R}^{n\times m}$, a projector to the image $\img{A}$ of $A$, and $V_2\in \mathbb{R}^{n\times(n-m)}$, a projector to its null-space $\ker{A}$. As all the vectors belonging to of the image $\img{A}$ have zero projection to the null-space $\ker{A}$, an equality constraint can be devised for $B\bm{y}+\bm{b}$ to belong to the image $\img{A}$ of $A$. 
+\begin{equation}
+    V_2^TB\bm{y} +V_2^T\bm{b}  = \bm{0}
+    \label{eq:nullspace_gen}
+\end{equation}
+
+Finally, combining equations (\ref{eq:nullspace_gen}), (\ref{eq:eq_general_red}), (\ref{eq:generic_poly_input_set_revisit2}) and (\ref{eq:generic_polyt_view_revisit2}), one can create a Linear Program (LP) capable of reaching all vertices of the polytope $\mathcal{P}_x$
+\begin{equation}
+\begin{aligned}
+    \max_{\bm{y}} \quad &  \bm{c}^TA^{+}B\bm{y} + A^{+}\bm{b}\\
+     \textrm{s.t.} \quad &  V_2^TB\bm{y} = -V_2^T\bm{b} \\
+          & ~~~  H_y \bm{y} \leq \bm{d}_y \\
+\end{aligned}
+\label{eq:lin_prog}
+\end{equation}
+by appropriately choosing the projection $\bm{c}$, as demonstrated on Figure \ref{fig:lp_explication}.
+
 
 
 \subsection{Proposed algorithm overview}
 \label{ch:method}
 
-Given the polytope definition (\ref{eq:eq_general}) and (\ref{eq:poly_init_2}) and the LP problem defined in (\ref{eq:lin_prog}), the proposed method provides a structured way to choose vectors $\bm{c}$ to find all the vertices ($\repr{V}$-rep) and facets ($\repr{H}$-rep) of the polytope $\mathcal{P}_x$. 
-In order to do so, the method leverages the iterative convex hull $\mathcal{C}$ calculation, where each newly found vertex extends $\mathcal{C}$. The normal vectors of the faces of the newly obtained $\mathcal{C}$ are used to decide for the new vectors $\bm{c}$ to use in the LP (\ref{eq:lin_prog}). This iterative process is performed until some specified level of accuracy is reached.
+Given the polytope definition (\ref{eq:generic_polyt_view_revisit2}) and the LP problem defined in (\ref{eq:lin_prog}), the proposed method provides a structured way to choose vectors $\bm{c}$ to find all the vertices ($\repr{V}$-representation) and facets ($\repr{H}$-representation) of the polytope $\mathcal{P}_x$. 
+In order to do so, the method leverages the iterative convex hull $\mathcal{C}$ calculation, where each newly found vertex extends $\mathcal{C}$. The normal vectors of the faces of the newly obtained $\mathcal{C}$ are used to decide for the new vectors $\bm{c}$ to use in the LP (\ref{eq:lin_prog}). This iterative process is performed until some specified level of accuracy is reached. Figure \ref{fig:algo_example} visually demonstrates several iterations of the algorithm for the 2-dimensional polytope $\mathcal{P}_x$ example.
+
+\subsubsection{Initial convex hull}More precisely, the first step of the algorithm constructs an initial set of vertices $\bm{x_v}$ and an initial convex hull $\mathcal{C}$. In a $m$-dimensional space, the minimal number of points to create a volume is $m\!+\!1$.  There are various ways proposed in the literature to obtain the initial set of points in order to start the refinement process, such as starting by a random set of directions $\bm{c}$ proposed by Lassez et al. \cite{lassez1992quantifier} in their original paper. Another approach, proposed by Del Prete et al. \cite{DelPrete2016Fast} proposes to uniformly sample the input space.
+
+The approach proposed in this work exploits the base vectors $\bm{u}_i\in U$ obtained using the Singular Value Decomposition of the matrix $(A^+B) = U\Sigma V^T$. This approach has two benefits. One one hand, the base vectors $\bm{u}_i$ are orthogonal vectors in the output space corresponding to the 
+highest variability (amplification) directions, given by the singular values $\sigma_i$ of the matrix $A^+B$.
+Therefore, the chances of not obtaining $m-1$ different vertices when projecting the polytope $\mathcal{P}_x$ in these directions is much lower than in random directions. And on the other hand, for any matrix $A$ and $B$, the matrix $U$ is relatively efficient to calculate.
+
+Therefore, the porpoised approach to find the initial set of vertices consists in solving two LPs (\ref{eq:lin_prog}) for each one of the $m$ base vectors $\bm{u}_i$, one that minimises ($\bm{c} = -\bm{u}_i$) and one maximises ($\bm{c} = \bm{u}_i$) the projection of the polytope $\mathcal{P}_x$. In the ideal case, this approach obtains $2m$ vertices of the polytope $\mathcal{P}_x$. Once the initial set of vertices $\bm{x}_v$ is found, the initial convex hull $\mathcal{C}$ can be calculated. Its centroid position is given by $\bm{x}_c\!=\!\frac{1}{N}\!\sum\bm{x}_{v,i}$. 
+
+
 
 \begin{figure}[!t]
     \centering
-    \includegraphics[width=\linewidth]{Papers/images/poly_lp_vert_part.pdf}
+    \includegraphics[width=\linewidth]{Papers/images/ichm_full.pdf}
     \vspace{-0.8cm}
-    \caption{This figure shows the procedure of successive approximation of the polytope $\mathcal{P}_x$ using the proposed CHM algorithm. The face normal vectors $\bm{n}_i$ of the convex-hull $\mathcal{C}$ are used with LP (\ref{eq:lin_prog}) to find new vertices which are then used to update the convex-hull $\mathcal{C}$ and furthermore improve the approximation of the polytope. }
+    \caption{This figure shows the procedure of the successive approximation of the polytope $\mathcal{P}_x$ using the proposed CHM algorithm. The approximation starts with the initial convex-hull $\mathcal{C}$ construction, using the vectors $\bm{u}_i\in U$. Then the approximation is refined by using the face normal vectors $\bm{n}_i$ of the convex-hull $\mathcal{C}$ with the LP (\ref{eq:lin_prog}) to find new vertices which are then used to update the convex-hull $\mathcal{C}$. The check (\ref{eq:normal_coplanar_test} is used to determine if the LP results belong to the faces or they are new vertices of the polytope. The algorithm stops when no new vertices are found. }
     \label{fig:algo_example}
 \end{figure}
 
 
-
-
-More precisely, the first step of the algorithm constructs an initial set of vertices $\bm{x_v}$ and an initial convex hull. In a $m$-dimensional space, the minimal number of points to create a volume is $m\!+\!1$. Since $\bm{x}$, defined by relation (\ref{eq:eq_general_red}), can be expressed as a linear combination of the $m$ base vectors $v_i\in V$ of $A$, $$\bm{x} = a_0 \bm{v}_0 + \dots +a_m \bm{v}_m$$ a way to get the initial set of vertices is to solve LP (\ref{eq:lin_prog}) that minimises ($\bm{c} = -\bm{v}_i$) and maximises ($\bm{c} = \bm{v}_i$) the projection of the polytope $\mathcal{P}_x$ on the axes of each one of the base vectors $\bm{v}_i$. Once the initial set of vertices $\bm{x}_v$ is found, the initial convex hull $\mathcal{C}$ can be calculated. Its centroid position is given by $\bm{x}_c\!=\!\frac{1}{N}\!\sum\bm{x}_{v,i}$. 
-
-The next step of the algorithm is to iterate over all the faces $\mathcal{F}_i$ of the convex hull $\mathcal{C}$. For each new face $\mathcal{F}_i$, the normal $\bm{n}_i$ is found and used as a candidate $\bm{c}_i$ in the direction pointing out of polytope $\mathcal{P}_x$.
+\subsubsection{Incremental refinement} The next step of the algorithm is to iterate over all the faces $\mathcal{F}_i$ of the convex hull $\mathcal{C}$. For each new face $\mathcal{F}_i$, the normal $\bm{n}_i$ is found and used as a candidate $\bm{c}_i$ in the direction pointing out of polytope $\mathcal{P}_x$.
 %all the vertices $\bm{x}_{\mathcal{F}j}\! =\! %\bm{x}_v\!\in\!\mathcal{F}_i$. Then the $\bm{c}_i$ is defined %as normal $\bm{n}_i$ in the direction pointing out of the polytope 5$\mathcal{P}_x$.
 The normal vector direction is verified by projecting the vector going from the centroid $\bm{x}_c$ to any vertex $\bm{x}_{j}$ of face $\mathcal{F}_i$, onto the normal $\bm{n}_i$ and verifying if the scalar product is positive or negative.
 \begin{equation}
@@ -1117,9 +1185,12 @@ The normal vector direction is verified by projecting the vector going from the 
 \end{cases} 
 \label{eq:normal_condition}
 \end{equation}
-
-%NR why did you remove the variability of results, i think it was informative of the distribution of error of the RSM?
-
+\begin{wrapfigure}{r}{0.35\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{Papers/images/espilon_explicaiton.pdf}
+    \caption{ The figure exemplifies the polytope face condition from equations (\ref{eq:normal_coplanar_test}) and (\ref{eq:normal_distance}), where  face $\mathcal{F}_i$ of the convex-hull $\mathcal{C}$ is considered to be the face of $\mathcal{P}_x$, because $\delta_i\! < \!\varepsilon$. }
+    \label{fig:expilon_explication}
+\end{wrapfigure}
 Solving equation (\ref{eq:lin_prog}) with $\bm{c}_i$, the obtained $\bm{x}_i$ can be either a vertex of the polytope $\mathcal{P}_x$ or be coplanar with face $\mathcal{F}_i$. To determine if  $\bm{x}_i$ is coplanar with the face, a simple check can be devised, which verifies if the orthogonal (normal) distance from $\bm{x}_i$ to any vertex $\bm{x}_{j}$ of face $\mathcal{F}_i$
 \begin{equation}
     \delta_i = \bm{n}_i^T(\bm{x}_{j} - \bm{x}_i)
@@ -1133,90 +1204,54 @@ is within a certain user defined accuracy $\varepsilon$:
 \end{cases} 
 \label{eq:normal_coplanar_test}
 \end{equation}
-Figure \ref{fig:sample_problems} provides a graphical interpretation of this check and of the values $\delta_i$ and $\varepsilon$.
+Figure \ref{fig:expilon_explication} provides a graphical interpretation of this check and of the values $\delta_i$ and $\varepsilon$.
 
-If $\bm{x}_i$ belongs to face $\mathcal{F}_i$ of the convex-hull $\mathcal{C}$ then  $\mathcal{F}_i$ is considered to be a face of the polytope $\mathcal{P}_x$. In that case the algorithm updates the $\repr{H}$-rep of $\mathcal{P}_x$ 
+If $\bm{x}_i$ belongs to face $\mathcal{F}_i$ of the convex-hull $\mathcal{C}$ then  $\mathcal{F}_i$ is considered to be a face of the polytope $\mathcal{P}_x$. In that case the algorithm updates the $\repr{H}$-representation of $\mathcal{P}_x$ 
 \begin{equation}
     H \leftarrow \begin{bmatrix} H \\ \bm{n}_i^T\end{bmatrix}, \quad \bm{d} \leftarrow \begin{bmatrix}  \bm{d} \\ \bm{n}^T_i \bm{x}_{j} \end{bmatrix}
 \label{eq:h_rep}
 \end{equation}
-where $\bm{n}_i$ is the face normal vector and $\bm{n}_i^T \bm{x}_{j}$ is the orthogonal distance from the origin to the face $\mathcal{F}_i$. On the other hand, if $\bm{x}_i$ is a vertex of the polytope it is appended to the $\repr{V}$-rep list $\bm{x}_v \leftarrow [\bm{x}_v, ~\bm{x}_i]$.
+where $\bm{n}_i$ is the face normal vector and $\bm{n}_i^T \bm{x}_{j}$ is the orthogonal distance from the origin to the face $\mathcal{F}_i$. On the other hand, if $\bm{x}_i$ is a vertex of the polytope it is appended to the $\repr{V}$-representation list $\bm{x}_v \leftarrow [\bm{x}_v, ~\bm{x}_i]$.
 
-Once all the faces of the convex hull $\mathcal{C}$ are evaluated, the convex hull is updated using the new vertex list $\bm{x}_v$.
-If the vertex list $\bm{x}_v$ has no new elements or, in other words, if the maximal distance $\delta_i$ for all the faces $\mathcal{F}_i$ is lower than the user defined accuracy $\varepsilon$  
+\subsubsection{Stopping condition} Once all the faces of the convex hull $\mathcal{C}$ are evaluated, the convex hull is updated using the new vertex list $\bm{x}_v$.
+
+One of the algorithm stopping conditions proposed by Bretl et al. \cite{Bretl2008}, is to construct the inner and outer approximation of the polytope $\mathcal{P}_x$ at the same time and stop approximating when the ratio $r=\vol{\mathcal{P}_{inner}}/\vol{\mathcal{P}_{outer}}$ between their volumes reaches certain threshold $r\leq1$.  
+
+However, volume ratio condition is sometimes hard to interpret to the end-used, as its representation of the approximation error does not have the same units as the physical quantity being represented by the polytope $\mathcal{P}_x$. Therefore, the proposed algorithm exploits a different stopping condition setting the threshold on the maximal distance $\delta_i$. The algorithm stops iterating if the vertex list $\bm{x}_v$ has no new elements or, in other words, if the maximal distance $\delta_i$ for all the faces $\mathcal{F}_i$ is lower than the user defined accuracy $\varepsilon$  
 \begin{equation}
     \max\{|\delta_{i}|\} \leq \varepsilon
 \end{equation}
-the procedure is completed. Otherwise the procedure restarts by iterating over all the new faces $\mathcal{F}_i$ of the updated convex hull $\mathcal{C}$. 
+In this stopping condition, the maximal distance $\delta_i$ corresponds to the maximal error committed by the approximation, expressed with the same units as the units of the physical quantity being represented by the polytope. Preserving the same units improves the interpretation of the approximation error and enables the end-user to intuitively decide on the acceptable approximation error $\varepsilon$ for the application in question. 
 
-A pseudo-code of one example implementation of the proposed algorithm can be found in Algorithm \ref{alg:main_algo}. Furthermore, figure \ref{fig:algo_example} visually demonstrates several iterations of the algorithm for the 2-dimensional polytope $\mathcal{P}_x$ example. The code of the proposed algorithm used in this paper is publicly available\footnote{\antun{ \url{https://gitlab.inria.fr/auctus-team/people/antunskuric/human\_wrench\_capacity}}}.
-
-\begin{algorithm}[!h]
-\caption{Proposed CHM algorithm pseudo-code}
-\begin{algorithmic}
-\REQUIRE $A$,$B$, $\unum{\bm{y}}$, $\onum{\bm{y}}$, $\varepsilon$
-\STATE $U, \Sigma, V^T \leftarrow svd(A)$ 
-
-\STATE init $\repr{H}$-rep: $H,\bm{d} \leftarrow [\,]$ and $\repr{V}$-rep: $\bm{x}_v\leftarrow [\,]$
-\antun{
-\STATE \textbf{for all}   {$\bm{v}_i$ in $V$} \textbf{do}
-
-\hspace{0.3cm} $\bm{y}_{i}\leftarrow$ LP (Eq. \ref{eq:lin_prog}) with $\bm{c}\! =\! \bm{v}_i$ and $\bm{c}\! =\! -\bm{v}_i$
-
-\hspace{0.3cm} $\bm{x}_{v} \leftarrow [\bm{x}_{v}, ~ A^+B\bm{y}_i]$
-}
-\REPEAT
-
-\STATE calculate the convex hull $\mathcal{C}$ of $\bm{x}_{v}$
-\STATE calculate the centroid $\bm{x}_{c} = \frac{1}{N}\sum_i\bm{x}_{v,i}$
-
-\STATE \textbf{for all}   {new face $\mathcal{F}_i$ in $\mathcal{C}$} \textbf{do}
-%\FORALL{ new face $\mathcal{F}_i$ in $\mathcal{C}$ } 
-
-\hspace{0.25cm} find normal $\bm{n}_i$ and one vertex $\bm{x}_{j}$ of $\mathcal{F}_i$
-
-\hspace{0.25cm} $\bm{y}_{i}\leftarrow$ LP ( Eq. \ref{eq:lin_prog} ) with  $\bm{c}\! =\! \bm{c}_i$ ( Eq. \ref{eq:normal_condition} )
-
-\hspace{0.25cm} $\bm{x}_{i} = A^+B\bm{y}_i$ 
-
-\hspace{0.25cm}  calculate $\delta_i$ (Eq.\ref{eq:normal_distance})
-
-\hspace{0.25cm}  \textbf{if}   $ |\delta_i| \leq \varepsilon$ \textbf{then} 
-
-\hspace{0.6cm}  new face: update $\repr{H}$-rep  ( Eq. \ref{eq:h_rep} )
-
-\hspace{0.25cm}  \textbf{else}
-
-\hspace{0.6cm} new vertex: update $\repr{V}$-rep $\bm{x}_{v} \!\leftarrow\! [\bm{x}_{v},~ \bm{x}_i ]$ 
-
-%\ENDFOR
-\UNTIL{{ $\max\{|\delta_{i}|\}\leq \varepsilon$}}
-\RETURN $\bm{x}_v$, $H$, $\bm{d}$ 
-\end{algorithmic}
-\label{alg:main_algo}
-\end{algorithm}
-
-% \subsection{Feasible wrench polytope}
-% The application of the proposed method to compute the feasible  Cartesian wrench polytope $\mathcal{P}_f$ is direct. $\bm{x}$ is chosen as the Cartesian wrench $\bm{f}$, $\bm{y}$ with the range $\bm{y}\! \in\!\left[\unum{\bm{y}},\onum{\bm{y}}\right]$ is the vector of muscle-tendon tensile forces $\bm{F}\!\in\! \left[\unum{\bm{F}},\onum{\bm{F}}\right]$.  $A$ is the Jacobian transpose matrix $J^T(\bm{q})$ and $B$ is the moment arm matrix $-L^T(\bm{q})$. Finally, the accuracy $\varepsilon$ can be interpreted as the maximal underestimation error of the Cartesian wrench $\bm{f}$ allowable, representing the desired accuracy of the polytope estimation.
-
-
-
-\begin{figure*}[!t]
-    \centering
-    \includegraphics[width=0.95\textwidth]{Papers/images/one_auto_new5}
-    \vspace{-0.2cm}
-    \caption{\antun{Figure presenting the performance analysis results in the logarithmic scale for three different algorithms: HPSM, RSM and proposed CHM with respect to different number of muscles. Left figure shows the evolution of the execution time. Middle figure shows the evolution of the underestimation error, the maximal distance in between the polytope $\mathcal{P}_x$ and the acquired polytope, calculated as max$\{|\delta_{i}|\}$. Right figure shows the evolution of the number of vertices found. All the plots show the averaged results, with variances, over 100 runs, where each run corresponds to one randomly generated model.}}
-    \label{fig:performance_results}
-    \vspace{-0.5cm}
-\end{figure*}
+Finally, if the user sets the approximation error $\varepsilon\!=\!0$ the proposed algorithm finds the exact solution, all the vertices and the faces of the polytope $\mathcal{P}_x$.
 
 \subsection{Performance analysis}
+\label{ch:chm_performance}
 
-To evaluate the performance of the proposed CHM algorithm, a comparative experiment is performed. The experiment consists in finding the $\repr{V}$-rep of the cartesian force $m=3$ polytope for a randomised mockup musculoskeletal model with $n\!=\!7$ degrees of freedom and a number of muscles ranging from $d$ = $20$ to $100$. 
+To evaluate the efficiency of the proposed approach, the challenging polytope formulation, corresponding to the generic formulation (\ref{eq:generic_polyt_view_revisit2}), with a high-dimensional input space and a low-dimensional output space ($n\gg m$) is tested. Additionally, the algorithm performance is compared against two state-of-the-art approaches: an approximation approach based on RSM algorithm introduced by Carmichael et al. \cite{carmichael_towards_2011} and an exact evaluation approach based on the combination of two efficient algorithms Hyper-plane shifting method \cite{hyper_psm} and Pivoting method \cite{bremner_fukuda_marzetta_1998}.
 
-Apart form the proposed method, two additional algorithms are tested. The first algorithm presents an exact approach. It combines the \textit{Hyper plane shifting method} (HPSM) \cite{hyper_psm}, to evaluate the $\repr{H}$-rep of the polytope $\mathcal{P}_\tau$, and the \textit{primal-dual} method introduced by Bremer et al. \cite{bremner_fukuda_marzetta_1998}, to find the $\repr{V}$-rep of $\mathcal{P}_f$. The second method is the RSM algorithm introduced by Carmichael et al. \cite{carmichael2011Towards} as an example of approximative algorithm used in the context of musculoskeletal models.
+\subsubsection{Human wrench capacity polytope}
+The polytope in question is the human's wrench capacity polytope, previously discussed in section \ref{ch:force_poly_human}. The polytope $\mathcal{P}_f$ characterising the achievable wrenches $\bm{f}$, the human can generate given its musculoskeletal model, can be expressed as 
+\begin{equation}
+    \mathcal{P}_f(\bm{q},\dot{\bm{q}},\ddot{\bm{q}}) = \left\{ \bm{f} \in \mathbb{R}^m ~|~ \bm{F}\in\left[\bm{F}_{min}, \bm{F}_{max} \right], ~~ \!J^T(\bm{q})\bm{f} =\! N(\bm{q})\bm{F} -\bm{\tau}_b(\bm{q},\dot{\bm{q}},\ddot{\bm{q}}) \right\}
+    \label{eq:human_force_poly_revisit2}
+\end{equation}
+where $\bm{f}\in\mathbb{R}^m$ is the cartesian wrench, $\bm{F}\in\mathbb{R}^n$ is the vector of muscular forces, while $J(\bm{q})$ and $N(\bm{q})$ are configuration $\bm{q}$ dependant jacobian a nd moment arm matrix. Additionally, the bias vector $\bm{\tau}_b$ corresponds to the joint torques corresponding to the effects of the gravity and the movement. 
 
-The RSM algorithm \cite{carmichael2011Towards} requires uniform sampling of the \textit{ray directions} in the 3D space. This sampling can be performed based on a two Euler angles parametrization. \antun{For this method, three linearly increasing levels of granularity are tested for each Euler angle: $\Delta\!=\!36^o$, $18^o$ and $12^o$;  making for $n_r\!=\!10,20$ and $30$ \textit{rays} per angle. Overall number of \textit{ray directions} in 3D space ($N_r\!=\!n_r^2$) is then $100$, $400$ and $900$. For the proposed CHM algorithm, three exponentially increasing levels of accuracy are tested $\varepsilon\!=\!0.1$, $1$ and $10$ N.} All the algorithms are implemented in Matlab and run on a 1.90GHz Intel i7-8650U processor.
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=1.\textwidth]{Papers/images/one_auto_new5_these}
+    \caption{{Figure presenting the performance analysis results in the logarithmic scale for three different algorithms: HPSM, RSM and proposed CHM with respect to different number of muscles. Left figure shows the evolution of the execution time. Middle figure shows the evolution of the underestimation error, the maximal distance in between the polytope $\mathcal{P}_x$ and the acquired polytope, calculated as max$\{|\delta_{i}|\}$. Right figure shows the evolution of the number of vertices found. All the plots show the averaged results, with variances, over 100 runs, where each run corresponds to one randomly generated model.}}
+    \label{fig:performance_results}
+\end{figure}
+This polytope formulation is challenging due to the high dimensional input space (large number of muscles), making the geometry of the polytope $\mathcal{P}_f$ relatively complex, having large number of faces and vertices. In such cases, standard exact methods for polytope transformation have long execution times, preventing this polytope representation to be used in interactive (online) applications. To reduce the computation times of the wrench polytope $\mathcal{P}_f$ evaluation, Carmichael et al. \cite{carmichael_towards_2011} have proposed an algorithm based on the Ray Shooting Method (RSM), described in section \ref{ch:approximation_algos}. Although the algorithm enables real-time approximation of the polytope $\mathcal{P}_f$, the obtained approximation is coarse and without any bounds on the approximation accuracy. 
+
+
+\subsubsection{Experiment and results}
+Therefore, to evaluate the performance of the proposed CHM algorithm, a comparative experiment is
+performed, where the proposed algorithm's performance is compared against the RSM method proposed by Carmichael et al.\cite{carmichael_towards_2011} as well as against the two step exact approach based on the Hyper-Plane Shifting Method (HPSM)\cite{hyper_psm} and Pivoting method\cite{bremner_fukuda_marzetta_1998}. The experiment consists in finding the $\repr{V}$-representation of the cartesian force $m=3$ polytope $\mathcal{P}_f$ for a randomised mockup musculoskeletal model with $k\!=\!7$ degrees of freedom and a number of muscles ranging from $n$ = $20$ to $100$. 
+
+The RSM algorithm \cite{carmichael2011Towards} requires uniform sampling of the ray directions in the 3D space. In this experiment the sampling is performed based on a two Euler angles parametrization. {For this method, three linearly increasing levels of granularity are tested for each Euler angle: $\Delta\!=\!36^o$, $18^o$ and $12^o$;  making for $n_r\!=\!10,20$ and $30$ rays per angle. Overall number of ray directions in 3D space ($N_r\!=\!n_r^2$) is then $100$, $400$ and $900$. For the proposed CHM algorithm, three exponentially increasing levels of accuracy are tested $\varepsilon\!=\!0.1$, $1$ and $10$ N.} All the algorithms are implemented in Matlab and run on a 1.90GHz Intel i7-8650U processor.
 
 Results of the experiments, averaged over 100 algorithm runs, are shown on figure \ref{fig:performance_results}. The results confirm that the exact approach using the HPSM method has an execution time exponentially related to the number of muscles. Even for only 30 muscles it already takes more than 4.5 h to calculate, therefore this method is not tested on more than 30 muscles, where it finds over $10^4$ vertices.  
 
@@ -1227,7 +1262,71 @@ The graphs show that the proposed CHM method's execution time depends near-linea
 
 The demonstrated efficiency of the proposed CHM algorithm opens many doors for its applications in real-time systems, providing the user with an easy to understand trade-off between speed and accuracy.
 
+\subsection{Algorithm summary}
 
+In this section, a new algorithm for polytope approximation is introduced, developed for the generic polytope formulation
+\begin{equation}
+    \mathcal{P}_x = \big\{ \bm{x}\in \mathbb{R}^{m}\, |\,A\bm{x} = B\bm{y} + \bm{b}, \quad  \bm{y}\in\mathcal{P}_y  \big\}
+    \label{eq:generic_polyt_view_revisit3}
+\end{equation}
+The algorithm is based on the Convex Hull Methods (CHM) \cite{lassez1992quantifier}, described in section \ref{ch:approximation_algos}. The proposed CHM algorithm approximates the polytope $\mathcal{P}_x$, refining the approximation iteratively until the approximation error is reduced within user defined level. 
+Additionally, the proposed algorithm finds the $\repr{V}$ and $\repr{H}$-representation of the polytope $\mathcal{P}_x$ at the same time and therefore.
+
+The proposed algorithm is \textit{output sensitive}, where its complexity depends directly on the number of vertices and faces of the polytope  $\mathcal{P}_x$. By allowing the user to define the desired level of the approximation accuracy $\varepsilon$, the user can effectively simplify the polytope $\mathcal{P}_x$ geometry, lower the number of faces and vertices, and reduce the overall execution time. 
+The approximation accuracy $\varepsilon$ represents the maximal distance from the obtained polytope approximation and furthers vertices of the polytope $\mathcal{P}_x$ and has the same unit as the physical quantity represented by the polytope. 
+Therefore, by choosing the appropriate value $\varepsilon$ for a given application the user can intuitively trade-off the approximation accuracy for the execution time, and in many cases bring it to the interactive (online) range. 
+
+As discussed in section \ref{ch:collab_metrics_overview}, the generic polytope formulation (\ref{eq:generic_polyt_view_revisit3}) unifies the formulations of all the common polytope characterisations of human's and robot's physical abilities, making the algorithm applicable to the transformation of all of their polytope formulations described in section \ref{ch:poly_metrics}. Even thought the algorithm can be applied to all the polytope formulations corresponding to (\ref{eq:generic_polyt_view_revisit3}) and its special cases, it is particularly well suited for cases where the dimension of the input space is high ($n\gg m$) and the dimension of the output space is relatively low ($m\leq3$), as it directly searches for the vertices and faces of the polytope $\mathcal{P}_x$ in the low dimensional output space. 
+
+Such high-dimensional ($n\gg m$) polytope enumeration problems are challenging for the standard polytope transformation methods, described in section \ref{ch:polytope_algorithms}, however relatively common when it comes to polytope representation of physical abilities of human's based on their musculoskeletal models. The polytopes based on human musculoskeletal models have therefore been limited to the off-line execution \cite{biomechanics1010008} and in many cases subject to coarse simplifications \cite{carmichael_estimating_2013}. As shown in the experimental results, in section \ref{ch:chm_performance}, the proposed algorithm substantially improves the time execution of finding the $\repr{V}$ and $\repr{H}$-representation of the challenging formulation of the human wrench capacity polytope while at the same time guaranteeing the user defined level of accuracy $\varepsilon$. The results show, that the proposed algorithm is capable of calculating the vertices of this polytope within a half of second for the human musculoskeletal models up to 100 muscles (while guaranteeing the precision of 10$N$) which opens many doors for real-time applications, for example for human-centred robot control in robotics. 
+
+The pseudo-code of the proposed algorithm is given in Algorithm \ref{alg:algo_2}, while an efficient open-source python implementation is publicly available within the package \textsc{pycapacity}\footnote{https://auctus-team.github.io/pycapacity/}, which is described more in detail in chapter \ref{ch:software}.
+
+Finally, section \ref{ch:human_robot_carrying} brings the application of the proposed algorithm for the real-time robot control in the human-robot collaboration scenario, where the algorithm is exploited in order to calculate the human's wrench capacity polytope online. 
+
+\begin{algorithm}[!h]
+\caption{Proposed CHM algorithm pseudo-code}
+\begin{algorithmic}
+\REQUIRE $A$,$B$, $\bm{y}_{min}$, $\bm{y}_{max}$, $\bm{b}$, $\varepsilon$
+\STATE $U, \Sigma, V^T \leftarrow svd(A^+)$ 
+
+\STATE init $\repr{H}$-rep: $H,\bm{d} \leftarrow [\,]$ and $\repr{V}$-rep: $\bm{x}_v,\bm{y}_v\leftarrow [\,]$
+\STATE \textbf{for all}   {$\bm{u}_i$ in $U$} \textbf{do}
+
+\hspace{0.3cm} $\bm{y}_{i}\leftarrow$ LP (Eq. \ref{eq:lin_prog}) with $\bm{c}\! =\! \bm{u}_i$ and $\bm{c}\! =\! -\bm{u}_i$
+
+\hspace{0.3cm} $\bm{x}_{v} \leftarrow [\bm{x}_{v}, ~ A^+B\bm{y}_i + A^+\bm{b}]$
+
+\REPEAT
+
+\STATE calculate the convex hull $\mathcal{C}$ of $\bm{x}_{v}$
+\STATE calculate the centroid $\bm{x}_{c} = \frac{1}{N}\sum_i\bm{x}_{v,i}$
+
+\STATE \textbf{for all}   {new face $\mathcal{F}_i$ in $\mathcal{C}$} \textbf{do}
+%\FORALL{ new face $\mathcal{F}_i$ in $\mathcal{C}$ } 
+
+\hspace{0.25cm} find normal $\bm{n}_i$ and one vertex $\bm{x}_{j}$ of $\mathcal{F}_i$
+
+\hspace{0.25cm} $\bm{y}_{i}\leftarrow$ LP ( Eq. \ref{eq:lin_prog} ) with  $\bm{c}\! =\! \bm{n}_i$ ( Eq. \ref{eq:normal_condition} )
+
+\hspace{0.25cm} $\bm{x}_{i} = A^+B\bm{y}_i+A^+\bm{b}$ 
+
+\hspace{0.25cm}  calculate $\delta_i$ (Eq.\ref{eq:normal_distance})
+
+\hspace{0.25cm}  \textbf{if}   $ |\delta_i| \leq \varepsilon$ \textbf{then} 
+
+\hspace{0.6cm}  new face: update $\repr{H}$-rep  ( Eq. \ref{eq:h_rep} )
+
+\hspace{0.25cm}  \textbf{else}
+
+\hspace{0.6cm} new vertex: update $\repr{V}$-rep: $\bm{x}_{v} \!\leftarrow\! [\bm{x}_{v},~ \bm{x}_i ]$,  $\bm{y}_{v} \!\leftarrow\! [\bm{y}_{v},~ \bm{y}_i ]$ 
+
+%\ENDFOR
+\UNTIL{{ $\max\{|\delta_{i}|\}\leq \varepsilon$}}
+\RETURN  $\repr{V}$-rep: $\bm{x}_v$, $\bm{y}_v$ and  $\repr{H}$-rep: $H$, $\bm{d}$ 
+\end{algorithmic}
+\label{alg:algo_2}
+\end{algorithm}
 
 \section{Conclusion}
 
