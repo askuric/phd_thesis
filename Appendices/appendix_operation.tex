@@ -1,10 +1,10 @@
 
-\section{Performing operations over polytopes}
+\chapter{Performing operations over polytopes}
 \label{ch:operations_over_poly_stategies}
 
 Once the polytopes are transformed in standard forms such as $\repr{H}$ or $\repr{V}$-representations, they can be exploited to efficiently calculate different operations over multiple polytopes, such as Minkowski sums  and intersections.
 
-\subsection{Minkowski sum of polytopes}
+\section{Minkowski sum of polytopes}
 \begin{figure}[!h]
     \centering
     \includegraphics[width=0.9\linewidth]{Chapters/imgs/polytope_minkowski_sum.pdf}
@@ -38,7 +38,7 @@ These $N_1\!\cdot\!N_2$ are not all vertices of the polytope $\mathcal{P}_x$, so
 Once the $\repr{V}$-representation is determined, different standard representation conversion algorithms (section \ref{ch:standard_represtantion_conversion}), can be used to efficiently find its $\repr{H}$-representation.
 
 
-\paragraph*{Special case - projection formulation}
+\subsection{Special case - projection formulation}
 A special case of simplified Minkowski sum calculation arises when polytopes $\mathcal{P}_{x1}$ and $\mathcal{P}_{x2}$ both have projection formulation
 \begin{equation}
     \mathcal{P}_{x1}=\{\bm{x}_1\in\mathbb{R}^m |~ \bm{x}_1 = B_1\bm{y}_1,~\bm{y}_1 \in \mathcal{I}_1  \}
@@ -84,7 +84,7 @@ Finding the $\repr{V}$ and $\repr{H}$-representation of this polytope can then b
     \mathcal{P}_x = \mathcal{P}_{x1} \oplus \mathcal{P}_{x2} \oplus ~\cdots
 \end{equation}
 
-\subsection{Polytope intersection}
+\section{Polytope intersection}
 
 \begin{figure}[!h]
     \centering
@@ -121,7 +121,7 @@ A visual example of constructing the intersection of $m=2$ dimensional polytopes
 
 Once the $\repr{H}$-representation is determined, different standard representation conversion algorithms (section \ref{ch:standard_represtantion_conversion}), can be used to efficiently find its $\repr{V}$-representation.
 
-\paragraph*{Special case - intersection formulation}
+\subsection{Special case - intersection formulation}
 
 A special case of simplified polytope intersection calculation arises when polytopes $\mathcal{P}_{x1}$ and $\mathcal{P}_{x2}$ both have intersection formulation
 \begin{equation}

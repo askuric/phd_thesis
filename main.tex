@@ -52,7 +52,6 @@ headsepline, % Uncomment to get a line under the header
 \usepackage{amsmath}
 \usepackage{bm}
 
-\usepackage[scr = pxtx]{mathalpha}
 
 \usepackage{wrapfig}
 \usepackage{cite}
@@ -91,7 +90,8 @@ pdfstartview={FitV},
 
 
 \renewcommand*{\repr}[1]{\mathscr{#1}}
-\renewcommand*{\conv}[1]{\mathcal{C}onv\left(#1\right)}
+% \renewcommand*{\conv}[1]{onv\left(#1\right)}
+\renewcommand*{\conv}[1]{\text{Conv}\left(#1\right)}
 \renewcommand*{\vol}[1]{\mathcal{V}ol\left(#1\right)}
 \renewcommand*{\img}[1]{\mathcal{I}m\left(#1\right)}
 \renewcommand*{\ker}[1]{\mathcal{K}er\left(#1^T\right)}
@@ -99,6 +99,10 @@ pdfstartview={FitV},
 
 \usepackage{amsthm}
 \newtheorem*{remark}{Remark}
+
+\usepackage[scr=pxtx]{mathalpha}
+
+\usepackage{bbm}
 
 \usepackage{cancel}
 %----------------------------------------------------------------------------------------
@@ -294,8 +298,8 @@ pdfstartview={FitV},
 % alternative view
 \include{Chapters/Intro}
 % \part{Polytopes of physical abilities}
-\include{Chapters/metrics_only}
-\include{Chapters/generic_view}
+% \include{Chapters/metrics_only}
+% \include{Chapters/generic_view}
 
 % \part{Theoretic contribution}
 % \include{Papers/icra2021}
@@ -306,7 +310,7 @@ pdfstartview={FitV},
 
 % \part{Applications}
 % \include{Chapters/force}
-% \include{Papers/carrying}
+\include{Papers/carrying}
 % \include{Papers/topca}
 % \include{Papers/hfr2022}
 % \include{Chapters/motion}

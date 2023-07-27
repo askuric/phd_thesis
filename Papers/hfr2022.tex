@@ -215,9 +215,9 @@ Figure \ref{fig:env} showcases the influence of the environmental constraints on
 \vspace{-0.2cm}
 \subsection{Integration of robot's link geometry}
 
-If the robot link $l_i$ is considered to be a straight line, to calculate the predicted reachable space of a robot's link $l_i$ the polytope $\mathcal{P}_x$ can be calculated at the start $\mathcal{P}_{xs}$ and the end $\mathcal{P}_{xe}$ of the line $l_i$.  Finally the reachable space of this idealised robot link $l_i$ can then be calculated as the \textit{convex-hull} (CH) of the polytopes $\mathcal{P}_{xs}$ and $\mathcal{P}_{xe}$
+If the robot link $l_i$ is considered to be a straight line, to calculate the predicted reachable space of a robot's link $l_i$ the polytope $\mathcal{P}_x$ can be calculated at the start $\mathcal{P}_{xs}$ and the end $\mathcal{P}_{xe}$ of the line $l_i$.  Finally the reachable space of this idealised robot link $l_i$ can then be calculated as the \textit{convex-hull} ($\conv{\cdot}$) of the polytopes $\mathcal{P}_{xs}$ and $\mathcal{P}_{xe}$
 \begin{equation}
-    \mathcal{P}_{xli} = CH \left(  \mathcal{P}_{xs}, ~ \mathcal{P}_{xe} \right)
+    \mathcal{P}_{xli} = \conv{  \mathcal{P}_{xs}, ~ \mathcal{P}_{xe}}
 \end{equation}
 
 If, instead of a straight line, a space captured by a robot's link $l_i$ can be expressed as a convex set of constraints or a polytope
@@ -227,7 +227,7 @@ If, instead of a straight line, a space captured by a robot's link $l_i$ can be 
 the reachable space polytope $\mathcal{P}_{xli}$ can be extended to account for this link geometry by first finding the vertices of the polytope $\mathcal{L}$, followed by computing the reachable space polytope $\mathcal{P}_{x}$ for each one of the $k$ vertices, and finally computing their convex hull. 
 
 \begin{equation}
-    \mathcal{P}_{xl,_i} = CH \left(  \mathcal{P}_{x1}, ~ \dots ~, \mathcal{P}_{xk} \right)
+    \mathcal{P}_{xl,_i} = \conv{  \mathcal{P}_{x1}, ~ \dots ~, \mathcal{P}_{xk} }
 \end{equation}
 
 By evaluating the polytope $\mathcal{P}_{xli}$ for each robot's link one can obtain an efficient approximation of the envelope of the reachable space of the entire robot, as shown on figure \ref{fig:minkowski}.
@@ -295,7 +295,7 @@ This polytope is then projected using the projection matrix $P$ into the $m$-dim
 
 The most straight forward way of approaching the enumeration of this polytope is to first enumerate the vertices of the polytope $\mathcal{P}_\tau$, project them to the cartesian space using the projection matrix $P$, followed by a Convex-Hull algorithm to extract the real vertices $\bm{v}_i$ of the polytope $\mathcal{P}_x$ from the projected points and its half-space representation.
 
-In order to avoid enumerating all the vertices of the high-dimensional joint torque polytope $\mathcal{P}_\tau$, as the most complex operation of this polytope enumeration, \textit{Iterative convex hull method}\cite{skuric2022} (ICHM) is used, allowing to directly enumerate low-dimensional cartesian polytope $\mathcal{P}_x$. This iterative method is based on successively applying \textit{Linear programming} (LP) and \textit{Convex-Hull} (CH) algorithms and is able to find both vertex and half-space representation of this polytope at the same time. ICHM algorithm is defined for a family of sets:
+In order to avoid enumerating all the vertices of the high-dimensional joint torque polytope $\mathcal{P}_\tau$, as the most complex operation of this polytope enumeration, \textit{Iterative convex hull method}\cite{skuric2022} (ICHM) is used, allowing to directly enumerate low-dimensional cartesian polytope $\mathcal{P}_x$. This iterative method is based on successively applying \textit{Linear programming} (LP) and \textit{Convex-Hull} ($\conv{\cdot}$) algorithms and is able to find both vertex and half-space representation of this polytope at the same time. ICHM algorithm is defined for a family of sets:
 
 \begin{equation}
 \{ ~\bm{x}\in R^{m} ~|~ A\bm{x} = B\bm{y},\quad C\bm{y} \leq \bm{d}~\}, \qquad \bm{y} \in R^n,\quad m \leq n
@@ -367,19 +367,19 @@ First metric, $m_1$, is defined as a ratio of number of the simulated cartesian 
 \end{equation}
 The metric $m_1$ gives an insight on how well the polytope $\mathcal{P}_x$ encapsulates the real reachable space determined with simulations. This metric might be used to asses the confidence in the polytope $\mathcal{P}_x$ for safety applications, the closer this metric is to 1, the less chance that the robot can exit the space bounded by $\mathcal{P}_x$.
 
-The second metric, $m_2$, is defined as the ratio of the volumes of the polytope $\mathcal{P}_x$ and the convex hull $CH$ of the points $\bm{x}_k\in\mathcal{X}\cap\mathcal{P}_x$, $$ R_1 = CH(\mathcal{X}\cap\mathcal{P}_x)$$ representing a subset of the points reached by the robot in the simulations found inside of the polytope $\mathcal{P}_x$ .
+The second metric, $m_2$, is defined as the ratio of the volumes of the polytope $\mathcal{P}_x$ and the convex hull $\conv{\cdot}$ of the points $\bm{x}_k\in\mathcal{X}\cap\mathcal{P}_x$, $$ R_1 = \conv{\mathcal{X}\cap\mathcal{P}_x}$$ representing a subset of the points reached by the robot in the simulations found inside of the polytope $\mathcal{P}_x$ .
 
 \begin{equation}
-    m_2 = \frac{Vol\{ R_1 \}}{Vol\{P_x\}}
+    m_2 = \frac{\vol{ R_1}}{\vol{P_x}}
 \end{equation}
 The metric $m_2$ gives an insight on how much volume of the polytope $\mathcal{P}_x$ is actually attainable by the robot, with respect to the simulations. This metric is designed to asses the quality of the approximation, if the score on this metric is low, this means that the large part of the $\mathcal{P}_x$ is not actually reachable.
 
-The third metric, $m_3$, is defined as the ratio of the volumes of the polytope $\mathcal{P}_x$ and the convex hull $CH$ of all the points $\bm{x}_k\in\mathcal{X}$, $$ R_2 = CH(\mathcal{X})$$ reached by the robot in the simulations.
+The third metric, $m_3$, is defined as the ratio of the volumes of the polytope $\mathcal{P}_x$ and the convex hull $\conv{\cdot}$ of all the points $\bm{x}_k\in\mathcal{X}$, $$ R_2 = \conv{\mathcal{X}}$$ reached by the robot in the simulations.
 
 \begin{equation}
-    m_3 = \frac{Vol\{P_x\}}{Vol\{ R_2 \}}
+    m_3 = \frac{\vol{P_x}}{\vol{ R_2 }}
 \end{equation}
-The metric $m_3$ gives insight about the ratio of the volumes of the polytope $\mathcal{P}_x$ and the simulated reachable space of the robot $CH(\mathcal{X})$. This metric is designed to asses the quality of the volume of the $\mathcal{P}_x$ as a metric. The further this metric from 1 the less confidence one has in the volume of the $\mathcal{P}_x$.
+The metric $m_3$ gives insight about the ratio of the volumes of the polytope $\mathcal{P}_x$ and the simulated reachable space of the robot $\conv{\mathcal{X}}$. This metric is designed to asses the quality of the volume of the $\mathcal{P}_x$ as a metric. The further this metric from 1 the less confidence one has in the volume of the $\mathcal{P}_x$.
 
 \subsection{Benchmark comparison}
 \vspace{-0.1cm}
@@ -467,7 +467,7 @@ The first graph on the figure \ref{fig:accuracy} shows the metric $m_1$. It can 
 
 Evolution of the metric $m_2$ is shown on the middle graph of the figure \ref{fig:accuracy} . It can be seen that the volume of all the reached robot positions inside polytope $\mathcal{P}_x$ and $\mathcal{C}_x$ decreases considerably with the increase of the horizon time $t_h$. For the horizon times under $t_h\leq 0.25$s the majority ($\geq$50\%) of the reachable space polytope $\mathcal{P}_x$ has been reached by the robot simulations. However for the longer horizon times $t_h\geq0.5$s the reached volume ratio $m_2$ drops under 20\% of the total volume of the $\mathcal{P}_x$. In the case of $\mathcal{C}_x$, the majority ($\geq$50\%)  of the volume of the $\mathcal{C}_x$ is never reached by the robot for all tested horizon lengths $t_h$. 
 
-% The right graph of the figure \ref{fig:accuracy} shows the evolution of the metric $m_3$, the ratio of volumes of the polytope $\mathcal{P}_x$ and the convex hull off all reached robot position in the simulation $R_2 = CH(\mathcal{X})$. 
+% The right graph of the figure \ref{fig:accuracy} shows the evolution of the metric $m_3$, the ratio of volumes of the polytope $\mathcal{P}_x$ and the convex hull off all reached robot position in the simulation $R_2 = \conv{\mathcal{X}}$. 
 
 The right graph of the figure \ref{fig:accuracy} shows the evolution of the metric $m_3$. The graph shows that the volume of the polytope $\mathcal{P}_x$ and the cube $\mathcal{C}_x$ becomes several times higher than the volume of the $R_2$ with the increase in the horizon time $t_h$. For the horizon time of $t_h$=2s the average volume of $\mathcal{P}_x$ is 12 times larger than the volume of $R_2$ and the volume $\mathcal{C}_x$ is more than 50 times larger than $R_2$. At the same time the average reached volume $R_1$ inside the $\mathcal{P}_x$ and $\mathcal{C}_x$ consists of under 10\% of their volume (metric $m_2$), which potentially makes both polytope $\mathcal{P}_x$ and $\mathcal{C}_x$ impractical for many of applications. 
 
