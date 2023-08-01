@@ -18,33 +18,21 @@
     \centering
     \includegraphics[width=0.6\linewidth]{Papers/images/carrying_schema.pdf}
     \caption{}
-    \label{fig:collaboartion_schema}
+    \label{fig:carrying_schema}
 \end{figure}
 
-One traditional example of a collaborative task requiring physical interaction between multiple actors (humans and robots) is object carrying~\cite{Arai2000carrying,Kosuge1997carrying,Tsumugiwa2002carrying}. 
+One traditional example of a collaborative task requiring physical interaction between multiple actors (humans and robots) is collaborative object carrying~\cite{Arai2000carrying,Kosuge1997carrying,Tsumugiwa2002carrying}. In this task multiple ($N_a$) actors collaborate physically by applying forces $\bm{f}_i$ on the object with mass $m_o$, in order to compensate for its gravity $G_o$
+\begin{equation}
+    G_o=m_o\bm{g}=\bm{f}_1 + ~\cdots ~+\bm{f}_{N_a}
+\end{equation}
+An illustration of the human-robot and dual robot arm collaborative carrying is given on Figure \ref{fig:carrying_schema}. 
+
+
 
 \todos{
 \begin{itemize}
-    \item To demonstrate this we show an example application of collaborative carrying
-    \item Where multiple actors (robots and humans) collaborate physically in order to compensate the weight of the object (move it in space)
     \item each one of the actors has a certain capacity to carry the objects
     \item their common capacity is the some of the two
-\end{itemize}
-}
-
-\subsection{Carrying capacity calculation}
-
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=0.6\linewidth]{Chapters/imgs/carrying_capacity.pdf}
-    \caption{}
-    \label{fig:collaboartion_schema}
-\end{figure}
-
-\todos{
-\begin{itemize}
-    \item Carrying capacity can be calculated for robots and humans as their wrench capacity
-    \item then their polytope can be intersected with $z$ axis
 \end{itemize}
 }
 
@@ -63,6 +51,25 @@ One traditional example of a collaborative task requiring physical interaction b
 % \end{figure}
 
 \subsection{Dual robotic arm collaborative object carrying}\label{ch:robot_robot_carrying}
+
+
+\subsubsection{Robot carrying capacity calculation}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.4\linewidth]{Papers/images/carrying_capacity_robot.pdf}
+    \caption{}
+    \label{fig:collaboartion_schema}
+\end{figure}
+
+\todos{
+\begin{itemize}
+    \item Carrying capacity can be calculated for robots as their wrench capacity
+    \item then their polytope can be intersected with $z$ axis
+\end{itemize}
+}
+
+\subsubsection{Robot control experiment}
 
 \begin{figure}[!h]
     \centering
@@ -109,6 +116,35 @@ The proposed control strategy is successful in ensuring  compensation of the obj
 
 \subsection{Human-robot collaborative object carrying}
 \label{ch:human_robot_carrying}
+
+
+\todos{
+\begin{itemize}
+    \item Naive approach for human-robot collaboration is for the robot to carry everything
+    \item human power applied is studied \cite{Mujica2020Evaluation}, ergonomic indicators (REBA) \cite{ferraguti2020unified},  static joint overloading \cite{Kim2018}
+    \item First this is not always possible, robot's carrying capacity is limited and it might require buying a huge robot which would not be safe to the operator any more
+    \item second the studies have shown that human's engagement to the task is proportional to the level of the physical effort exerted
+    \item Exoskeletons \cite{petric2019assistive}, \cite{carmichael2013admittance}
+    \item once when we've decided to separate the weight, how do we do that?
+\end{itemize}
+}
+
+\subsubsection{Human carrying capacity calculation}
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.4\linewidth]{Papers/images/carrying_capacity_human.pdf}
+    \caption{}
+    \label{fig:collaboartion_schema}
+\end{figure}
+
+\todos{
+\begin{itemize}
+    \item Carrying capacity can be calculated for robots as their wrench capacity
+    \item then their polytope can be intersected with $z$ axis
+\end{itemize}
+}
+
+\subsubsection{Robot control experiment}
 
 %To illustrate the potential of the proposed algorithm for the human-centered robot control, a mockup load carrying experiment is conducted. 
 An example experiment is conducted, designed as a simplified heavy object manipulation task common in the industrial assembly procedures. 
