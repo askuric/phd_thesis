@@ -81,10 +81,14 @@ urlcolor=mdtRed,% The color of hyperlinks (URLs)
 pdfstartview={FitV},
 ]{hyperref}
 
+\newcommand{\citedon}[1]{%
+  \par
+  \vspace*{-\parskip}% Correct insertion of paragraph skip due to \par
+  {\textsc{Cited on page #1}\par}}
 \renewcommand*{\backref}[1]{%
   \ifx\relax#1\empty
   \else
-    (page #1) %
+    \citedon{#1}%
   \fi
 }
 
@@ -298,8 +302,8 @@ pdfstartview={FitV},
 % alternative view
 \include{Chapters/Intro}
 % \part{Polytopes of physical abilities}
-\include{Chapters/metrics_only}
-\include{Chapters/generic_view}
+% \include{Chapters/metrics_only}
+% \include{Chapters/generic_view}
 
 % \part{Theoretic contribution}
 % \include{Papers/icra2021}

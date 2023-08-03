@@ -190,7 +190,7 @@ The matrix $AA^+$ represents an orthogonal projector matrix to the \textit{image
 \begin{equation}
     \bm{y} = AA^+\bm{y}, \qquad \forall \bm{y}\in\img{A}
 \end{equation}
-However, for any input vector $\bm{y}$ not belonging to the image $\img{A}$, multiplying it with the matrix $AA^+$ will result in its orthogonal projection to the image $\img{A}$. As shown in the graphical example on Figure \ref{fig:image_psueodinverse_ilustration}, even though the original $\bm{y}$ respect the input set $\mathcal{P}_y$, its orthogonal projection onto the image $AA^+\bm{y}$ is some cases does not.
+However, for any input vector $\bm{y}$ not belonging to the image $\img{A}$, multiplying it with the matrix $AA^+$ will result in its orthogonal projection to the image $\img{A}$. As shown in the graphical example on Figure \ref{fig:image_psueodinverse_ilustration}, even though the original $\bm{y}$ respects the input set $\mathcal{P}_y$, its orthogonal projection onto the image $AA^+\bm{y}$ is some cases does not.
 
 Therefore, by ensuring that all the inputs $\bm{y}$ belong to the image $\img{A}$, the pseudo-inverse $A^+$ provides a unique inverse solution to the equation $\bm{y} = A\bm{x}$. Then, the new input set, respecting the limitations $\bm{y}\in\mathcal{P}_y$ and ensuring the unique inverse solution, can be can be found as the intersection
 \begin{equation}
@@ -955,17 +955,21 @@ To demonstrate the efficiency of the proposed polytope vertex search algorithm, 
        & 8$\times$8 & 2$\times$2 & 2$\times$2 \\ 
        & 2.7$\pm$0.1 (3.6) & 0.93$\pm$0.1 (1.1) & 0.64$\pm$0.1 (1.5) \\ 
        \hline
+       $(4,3)$ &  32 & 4 & 2.9$\pm$1.1 (4) \\ 
+       & 8$\times$8 & 3$\times$3 & 1$\times$1 \\ 
+       & 3.7$\pm$0.3 (6.0) & 0.79$\pm$0.08 (1.4) & 0.54$\pm$0.1 (1.4) \\ 
+       \hline
        $(6,3)$ & 220 & 20 & 2.8$\pm$2.5 (10) \\ 
         & 12$\times$12 & 3$\times$3 & 3$\times$3 \\ 
        & 14.2$\pm$0.9 (20) & 2.1$\pm$0.2 (3.4) & 1.5$\pm$0.2 (2.7) \\ 
        \hline
-      $(7,3)$&    364 & 35 & 7.3$\pm$4.2 (20)\\
-        & 14$\times$14 & 3$\times$3 & 4$\times4$\\
-       & 25$\pm$0.5 (27) & 3.5$\pm$0.1 (5.4) & 2.6$\pm$0.2 (4.3)\\
-       \hline
       $(6,6)$&   64 & 1 & 1$\pm$0 (1)\\
         &  12$\times$12 & 6$\times$6 & 6$\times6$\\
        & 34.7$\pm$1 (44.3) & 0.32$\pm$0.07 (0.56) & 0.24$\pm$0.04 (0.46)\\
+       \hline
+      $(7,3)$&    364 & 35 & 7.3$\pm$4.2 (20)\\
+        & 14$\times$14 & 3$\times$3 & 4$\times4$\\
+       & 25$\pm$0.5 (27) & 3.5$\pm$0.1 (5.4) & 2.6$\pm$0.2 (4.3)\\
        \hline
       $(7,6)$& 448 & 7 & 6.4$\pm$1 (7)\\
         & 14$\times$14 & 6$\times$6 & 1$\times$1\\
@@ -975,10 +979,19 @@ To demonstrate the efficiency of the proposed polytope vertex search algorithm, 
     \label{tab:complexity_results}
 \end{table}
 
+\todos{Talk about the $m=6$}
 
 The three algorithms have been tested on finding the $\repr{V}$-representation of the three different systems, inspired by the force ($\bm{f}\in\mathbb{R}^3$, $m=3$) polytope $\mathcal{P}_f$ enumeration for three different robots: a 4R planar robot ($n$=$4$, $m$=$2$), the \textit{Universal Robots} UR5 6DoF robot ($n$=$6$, $m$=$3$) and the \textit{Franka Emika Panda} 7DoF robot ($n$=$7$,$m$=$3$). The results are averaged over 1000 randomly generated matrices $A$ and input sets $\mathcal{I}_y$. All algorithms have been implemented in the programming language Python and tested on a laptop equipped with a 1.90GHz Intel i7-8650U processor. 
 
 Table \ref{tab:complexity_results} shows the results of this complexity evaluation. The proposed vertex search algorithm substantially reduces the number of matrix inversions and thus reduces the processing time considerably: $4$-$10\times$ faster execution than Chiacchio's algorithm and on average 30\% faster than Sasaki's. Results show that even for the generic cases that correspond to the 6DoF ($n=6$,$m=3$) and 7DoF ($n=7$,$m=3$) industrial robots the proposed approach is capable of evaluating the polytope vertices under $3ms$. Such a low processing time opens numerous opportunities for the on-line use of polytope based capacity evaluation especially in the area of robot control.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{Papers/images/panda_ur5.png}
+    \caption{Two different views of Panda ($n=7$) and UR5 ($n=6$) robot's force polytope ($m=3$) calculated using the proposed algorithm. Both robots and polytopes are shown in the same scale (1m : 1000N). The figure shows that the UR5 has much larger polytope than Panda robot. This is due to its larger force capacity, as UR5 is rated for 5kg loads whereas Panda is rated for 3kg loads.}
+    \label{fig:panda_ur5_force}
+\end{figure}
+\todos{Talk about the Figure \ref{fig:panda_ur5_force}}
 
 \subsection{Discussion on limitations}
 This algorithm, being based on the algorithm proposed by Sasaki \cite{sasaki2011vertex}, is still based on the exhaustive search. Even though significantly reducing the complexity of the Sasaki's method, it is not particularly well suited for high dimensions $n$ of the input spaces, especially is the difference between the input and the output space dimension $n\!-\!m$ is large. 
@@ -991,7 +1004,7 @@ On the other hand, if the system has both high dimensional input space and the h
 Furthermore, as the proposed algorithm exploits the null-space $\ker{A}$ of the matrix $A$ to gain on efficiency, it is not suitable for the systems where the matrix $A$ is square ($m\!=\!n$), as in that case the null-space does not exist $\ker{A}=\{\varnothing\}$. However, as discussed in the section \ref{par:equivalent_proj}, this specific case of interval projection is much easier to work with as it corresponds to the projection formulation, which $\repr{V}$-representation can be determined in a straight-forward manner, as described in section \ref{ch:proj_algos_v}, by projecting the vertices of the hyperrectangle to the output space.
 
 
-\begin{algorithm}[!h]
+\begin{algorithm}[!b]
 \caption{The proposed vertex search algorithm pseudo-code}
 \begin{algorithmic}
 \REQUIRE $A$, $\bm{y}_{min}$, $\bm{y}_{max}$ (Eq. \ref{eq:interval_revisit_algo}) 
@@ -1188,6 +1201,12 @@ Therefore, the porpoised approach to find the initial set of vertices consists i
 \subsubsection{Incremental refinement} The next step of the algorithm is to iterate over all the faces $\mathcal{F}_i$ of the convex hull $\mathcal{C}$. For each new face $\mathcal{F}_i$, the normal $\bm{n}_i$ is found and used as a candidate $\bm{c}_i$ in the direction pointing out of polytope $\mathcal{P}_x$.
 %all the vertices $\bm{x}_{\mathcal{F}j}\! =\! %\bm{x}_v\!\in\!\mathcal{F}_i$. Then the $\bm{c}_i$ is defined %as normal $\bm{n}_i$ in the direction pointing out of the polytope 5$\mathcal{P}_x$.
 The normal vector direction is verified by projecting the vector going from the centroid $\bm{x}_c$ to any vertex $\bm{x}_{j}$ of face $\mathcal{F}_i$, onto the normal $\bm{n}_i$ and verifying if the scalar product is positive or negative.
+\begin{wrapfigure}{r}{0.35\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{Papers/images/espilon_explicaiton.pdf}
+    \caption{ The figure exemplifies the polytope face condition from equations (\ref{eq:normal_coplanar_test}) and (\ref{eq:normal_distance}), where  face $\mathcal{F}_i$ of the convex-hull $\mathcal{C}$ is considered to be the face of $\mathcal{P}_x$, because $\delta_i\! < \!\varepsilon$. }
+    \label{fig:expilon_explication}
+\end{wrapfigure}
 \begin{equation}
     \bm{c}_i = \begin{cases}
   \bm{n}_i, & \text{if } \bm{n}_i^T(\bm{x}_{j} - \bm{x}_c) \geq 0, \\
@@ -1195,12 +1214,6 @@ The normal vector direction is verified by projecting the vector going from the 
 \end{cases} 
 \label{eq:normal_condition}
 \end{equation}
-\begin{wrapfigure}{r}{0.35\linewidth}
-    \centering
-    \includegraphics[width=\linewidth]{Papers/images/espilon_explicaiton.pdf}
-    \caption{ The figure exemplifies the polytope face condition from equations (\ref{eq:normal_coplanar_test}) and (\ref{eq:normal_distance}), where  face $\mathcal{F}_i$ of the convex-hull $\mathcal{C}$ is considered to be the face of $\mathcal{P}_x$, because $\delta_i\! < \!\varepsilon$. }
-    \label{fig:expilon_explication}
-\end{wrapfigure}
 Solving equation (\ref{eq:lin_prog}) with $\bm{c}_i$, the obtained $\bm{x}_i$ can be either a vertex of the polytope $\mathcal{P}_x$ or be coplanar with face $\mathcal{F}_i$. To determine if  $\bm{x}_i$ is coplanar with the face, a simple check can be devised, which verifies if the orthogonal (normal) distance from $\bm{x}_i$ to any vertex $\bm{x}_{j}$ of face $\mathcal{F}_i$
 \begin{equation}
     \delta_i = \bm{n}_i^T(\bm{x}_{j} - \bm{x}_i)
@@ -1223,7 +1236,9 @@ If $\bm{x}_i$ belongs to face $\mathcal{F}_i$ of the convex-hull $\mathcal{C}$ t
 \end{equation}
 where $\bm{n}_i$ is the face normal vector and $\bm{n}_i^T \bm{x}_{j}$ is the orthogonal distance from the origin to the face $\mathcal{F}_i$. On the other hand, if $\bm{x}_i$ is a vertex of the polytope it is appended to the $\repr{V}$-representation list $\bm{x}_v \leftarrow [\bm{x}_v, ~\bm{x}_i]$.
 
-\subsubsection{Stopping condition} Once all the faces of the convex hull $\mathcal{C}$ are evaluated, the convex hull is updated using the new vertex list $\bm{x}_v$.
+\subsubsection{Stopping condition} 
+\todos{Wrench/force ambiguity how do you represent them with the same unit}
+Once all the faces of the convex hull $\mathcal{C}$ are evaluated, the convex hull is updated using the new vertex list $\bm{x}_v$.
 
 One of the algorithm stopping conditions proposed by Bretl et al. \cite{Bretl2008}, is to construct the inner and outer approximation of the polytope $\mathcal{P}_x$ at the same time and stop approximating when the ratio $r=\vol{\mathcal{P}_{inner}}/\vol{\mathcal{P}_{outer}}$ between their volumes reaches certain threshold $r\leq1$.  
 
@@ -1241,12 +1256,6 @@ Finally, if the user sets the approximation error $\varepsilon\!=\!0$ the propos
 To evaluate the efficiency of the proposed approach, the challenging polytope formulation, corresponding to the generic formulation (\ref{eq:generic_polyt_view_revisit2}), with a high-dimensional input space and a low-dimensional output space ($n\gg m$) is tested. Additionally, the algorithm performance is compared against two state-of-the-art approaches: an approximation approach based on RSM algorithm introduced by Carmichael et al. \cite{carmichael_towards_2011} and an exact evaluation approach based on the combination of two efficient algorithms Hyper-plane shifting method \cite{hyper_psm} and Pivoting method \cite{bremner_fukuda_marzetta_1998}.
 
 \subsubsection{Human wrench capacity polytope}
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=0.5\linewidth]{Papers/images/bimanual.png}
-    \caption{Cartesian force polytope of a musculoskeletal model of both human upper limbs  \cite{saul2015benchmarking} with 7Dof and 50 muscles each, visualised in \textit{pyomeca bioviz} \cite{Michaud2021}. The polytopes are scaled with a ratio 1m : 1000N}
-    \label{fig:images_bimanual}
-\end{figure}
 The polytope in question is the human's wrench capacity polytope, previously discussed in section \ref{ch:force_poly_human}. The polytope $\mathcal{P}_f$ characterising the achievable wrenches $\bm{f}$, the human can generate given its musculoskeletal model, can be expressed as 
 \begin{equation}
     \mathcal{P}_f(\bm{q},\dot{\bm{q}},\ddot{\bm{q}}) = \left\{ \bm{f} \in \mathbb{R}^m ~|~ \bm{F}\in\left[\bm{F}_{min}, \bm{F}_{max} \right], ~~ \!J^T(\bm{q})\bm{f} =\! N(\bm{q})\bm{F} -\bm{\tau}_b(\bm{q},\dot{\bm{q}},\ddot{\bm{q}}) \right\}
@@ -1271,12 +1280,20 @@ The RSM algorithm \cite{carmichael2011Towards} requires uniform sampling of the 
 
 Results of the experiments, averaged over 100 algorithm runs, are shown on figure \ref{fig:performance_results}. The results confirm that the exact approach using the HPSM method has an execution time exponentially related to the number of muscles. Even for only 30 muscles it already takes more than 4.5 h to calculate, therefore this method is not tested on more than 30 muscles, where it finds over $10^4$ vertices.  
 
-The RSM algorithm shows nearly constant time of execution for the full range of tested muscles and the constant number of vertices found, which is expected. The results show however, that for low muscle numbers $d\!<$25, when using a fine granularity $\Delta$=$12^o$ the RSM algorithm finds more vertices than the exact solution found by the HPSM. Furthermore, the middle plot of figure \ref{fig:performance_results} shows that the RSM estimation error increases considerably with the number of muscles $d$, followed by a very
+The RSM algorithm shows nearly constant time of execution for the full range of tested muscles and the constant number of vertices found, which is expected. The results show however, that for low muscle numbers $d\!<$25, when using a fine granularity $\Delta$=$12^o$ the RSM algorithm finds more vertices than the exact solution found by the HPSM. Furthermore, the middle plot of Figure \ref{fig:performance_results} shows that the RSM estimation error increases considerably with the number of muscles $d$, followed by a very
 high variance. These results confirm that, as the polytope shape is not spherical, by uniformly covering the space of ray directions, RSM based algorithms will necessarily estimate certain areas of the polytope better than the others.
 
 The graphs show that the proposed CHM method's execution time depends near-linearly of the number of muscles considered $d$ and the estimation error bound parameter $\varepsilon$. The accuracy graph, shown in the middle plot, shows that the proposed CHM algorithm is capable of limiting the estimation error of the polytope evaluation under desired value $\varepsilon$ regardless of the number of muscles. Furthermore, considering the vertex number found by the algorithms, it can be seen that the number of vertices has a nearly-linear relationship with the number of muscles $d$ and the variable $\varepsilon$. 
 
 The demonstrated efficiency of the proposed CHM algorithm opens many doors for its applications in real-time systems, providing the user with an easy to understand trade-off between speed and accuracy.
+
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Papers/images/bimanual.png}
+    \caption{Cartesian force polytope of a musculoskeletal model of both human upper limbs  \cite{saul2015benchmarking} with 7Dof and 50 muscles each, visualised in \textit{pyomeca bioviz} \cite{Michaud2021}. The polytopes are scaled with a ratio 1m : 1000N}
+    \label{fig:images_bimanual}
+\end{figure}
 
 \subsection{Algorithm summary}
 

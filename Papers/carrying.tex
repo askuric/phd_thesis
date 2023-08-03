@@ -1,18 +1,29 @@
 
-\chapter{Using polytopes for human-robot physical collaboration}
+\chapter{Enhancing human-robot physical collaboration with polytopes}
 
+
+\section{Motivation: Collaborative Workstation}
+The industry of the future, as described by the movement called Industry 5.0~\cite{MADDIKUNTA2022ind50}, promises to step away from the traditional point of view on industrial automation, where the goal is to blindly automatise, as much processes as possible, in order to improve the overall efficiency and reduce the cost. The Industry 5.0 puts the human workers in the central position and aims to create the workflows that ensure their well-being as well as the long term sustainability of the industrial practices in general~\cite{XU2021ind50}. The industry of the future relies on the flexibility and adaptability of the human workers, by embracing their cognitive and physical skills as well as their talents and different levels of expertise. The role of the automation is no longer purely optimisation of the industrial processes, but providing the support and assistance to the human operator with the aim to exploit both machines' and humans' full potential, establishing human-automation symbiosis~\cite{LENG2022ind50} on the industry floor.
+ 
+One typical example of such symbiosis is an industrial workstation~\cite{SIMOES2022workplace}, where the human and the robot work in a close proximity and interact physically to execute different tasks. The aim of such collaboration is to improve the overall efficiency by exploiting the abilities of both humans (flexibility, adaptability, cognitive capacity, expertise, etc.) and robots (repeatability, precision, tirelessness, etc.), as well as to improve the operators well-being, remove the unnecessary strain and ensure his safety when executing tasks. Therefore, such future collaborative scenarios require having a set of tools for characterising different abilities of robots and humans, as well as different notions of human well-being and safety. Such tools are required both for assessing different tasks and allocating them with respect to humans and robots abilities as well as for creating more human-centred robot control strategies.
+
+\todos{I'm more or less happy till here}
+
+Even though human-robot collaboration is still relatively recent field, there are numerous performance metrics proposed in the literature that quantify different aspects of the quality of their collaboration and their individual abilities~\cite{CORONADO2022collab_quality}.
+The main focus of this work is put on different tools for characterising human's and robot's physical abilities, especially their polytope representations, which have a great potential to be used in this context, both in order to quantify and leverage their individual abilities as well as to ensure human safety. As discussed in chapter \ref{ch:poly_metrics}, the polytope characterisations of different physical abilities are an accurate representations of physical abilities for both robots and humans. Furthermore, the polytopes enable expressing their individual physical abilities, as well as their joint physical abilities when collaborating, in the same polytope form. Such unified view on their capacities lays foundation for creating new task allocation strategies that take in consideration their physical abilities, by being able to asses if different tasks better suite human's or robot's abilities or potentially require their collaboration. 
+
+Furthermore, both human's and robot's physical abilities are state dependant and can vary significantly during the task execution, and polytopes enable capturing the changes in their abilities as well. Having an accurate information about the robot's physical abilities online, enables creating robot control strategies that adapt to the their changes and exploit the robot's full potential. On the other hand, having an accurate online information about the human's physical abilities is important for assessing if the operator is apt to execute a certain task and quantifying if the operator needs assistance of the robot due to its lacking physical abilities. Furthermore, having the real-time information about the operator's physical abilities enables ensuring that his abilities are never surpassed which has a direct impact on the operator's safety and well-being. Therefore, the collaborative workstations require creating more human-centred robot control strategies where the robot adapts its behaviour not just with respect to the requirements of the task and its own abilities, but also to the current abilities of the human operator as well as his safety. As polytope characterisations of robot's and human's physical abilities can be easily integrated with different robot control strategies, they have a great potential to be used for creating such adaptive collaboration scenarios.
+
+\todos{more or less happy.}
+
+This chapter present the benefits of using the polytope based physical ability characterisations for creating real-time robot control strategies that enable such flexible collaboration scenarios. Section \ref{ch:collaborative_carrying} brings an example of the task of collaborative object carrying within the collaborative workstation, where two collaborative scenarios are proposed. First scenario, introduced in section \ref{ch:robot_robot_carrying}, consists in two robots collaborating to carry a heavy object while the control strategies of each one of the robots take in consideration both their own and the other robot's physical abilities. Second scenario, proposed in section \ref{ch:human_robot_carrying}, consists in the human operator and the robot collaboratively carrying a heavy object, where the robot's control strategy takes in consideration its own physical abilities and the physical abilities of the operator in the real-time. 
 
 \todos{
-\begin{itemize}
-    \item polytopes for collaborative robot control
-    \item human-centred robot control (but taking in consideration the human)
-    \item capabilities of the dyad
-    \item better than looking at the human as a disturbance (or predicting the human)
-\end{itemize}
+Furthermore, an assistive and human-centred robot control strategy that exploits the polytope geometry is described in section after.
 }
 
-\section{Collaborative object carrying}
-
+\section{Collaborative carrying of a heavy object}
+\label{ch:collaborative_carrying}
 
 \begin{figure}[!h]
     \centering
@@ -21,9 +32,9 @@
     \label{fig:carrying_schema}
 \end{figure}
 
-One traditional example of a collaborative task requiring physical interaction between multiple actors (humans and robots) is collaborative object carrying~\cite{Arai2000carrying,Kosuge1997carrying,Tsumugiwa2002carrying}. In this task multiple ($N_a$) actors collaborate physically by applying forces $\bm{f}_i$ on the object with mass $m_o$, in order to compensate for its gravity $G_o$
+One traditional example of a collaborative task requiring physical interaction between multiple actors (humans and robots) is collaborative object carrying~\cite{Arai2000carrying,Kosuge1997carrying,Tsumugiwa2002carrying}. In this task $N$ actors collaborate physically by applying forces $\bm{f}_{a_i}$ on the object with mass $m_o$, in order to compensate for its gravity $G$
 \begin{equation}
-    G_o=m_o\bm{g}=\bm{f}_1 + ~\cdots ~+\bm{f}_{N_a}
+    G=m_o\bm{g}=\bm{f}_{a_1} + ~\cdots ~+\bm{f}_{a_N}
 \end{equation}
 An illustration of the human-robot and dual robot arm collaborative carrying is given on Figure \ref{fig:carrying_schema}. 
 
@@ -106,12 +117,20 @@ To efficiently distribute and adapt the carried load in between robots, each rob
 \begin{equation}
    f_1 = \lambda G \quad f_2 = (1-\lambda)G,\quad \lambda = \frac{f_{1,max}}{f_{1,max} + f_{2,max}}
 \end{equation}
-
+ 
 A straightforward control strategy, requiring each robot to compensate for half of object mass $f_1=f_2=0.5G$ is taken as baseline to evaluate the performance of the new method.
 
 Figure \ref{fig:dual_manip} (right) shows one possible manipulation trajectory, where a human operator displaces the carried object in the common workspace in four discrete locations over a 20 seconds period of time. On the left side of the figure \ref{fig:dual_manip} the evaluated maximal forces and force applied by each robot during the experiment are shown. Additionally, the $0.5G$ strategy line is shown for comparison. 
 
 The proposed control strategy is successful in ensuring  compensation of the object weight during the full length of the experiment. In the starting pose $t=0s$, robot 2 (robot on the left) is close to it's singular configuration and its load carrying capacity is close to 5kg. Controlling it to compensate for half of the weight of the object would result in a security exception and could damage the robot hardware. The same is true for pose 4 at $t=17s$. Robot 1 (robot on the right) is not be able to compensate for half of the object weight but thanks to the proposed adaptive control law, the task can successfully be achieved. This may not be the case over the entire common workspace of the two robots but this example is a good illustration of the interest of accounting for the true capabilities of the system at the control level.  An additional interesting result from the experiment is the transition between pose 3 and 4 ($t \in [12s,16s]$). Even though the object is much closer to robot 2 (right), robot 1 has a much higher carrying capacity. This illustrates the fact that force capabilities are highly nonlinear functions which are very hard to predict. This provides an additional argument in favor of on-line force capacity evaluation. 
+
+\begin{equation}
+\begin{split}
+    \min_{f_1,f_2} &~||G - f_1 -f_2||^2 ~~+ \omega\lambda||f_1||^2 + \omega(1-\lambda)||f_2||^2\\
+    s.t.& \quad f_1 \in[0, f_{1,max}]\\
+    & \quad f_2 \in[0, f_{2,max}]\\
+\end{split}
+\end{equation}
 
 
 \subsection{Human-robot collaborative object carrying}
@@ -188,6 +207,15 @@ Figure \ref{fig:experiment_results} confirms that the evolution of robot's carry
 Figure \ref{fig:experiment_results} further shows that, by calculating the operator's carrying capacity in real-time, { using the same simple control law, the robot is able to adapt its assistance strategy despite the substantial change in the operator's capacity profile.}
 To demonstrate this adaptability even further, in addition to  experiments 1 and 2 , a third experiment is included in the video attachment, where the human operator moves freely in space. 
 
+\begin{equation}
+\begin{split}
+    \min_{f_r,f_h} &~||G - f_r -f_h||^2 ~~+ \omega||f_r||^2 - \omega f_h\\
+    s.t.& \quad f_h \in[0, ~f_{h,max}]\\
+    & \quad f_r \in[0, ~f_{r,max}]\\
+\end{split}
+\end{equation}
+
+
 \begin{figure}[!t]
     \centering
     \includegraphics[width=\linewidth]{Papers/images/exp2_no_anim.png}
@@ -195,6 +223,16 @@ To demonstrate this adaptability even further, in addition to  experiments 1 and
     \label{fig:experiment_results}
 \end{figure}
 
+\subsubsection{Prospective for human-robot collaboration}
+The proposed algorithm presents a new and efficient way of calculating human's wrench capabilities which, as opposed to the known methods (ellipsoids \cite{yoshikawa1985manipulability}\cite{sasaki2011vertex} or RSM algorithm \cite{carmichael2011Towards}), can guarantee user defined level of accuracy. It opens many possibilities for wider use of human wrench polytopes in the area of the human-robot collaboration, by both reducing the computation time and enabling the use of more complete human models, better describing human subjects \cite{sohn2019effects}.
+
+Analysis based on the more complete human models and their pathology could enhance the exoskeleton and prosthesis design, while the efficiency might accelerate analysis of wider anthropomorphic groups of people and improve the design of collaborative workspaces. The algorithm's real-time ability, on the other hand, may enable higher degree of human-centered robot control. The operators' accurate real-time capacity, based on the detailed musculoskeletal models, could be used not only to enforce safety and improve engagement, but to provide the operator-specific assistance profiles. Preventing the development of the work related injuries and potentially even enabling the rehabilitation in the factory context.
+
+Furthermore, the  also relate to the inclusion of capability alteration models related to fatigue but also cognitive factors. This potential increase in models complexity advocates for systematic experimental validations of the results they lead to \cite{biomechanics1010008}.
+
+The potential of the method to be used for collaborative robot control is demonstrated in a collaborative carrying experiment, where the human operator and a robot jointly carry a 7kg object. The experiment shows that by combining the real-time human's capacity evaluation with a simple control law, a highly flexible collaboration scenario can be created. 
+
+Even though the proposed algorithm itself is independent of any musculoskeletal model, it relies entirely on the model's real-time representation of the operator. Therefore, for practical implementations, the key challenges become: evaluating human posture in the real-time, precise enough and in a minimally intrusive way, as well as performing the individual scaling and calibration of the used musculoskeletal models for a given operator \cite{correa20112782}.
 
 \section{Reachable space shaping}
 \label{ch:human_robot_reachable_space}
@@ -202,6 +240,7 @@ To demonstrate this adaptability even further, in addition to  experiments 1 and
 
 \section{Perceived mass shaping}
 \label{ch:human_robot_percieved_mass}
+
 
 \section{Conclusion}
 
