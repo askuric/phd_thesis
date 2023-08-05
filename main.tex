@@ -49,12 +49,14 @@ headsepline, % Uncomment to get a line under the header
 \usepackage[T1]{fontenc} % Output font encoding for international characters
 
 
+\usepackage{pdflscape}
+
 \usepackage{amsmath}
 \usepackage{bm}
 
-
 \usepackage{wrapfig}
 \usepackage{cite}
+\usepackage[numbers]{natbib}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage[noend]{algorithmic}
 \usepackage{graphicx}
@@ -93,6 +95,8 @@ pdfstartview={FitV},
 }
 
 
+\usepackage[nameinlink]{cleveref}
+
 \renewcommand*{\repr}[1]{\mathscr{#1}}
 % \renewcommand*{\conv}[1]{onv\left(#1\right)}
 \renewcommand*{\conv}[1]{\text{Conv}\left(#1\right)}
@@ -100,6 +104,14 @@ pdfstartview={FitV},
 \renewcommand*{\img}[1]{\mathcal{I}m\left(#1\right)}
 \renewcommand*{\ker}[1]{\mathcal{K}er\left(#1^T\right)}
 
+
+\renewcommand*{\qrimg}[3]{
+\begin{wrapfigure}{r}{0.2\linewidth}
+\vspace{-0.5cm}
+    \centering
+    \href{#2}{\includegraphics[width=\linewidth]{#1}}\par \href{#2}{#3}
+\end{wrapfigure}
+}
 
 \usepackage{amsthm}
 \newtheorem*{remark}{Remark}
@@ -314,7 +326,7 @@ pdfstartview={FitV},
 
 % \part{Applications}
 % \include{Chapters/force}
-\include{Papers/carrying}
+\include{Papers/carrying} 
 % \include{Papers/topca}
 % \include{Papers/hfr2022}
 % \include{Chapters/motion}
@@ -342,7 +354,7 @@ pdfstartview={FitV},
 %----------------------------------------------------------------------------------------
 %	BIBLIOGRAPHY
 %----------------------------------------------------------------------------------------
-\bibliographystyle{ieeetr}
+\bibliographystyle{IEEEtranN}
 \bibliography{example}
 %----------------------------------------------------------------------------------------
 
