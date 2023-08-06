@@ -22,7 +22,7 @@ One typical example of such symbiosis is an industrial workstation~\cite{SIMOES2
 %\todos{I'm more or less happy till here}
 
 Even though human-robot collaboration is still relatively recent field, there are numerous performance metrics proposed in the literature that quantify different aspects of the quality of their collaboration and their individual abilities~\cite{CORONADO2022collab_quality}.
-The main focus of this work is put on different tools for characterising human's and robot's physical abilities, especially their polytope representations, which have a great potential to be used in this context, both in order to quantify and leverage their individual abilities as well as to ensure human safety. As discussed in chapter \ref{ch:poly_metrics}, the polytope characterisations of different physical abilities are an accurate representations of physical abilities for both robots and humans. Furthermore, the polytopes enable expressing their individual physical abilities, as well as their joint physical abilities when collaborating, in the same polytope form. Such unified view on their capacities lays foundation for creating new task allocation strategies that take in consideration their physical abilities, by being able to asses if different tasks better suite human's or robot's abilities or potentially require their collaboration. 
+The main focus of this work is put on different tools for characterising human's and robot's physical abilities, especially their polytope representations, which have a great potential to be used in this context, both in order to quantify and leverage their individual abilities as well as to ensure human safety. As discussed in \Cref{ch:poly_metrics}, the polytope characterisations of different physical abilities are an accurate representations of physical abilities for both robots and humans. Furthermore, the polytopes enable expressing their individual physical abilities, as well as their joint physical abilities when collaborating, in the same polytope form. Such unified view on their capacities lays foundation for creating new task allocation strategies that take in consideration their physical abilities, by being able to asses if different tasks better suite human's or robot's abilities or potentially require their collaboration. 
 
 Furthermore, both human's and robot's physical abilities are state dependant and can vary significantly during the task execution, and polytopes enable capturing the changes in their abilities as well. Having an accurate information about the robot's physical abilities online, enables creating robot control strategies that adapt to the their changes and exploit the robot's full potential. On the other hand, having an accurate online information about the human's physical abilities is important for assessing if the operator is apt to execute a certain task and quantifying if the operator needs assistance of the robot due to its lacking physical abilities. Furthermore, having the real-time information about the operator's physical abilities enables ensuring that his abilities are never surpassed which has a direct impact on the operator's safety and well-being. Therefore, the collaborative workstations require creating more human-centred robot control strategies where the robot adapts its behaviour not just with respect to the requirements of the task and its own abilities, but also to the current abilities of the human operator as well as his safety. As polytope characterisations of robot's and human's physical abilities can be easily integrated with different robot control strategies, they have a great potential to be used for creating such adaptive collaboration scenarios.
 
@@ -156,13 +156,10 @@ The regularisation factor $\omega$ is used to set the priority of the weight dis
 
 Each robot control cycle starts by calculating the carrying capacity of both robots (\ref{eq:robot_robot_carrying_capacity}), followed by the resolution of the optimisation problem (\ref{eq:qp_robot_robot}). Once the optimal vertical forces $f_{r_i}$ are obtained the joint torques $\bm{\tau}_{r_i}$, achieving those forces, are calculated for each of the robots and sent to their low-level joint controllers 
 \begin{equation}
-    \bm{\tau}_{r_i} = J_{z,r_i}^T(\bm{q}_{r_i}){f}_{r_i} - \bm{\tau}_{r_i,b}(\bm{q}_{r_i},\dot{\bm{q}}_{r_i}), \qquad \forall i \in \{1,2\}
+    \bm{\tau}_{r_i} = J_{z,r_i}^T(\bm{q}_{r_i}){f}_{r_i} - \bm{\tau}_{b,r_i}(\bm{q}_{r_i},\dot{\bm{q}}_{r_i}), \qquad \forall i \in \{1,2\}
 \end{equation}
-\todos{maybe form this as an optimisation problem as well... torque QP. Or discuss that no limits can be surpassed.}.
 
-
-
-\subsubsection{Experiment and Results}
+\subsubsection{Experimental validation}
 \label{sec:experiment_dual_robto_carrying}
 \begin{figure}[!h]
     \centering
@@ -172,11 +169,13 @@ Each robot control cycle starts by calculating the carrying capacity of both rob
 \end{figure}
 
 In this experiment, a human operator is moving the object freely through the common work-space, implicitly changing both robots positions and configurations in real-time. As a consequence, the task space trajectory and the evolution of the robot configurations are not known in advance. The particular trajectory taken by the human operator in this experiment is indicated on \Cref{fig:experiment1}. 
-The trajectory executed by the operator consisted in taking the load through the common work-space making a forward and backward pass through four via-points. The robots calculated the changes in their carrying capacity in real-time and adapted the weight distribution to their varying physical abilities, in order to ensure the object's weight compensation during the whole experiment.
+The trajectory executed by the operator consisted in taking the load through the common work-space making a forward and backward pass through four via-points. The robots calculated the changes in their carrying capacity in real-time and adapted the weight distribution to their varying physical abilities, in order to ensure the object's weight compensation during the whole experiment. 
 
+\qrimg{qrcodes/icra2021.png}{https://youtu.be/hApIv1oFuhk}{Video}
 A straightforward control strategy, requiring each robot to compensate for half of object mass $f_{r_1}=f_{r_1}=0.5G$ is taken as baseline to evaluate the performance of the new method.
 
-Furthermore, the experiment has been implemented using the Robot operating system (ROS) programming environment. Both robots are torque controlled at the frequency of 1kHz. The update of the carrying capacity calculations are performed at 40Hz and implemented in programming language Python. All the control software is run from one computer with the 1.90GHz Intel i7-8650U processor. 
+Furthermore, the experiment has been implemented using the Robot Operating System (ROS) programming environment. Both robots are torque controlled at the frequency of 1kHz. The update of the carrying capacity calculations are performed at 40Hz and implemented in programming language Python. All the control software is run from one computer with the 1.90GHz Intel i7-8650U processor. 
+This experiment is illustrated in the accompanying video\footnote{https://youtu.be/hApIv1oFuhk}.
 
 \begin{landscape}
 \begin{figure}
@@ -197,52 +196,56 @@ Furthermore, any naive fixed strategy, assigning certain fixed ratio of the obje
 
 The results further show that even though in the large portion of the experiment one of the robots was not able to carry half of the object's weight, their joint carrying capacity exceeded the objects weight $f_{r_1,max}+f_{r_2,max} >G$ during the whole length of the experiment. 
 
-\qrimg{qrcodes/icra2021.png}{https://youtu.be/hApIv1oFuhk}{Video}
 However, this may not be the case over the entire common workspace of the two robots, but this example is a good illustration of the interest of accounting for the true capabilities of the system at the control level.  In certain configurations the common carrying capacity of the robots might be lower than the objects weight $f_{r_1,max}+f_{r_2,max} <G$. The proposed control approach, in those cases would still be able to ensure that the robot's physical abilities are not exceeded, however it would not be able to guarantee the weight compensation of the object. 
 
-This experiment is illustrated in the accompanying video\footnote{https://youtu.be/hApIv1oFuhk}.
 
 
 \subsection{Human-robot collaborative object carrying}
 \label{ch:human_robot_carrying}
-
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=\linewidth]{Papers/images/exp2_real_schema.jpg}
-    \caption{}
-    \label{fig:exp2_real_schema}
-\end{figure}
 
 This section brings an example scenario of the human-robot physical collaboration in order to execute the task of the carrying and manipulation of a heavy object, common in the industrial assembly procedures. In this scenario, shown on \Cref{fig:exp2_real_schema}, a human operator and a \textit{Franka Emika Panda} robot jointly carry $m\!=\!7$ kg object, each one compensating for a part of the total weight 
 \begin{equation}
     \bm{f}_h  + \bm{f}_r = m\bm{g} = G
 \end{equation}
 
-The usual choice for this scenarios is a simple gravity compensation strategy, making the robot carry the full weight of the object $\bm{f}_r = G$ and provide the operator with full movement transparency. Several human-centred robot control strategies have recently been proposed in the literature, where the robot in addition to the full weight compensation improves different aspects of the human safety and ergonomics. One example of such approach is proposed by \citet{ferraguti2020unified}, which REBA \cite{reba} ergonomic indicators to improve human posture while carrying an object. 
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=\linewidth]{Papers/images/exp2_real_schema.jpg}
+    \caption{}
+    \label{fig:exp2_real_schema}
+\end{figure}
+
+This scenario is inspired by common industrial tasks requiring 
+the manipulation of a heavy object. The operator has the expert knowledge about the task and moves the object through the workspace to perform the task efficiently. The robot's role, in this case, is to assists the operator with the carrying of the heavy object and improve his well-being.
+
+The usual choice for these scenarios is a simple gravity compensation strategy, making the robot carry the full weight of the object $\bm{f}_r = G$ and provide the operator with full movement transparency. Several human-centred robot control strategies have recently been proposed in the literature, where the robot in addition to the full weight compensation improves different aspects of the human safety and ergonomics. One example of such approach is proposed by \citet{ferraguti2020unified}, which REBA \cite{reba} ergonomic indicators to improve human posture while carrying an object. 
 
 However, as discussed in previous section, \Cref{ch:robot_robot_carrying}, assigning any fixed weight to the robotic manipulator requires \textit{a priori} analysis of its changing capacity and determination of the \textit{worst-case} weight limits, which in the case of the Franka Emika Panda robot is $m\leq3$kg\footnote{Given by the manufacturer in the form of the robot's rated payload.}. Therefore, carrying the 7kg load requires using a more capable robot which, in many cases, significantly increase the cost of such system and potentially reduces operator's safety. More capable robots are usually bigger and heavier, which in case of impact with the operator, results in higher exchanged forces~\cite{smu}.
 Therefore, delegating the entire weight compensation to the robot is not always be the most efficient or the safest solution for the operator. 
 
-On the other hand, several studies have shown that the human's physical feedback during task execution improves significantly his engagement in the task \cite{rani2007operator}, improves the task execution efficiency and reduces the risk of the human error \cite{BYRNE1996249}. However, since the human's carrying capacity varies significantly throughout the workspace, before allocating any weight to the operator his safety has to be ensured. As in the case of robots, the traditional approach consists in analysing the task in advance and determining, often very conservative, the set of \textit{worst-case} limits \cite{shoaf1997comprehensive}, often given in a form of different standards \cite{nasa} and manuals \cite{health1992manual}. 
+On the other hand, several studies have shown that the human's physical feedback during task execution improves significantly his engagement in the task \cite{rani2007operator}, improves the task execution efficiency and reduces the risk of the human error \cite{BYRNE1996249}. However, since the human's carrying capacity varies significantly throughout the workspace as well, before allocating any weight to the operator, his safety has to be ensured. As in the case of robots, the traditional approach consists in analysing the task in advance and determining, often very conservative, the set of \textit{worst-case} limits \cite{shoaf1997comprehensive}, often given in a form of different standards \cite{nasa} and manuals \cite{health1992manual}. 
 
-In order to avoid making such coarse assumptions, several approaches have been proposed in the literature, able to quantify different measures of human physical abilities and adapt the human load to their changes online. \citet{Kim2018} have proposed an approach estimating the joint torques in the operator's body produced by carrying the load of the object, where the robot role is to adapt his posture to minimise necessary torques. In their work, the human body was approximated using a planar model actuated at the joint level. \citet{carmichael2013admittance} proposed an approach using a more accurate human model based on human musculoskeletal models. This approach uses am efficient approximation of the human's force capacity to modulate the weight carried by the human with respect to his changing abilities. This work is developed in the context of human rehabilitation and used for the real-time control of assistive exoskeletons, where the authors showed that such approach is capable of adapting to the operators pathology and reduce the rehabilitation time~\cite{Carmichael2013Experimental}. 
-These works show the potential of using human-centred robot control strategies which are able to adapt online to the changing assistance needs of the operator. However, in both of these approaches, human was the one executing the task, while the robot's role was to improve the ergonomics and ensure safety.
+In order to avoid making such coarse assumptions, several approaches have been proposed in the literature, able to quantify different measures of human physical abilities and adapt the human load to their changes online. \citet{Kim2018} have proposed an approach estimating the joint torques in the operator's body produced by carrying the load of the object, where the robot role is to adapt his posture to minimise necessary torques. In their work, the human body was approximated using a planar model actuated at the joint level. In their work however, human was the one carrying the full mass of the object, while the only role of the robot was modify the operator's posture in order to improve his ergonomics.
 
-The aim of this experiment is to demonstrate the potential of using the real-time calculation of both robot's and human's physical abilities in order to create collaborative robot control strategies that are capable of both exploiting their full potential and, at the same time, ensure the safety of the operator. Therefore, following sections propose and experimentally validate one such control strategy.
+A different approach was proposed by \citet{carmichael2013admittance}, where the authors used a more accurate human model based on human musculoskeletal models. This approach uses an efficient approximation of the human's force capacity to modulate the weight carried by the human with respect to his changing abilities. This work is developed in the context of human rehabilitation and used for the real-time control of assistive exoskeletons, where the authors showed that such approach is capable of adapting to the operators pathology and reduce the rehabilitation time~\cite{Carmichael2013Experimental}. 
+This work shows the potential of using human-centred robot control strategies which are able to adapt the load carried by the human precisely to his varying physical abilities. However due to the intractable computational complexity of the human force capacity calculation proposed by the authors, the scope of their work is limited to relatively simple planar musculoskeletal models. Furthermore, the robot control strategy proposed in their work is aimed to the rehabilitation and the use of assistive exoskeletons, which does not transpose well to more unstructured industrial scenarios.
 
-\Cref{sec:human_carrying_capacity} introduces an efficient strategy of calculating the operators carrying capacity in real-time. \Cref{sec:collab_robot_control_human_robot} the introduces a collaborative robot control strategy using the online information about the operator's carrying capacity as well as the robot's capacity, described in  \Cref{sec:robot_carrying_capacity}. The experimental validation of this approach is described in  \Cref{sec:human_robot_experiment}, followed by the discussion on prospective applications and limitations in  \Cref{sec:human_robot_prospective}.
+Inspired by their work, this section aims to further demonstrate the potential of using the real-time knowledge about both robot's and human's physical abilities in the context of collaborative robot control in industrial scenarios. The proposed collaborative robot control strategy leverages the two new algorithms developed in the context of this work, capable of efficiently calculating the force capacity of robots (\Cref{sec:algorithm_vea}) and humans, based on their musculoskeletal models (\Cref{ch:algorihtm_ichm}). 
+Their changing capacities are calculated online and used to create collaborative robot control strategy, capable of both exploiting their full potential and, at the same time, ensure the safety of the operator. 
+
+\Cref{sec:human_carrying_capacity} introduces an efficient strategy of calculating the operators carrying capacity in real-time. \Cref{sec:collab_robot_control_human_robot} the introduces the collaborative robot control strategy using the online information about the operator's carrying capacity as well as the robot's capacity, described in  \Cref{sec:robot_carrying_capacity}. The experimental validation of this approach is described in  \Cref{sec:human_robot_experiment}, followed by the discussion on prospective applications and limitations in  \Cref{sec:human_robot_prospective}.
 
 
 \subsubsection{Human carrying capacity calculation}
 \label{sec:human_carrying_capacity}
 
-Assuming that the musculoskeletal model of the operator is available, as described in  \Cref{ch:human_metrics}, its model can be used to evaluate different physical abilities of the operator. 
+Assuming that the musculoskeletal model of the operator is available, this model can be used to evaluate different physical abilities of the operator. Some of the most common physical abilities in the literature are listed in \Cref{ch:human_metrics}. 
 
-In the case of the collaborative carrying experiment, the operator is required to apply only the force $f_{h}$ that contributes to compensating the object's gravity $G$. Therefore, his task is effectively one dimensional $m=1$ and his physical ability to carry certain weight can be evaluated as the maximal applicable force in the vertical ($z$-axis) direction. Hence, the human's carrying capacity $\mathcal{F}_z$ can be expressed as the the special case of the human's wrench polytope $\mathcal{P}_{f}$, described in  \Cref{ch:force_poly_human}, where the task space is one dimensional ($m=1$)
+When it comes to the collaborative carrying experiment, the operator is required to apply only the force $f_{h}$ that contributes to compensating the object's gravity $G$. Therefore, his task is effectively one dimensional $m=1$ and his physical ability to carry certain weight can be evaluated as the maximal applicable force in the vertical ($z$-axis) direction. Hence, the human's carrying capacity $\mathcal{F}_z$ can be expressed as the the special case of the human's wrench polytope $\mathcal{P}_{f}$, described in  \Cref{ch:force_poly_human}, where the task space is one dimensional ($m=1$)
 \begin{equation}
      \mathcal{F}_z(\bm{q},\dot{\bm{q}}) = \mathcal{P}_{f_z} (\bm{q},\dot{\bm{q}}) = \{ f \in \mathbb{R} ~|~ J_{z}(\bm{q})^Tf=N(\bm{q})\bm{F} - \bm{\tau}_b(\bm{q},\dot{\bm{q}}), \quad \bm{F}\in[\bm{F}_{min}, ~\bm{F}_{max}]\}
 \end{equation}
-where $\{\bm{q},\dot{\bm{q}}\}$ represent the human's joint state, $f \in\mathbb{R}$ is the applicable scalar force in $z$-axis direction, $\bm{F}\in\mathbb{R}^n$ are the applied muscular forces limited within the interval $\bm{F}\in[\bm{F}_{min}, ~\bm{F}_{max}]$, the $\bm{\tau}_{b}\in\mathbb{R}^n$ represents the bias joint torques grouping the effects of the gravity and robot's motions, while $J_{z}\in\mathbb{R}^{1\times n}$ is the state dependant jacobian matrix with one line and $n$ columns and $N\in\mathbb{R}^{n\times d}$ is the state dependant moment arm matrix. Values $n$ and $d$ correspond to the number of joints and muscles considered in the musculoskeleral model.
+where $\{\bm{q},\dot{\bm{q}}\}$ represent the human's joint state, $f \in\mathbb{R}$ is the applicable scalar force in $z$-axis direction, $\bm{F}\in\mathbb{R}^n$ are the applied muscular forces limited within the interval $\bm{F}\in[\bm{F}_{min}, ~\bm{F}_{max}]$, the $\bm{\tau}_{b}\in\mathbb{R}^n$ represents the bias joint torques grouping the effects of the gravity and human's motions, while $J_{z}\in\mathbb{R}^{1\times n}$ is the state dependant jacobian matrix with one line and $n$ columns and $N\in\mathbb{R}^{n\times d}$ is the state dependant moment arm matrix. Values $n$ and $d$ correspond to the number of joints and muscles considered in the musculoskeleral model.
 
 
 \begin{wrapfigure}{r}{0.4\linewidth}
@@ -251,15 +254,15 @@ where $\{\bm{q},\dot{\bm{q}}\}$ represent the human's joint state, $f \in\mathbb
     \caption{}
     \label{fig:carrying_cap_human}
 \end{wrapfigure}
-Analogously to the robot's case, human's carrying capacity $\mathcal{F}_z$ is a $m=1$ dimensional polytope, describing the range of scalar forces $f$ in applicable the vertical direction. Geometrically, this polytope corresponds to the intersection of the complete wrench/force ($m=6$/$m=3$) polytope $\mathcal{P}_f$, described in \Cref{ch:force_poly_human}, with the vertical axis. An illustrative view of this intersection is shown on \Cref{fig:carrying_cap_human}.
+Analogously to the robot's case, human's carrying capacity $\mathcal{F}_z$ is a $m=1$ dimensional polytope, describing the range of scalar forces $f$ applicable in the vertical direction. Geometrically, this polytope corresponds to the intersection of the complete wrench/force ($m=6$/$m=3$) polytope $\mathcal{P}_f$, described in \Cref{ch:force_poly_human}, with the vertical axis. An illustrative view of this intersection is shown on \Cref{fig:carrying_cap_human}.
 
 Furthermore, for any given human's state $\{\bm{q},\dot{\bm{q}}\}$ this one dimensional set $\mathcal{F}_z$ can be transformed into the form of a min-max interval
 \begin{equation}
     \mathcal{F}_z = \{ f \in \mathbb{R} ~|~ f \in[{f}_{min}, ~{f}_{max}]\}
 \end{equation}
-In order to find the limits $[f_{min},~f_{max}]$ of the applicable scalar force $f$ in the vertical direction, this problem can be formulated as finding the $\repr{V}$-representation of the 1D ($m=1$) polytope $\mathcal{F}_z$. Then real-time capable algorithm proposed in \Cref{sec:algorithm} can then be used to find the limits (vertices) $f_{min}$ and $f_{max}$ of the applicable force in $z$-axis direction.  
+In order to find the limits $[f_{min},~f_{max}]$ of the applicable scalar force $f$ in the vertical direction, this problem can be formulated as finding the $\repr{V}$-representation of the 1D ($m=1$) polytope $\mathcal{F}_z$. Then the real-time capable algorithm, proposed in \Cref{sec:algorithm}, can then be used to find the limits (vertices) $f_{min}$ and $f_{max}$ of the applicable force in $z$-axis direction.  
 
-Following the similar procedure proposed in \Cref{sec:robot_carrying_capacity}, the robot's carrying capacity can be determined in real-time as well. Then the humans carrying capacity $\mathcal{F}_{z,h}$ and robots carrying capacity $\mathcal{F}_{z,r}$, characterising their feasible ranges of applicable vertical forces $f_r$ and $f_h$ can be expressed as in the form of ranges
+Following the similar procedure as for humans, the robot's carrying capacity can be determined in real-time as well, as proposed in \Cref{sec:robot_carrying_capacity}. Then the human's carrying capacity $\mathcal{F}_{z,h}$ and robot's carrying capacity $\mathcal{F}_{z,r}$, characterising their feasible ranges of applicable vertical forces $f_r$ and $f_h$ can be expressed as in the form of ranges
 \begin{equation}
     f_{h}\in [f_{h,min}, ~f_{h,max}], \qquad f_{r} \in [f_{r,min}, ~f_{r,max} ]
     \label{eq:human_robot_carrying_capacity}
@@ -277,12 +280,13 @@ The collaborative carrying task requires the human and the robot to apply forces
 $$f_{h} + f_{r} = G$$
 As their carrying capacity changes in time, the main task of the robot's control algorithm consists in modulating the weight carried by the operator and the robot to ensure that their carrying capacity is not exceed while compensating for the object's weight.
 
-In addition to the object's weight compensation, inspired by the \textit{Assist-As-Needed} (AAN)~\cite{carmichael2013admittance} paradigm, a simple adaptive weight distribution strategy is proposed, with the goal to ensure that the human operator's relative load remains constant with respect to its real-time capacity. The fixed ratio chosen for the experiments is 30\% of the human's carrying capacity, ensuring operator's safety and maintaining the constant level of engagement.
+In addition to the object's weight compensation, inspired by the Assist-As-Needed (AAN) paradigm proposed by 
+\citet{carmichael2013admittance}, a simple adaptive weight distribution strategy is proposed, with the goal to ensure that the human operator's relative load remains constant with respect to its real-time capacity. The fixed ratio chosen for the experiments is 30\% of the human's carrying capacity, ensuring operator's safety and maintaining the constant level of engagement.
 $$
 f_h = 0.3 f_{h,max}
 $$
 
-To efficiently distribute and adapt the carried load between the human and the robot, while making sure that their carrying capacity is not exceeded and that the operator's relative load is maintaining constant, a robot control strategy based on Quadratic Programming (QP) is proposed
+The main task of the object's weight compensation as well as the AAN strategy, maintaining the constant relative load of the operator, is implemented in a single robot control strategy based on Quadratic Programming (QP)
 \begin{equation}
 \begin{split}
     \min_{f_r,f_h} &~\overbrace{||G - f_r -f_h||^2}^{\text{weight compensation}} ~~+ \overbrace{\omega||f_r||^2}^{\text{weight distribution}}\\
@@ -291,16 +295,16 @@ To efficiently distribute and adapt the carried load between the human and the r
 \end{split}
 \label{eq:qp_human_robot}
 \end{equation}
-The main component of the cost function of this QP is the minimisation of the error $||G - f_{h} -f_{r}||^2$ ensures that the object's gravity is always compensates, as long as their carrying capacity defined in the constraints of the optimisation problem allows for it. 
+The main component of the cost function of this QP is the minimisation of the error $||G - f_{h} -f_{r}||^2$, which ensures that the object's gravity is always compensates, as long as their carrying capacity defined in the constraints of the optimisation problem allows for it. 
 
-The additional regularisation component of the cost function minimises the magnitude of force $f_{r}$ applied by the robot. This optimisation problem will therefore try to find the weight distribution between the human and the robot which results in the minimal force $f_{r}$ applied by the robot. This weight distribution strategy produces the Assist-As-Needed (AAN) behaviour where the human applies its maximal forces (30\% of its carrying capacity) while the robot compensates for the rest. More precisely, the force the human applies is equal either to 30\% of its carrying capacity or the full objects weight
+The Assist-As-Needed (AAN) strategy is formulated as a regularisation task $\omega||f_r||^2$ in the cost function. This task minimises the magnitude of force $f_{r}$ applied by the robot while having no penalisation for the human's force $f_h$. The resulting behaviour of the optimisation problem is to find the weight distribution between the human and the robot which results in the minimal force $f_{r}$ applied by the robot, while maximising the force of the operator $f_h$. In the other words, this weight distribution strategy produces the AAN behaviour where the human applies its maximal forces (30\% of its carrying capacity) while the robot compensates for the rest. More precisely, the force the human applies is equal either to 30\% of its carrying capacity or the full objects weight
 $$
 f_h = \begin{cases}
     0.3f_{h,max},& \text{if } G\geq 0.3f_{h,max}\\
     G,              & \text{otherwise}
 \end{cases}
 $$
-while the robot applies
+while the robot applies carries the remaining weight, as long as its capable of doing so
 $$
 f_r =  \begin{cases}
     G-f_h,& \text{if } G-f_h\geq f_{r,max}\\
@@ -308,39 +312,69 @@ f_r =  \begin{cases}
 \end{cases}
 $$
 
-The regularisation factor $\omega$ is used to set the priority of the weight distribution task much lower than the main task of the weight compensation of the object, in the experiments proposed in this sections the regularisation weight is set to $\omega=1\times 10^{-2}$.
+It is worth noting that if the object's weight exceeds the common carrying capacity of the robot and the operator $$f_{r,max} + 0.3f_{h,max} < G$$
+they are not able to compensate for the weight of the object and the object will fall. 
 
-Each robot control cycle starts by calculating the carrying capacity of the human $\mathcal{F}_{z,h}$ and the robot $\mathcal{F}_{z,r}$, followed by the resolution of the optimisation problem (\ref{eq:qp_human_robot}). Once the optimal vertical force $f_{r}$ is obtained, the joint torques $\bm{\tau}_{r}$ achieving this force are calculated sent to their low-level joint controllers. 
+The regularisation factor $\omega$ is used to set the priority of the AAN task lower than the main task of the weight compensation of the object, in the experiments proposed in this sections the regularisation weight is set to $\omega=1\times 10^{-2}$.
+
+In each control cycle human's $\mathcal{F}_{z,h}$ and robot's $\mathcal{F}_{z,r}$ carrying capacities are calculated. These values are then used for the resolution of the optimisation problem (\ref{eq:qp_human_robot}). Once the robot's optimal vertical force $f_{r}$ is obtained, the joint torques $\bm{\tau}_{r}$ achieving this force are calculated using the expression
 $$
 \bm{\tau}_r = J_{z,r}^T(\bm{q}_r) f_r - \bm{\tau}_{b,r}(\bm{q}_r,\dot{\bm{q}}_r)
 $$
-where $J_r\in\mathbb{R}^{\times n_r}$ is the end-effector Jacobian with 1 line and $n_r$ columns, $\bm{\tau}_{b,r} \in\mathbb{R}^{n_r}$ is robot's torque vector corresponding to the effects of the gravity and the robot's motion and $\bm{\tau}_r \in\mathbb{R}^{n_r}$ are the joint torques applied to the robot. 
+where $\{\bm{q}_r,\dot{\bm{q}}_r\}\in \mathbb{R}^{n_r}$ is the robot's $n_r$ dimensional state, $J_r\in\mathbb{R}^{\times n_r}$ is the end-effector Jacobian with 1 line and $n_r$ columns, $\bm{\tau}_{b,r} \in\mathbb{R}^{n_r}$ is robot's torque vector corresponding to the effects of the gravity and the robot's motion and $\bm{\tau}_r \in\mathbb{R}^{n_r}$ are the joint torques sent to the robot's low-level joint control. 
 
-\subsubsection{Experiment and Results}
+\subsubsection{Experimental validation}
 \label{sec:human_robot_experiment}
-The human operator {visually} navigates the object through the common workspace, passing through {the set of} 4 via-points. 
-{The experiment is repeated two times, for two different operator positions, equally distant from the via-points, but rotated by 90° in space.}
 
-All the algorithms are implemented in Python, integrated using the \textit{Robot operating system} (ROS) and run on a computer with 1.90GHz Intel i7-8650U processor. 
+In this experiment, the human operator performs a task by {visually} navigating the object through the common workspace, passing through {the set of} 4 via-points. The object is fixed in the end-effector of the robot as well as at the hand of the human operator using a handle. \Cref{fig:experiment2} shows the experimental setup indicating the structure of the collaborative workstation, the placement of the via-points and the handle. 
+The experiment is illustrated in the accompanying video\footnote{https://youtu.be/wg4E62AkNnM}.
+
+\qrimg{qrcodes/icra2022.png}{https://youtu.be/wg4E62AkNnM}{Video}
+
+
+The experiment is repeated two times, for two different operator positions, equally distant from the via-points, but rotated by 90° in space. These operator positions are indicated on \Cref{fig:experiment2} as well. Furthermore, in each of the two experiments, the operator performs 10 cycles through the via-points.
+
 
 \begin{figure}[!t]
     \centering
     \includegraphics[width=\linewidth]{Papers/images/both_pose_explanation.jpg}
     \caption{{These figures show the experimental setup. The robot end-effector is fixed to the carried object and the human operator is holding the object by the handle. The motion capture system is used to acquire the pose of the human arm. The via-points are visually indicated to the human operator with numbered stickers on the table placed at the corners of a 30 cm square. The images shows the experiment 1 (left) and the experiment 2 (rigth).}}
-    \label{fig:experiment}
+    \label{fig:experiment2}
 \end{figure}
 
-The human upper limb configuration is inferred in real-time using an \textit{Optitrack} motion capture system. The musculoskeletal model analysis is developed using the efficient C++ library \textit{pyomeca biorbd} \cite{Michaud2021}. The musculoskemetal model used in this experiment is the 50 muscles, 7 degrees of freedom MOBL-ARMS model \cite{saul2015benchmarking}  {developed by \citet{holzbaur2005model}. The human subject (male, 182 cm, 80 kg) and the model belong to the same 50th percentile anthropomorphic group \cite{gordon1989anthropometric} so no model scaling \cite{correa20112782} is necessary.}
+\begin{wrapfigure}{r}{0.4\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{Papers/images/model_50m7dof.png}
+    \caption{Caption}
+    \label{fig:model_musc}
+\end{wrapfigure}
 
-\Cref{fig:experiment_results} confirms that the evolution of robot's carrying capacity does not change in both experiments, as the via-points' position remains fixed, {whereas human's carrying capacity profile changes significantly}. The human's carrying capacity in both experiments peaks around 20 kg demonstrating that the human's force capacity is not negligible with respect to the robot's, however its large variability, from 20 kg to less than 5 kg, emphasizes the importance of measuring it in real-time.    
+The human upper limb configuration is inferred in real-time using an OptiTrack~\cite{optitrack} motion capture system. The musculoskeletal model analysis is developed using the efficient biomechanics library {biorbd} \cite{Michaud2021}. The musculoskeletal model used in this experiment is the 50 muscles, 7 degrees of freedom MOBL-ARMS model \cite{saul2015benchmarking}  developed by \citet{holzbaur2005model}. The visualisation of this model, using the biomechanics software Opensim \cite{opensim}, is shown on \Cref{fig:model_musc}.
 
-\Cref{fig:experiment_results} further shows that, by calculating the operator's carrying capacity in real-time, { using the same simple control law, the robot is able to adapt its assistance strategy despite the substantial change in the operator's capacity profile.}
-To demonstrate this adaptability even further, in addition to  experiments 1 and 2 , a third experiment is included in the video attachment, where the human operator moves freely in space. 
+The human subject (male, 182 cm, 80 kg) and the model belong to the same 50th percentile anthropomorphic group \cite{gordon1989anthropometric} so no model scaling \cite{correa20112782} is necessary.
 
 
-\qrimg{qrcodes/icra2022.png}{https://youtu.be/kss0-aompbs}{Video}
+Both robot's and human's carrying capacity calculation algorithms, as well as the robot control strategy described in \Cref{sec:collab_robot_control_human_robot}, are implemented in Python and run in real-time with the update frequency of 100Hz. The low-level robot control is implemented in C++, and run in real-time at the frequency of 1kHz. All the software components are integrated using the Robot Operating System (ROS) and run on a computer with 1.90GHz Intel i7-8650U processor. 
 
-\todos{This experiment is illustrated in the accompanying video\footnote{https://youtu.be/kss0-aompbs}.}
+\Cref{fig:experiment_results} shows the recorded time evolution of robot's and human's carrying capacities and weight carried during the 10 cycles for each of the two experiments.
+
+The figure shows (top graphs) that the human's carrying capacity is much more variable that the robot's one, peaking around 20kg in the recorded experiments and going as low as 5kg, emphasising the importance of measuring it in real-time. Furthermore, the experiment's show that the human's carrying capacity is in many cases much higher than the robot's capacity, confirming the importance of creating the control strategies able to account for both of their physical abilities. 
+
+The second line of graphs on \Cref{fig:experiment_results} shows the time evolution of the sum of their carrying capacities, their carrying capacity as one system. The graphs show that even though both robot and the human, in multiple instances during the experiment runs, had carrying capacity lower than the object's weight $G$, their joint carrying capacity exceed the object's weight during the whole time of the experiment. Therefore, neither the operator or the robot would have been able to carry the object on their own, but by collaborating they were able to execute this task.
+
+However, this may not be the case over the entire common workspace, but this example is a good illustration of the interest of accounting for the true capabilities of the system at the control level. In certain configurations the common carrying capacity of the human and the robot might be lower than the objects weight $f_{h,max}+f_{r,max} <G$. The proposed control approach, in those cases would still be able to ensure that both robot's and human's physical abilities are not exceeded, however it would not be able to guarantee the weight compensation of the object. 
+
+The third line of graphs shows the time evolution of the weight carried by the robot and the human, while the bottom graphs on \Cref{fig:experiment_results}, show the carrying load of the robot $l_r$ and the human $l_h$ calculated as
+$$
+l_h = \frac{f_h}{f_{h,max}}, \qquad l_r = \frac{f_r}{f_{r,max}}
+$$
+The graphs confirm that the proposed control strategy maintained the human's relative load at 30\% ($l_h=0.3$) of its capacity as proposed by the Assist-As-Needed (AAN) strategy, while the robot's relative load $l_r$ depended on the human capacity. As the human's carrying capacity decreased robot's load $l_r$ increased, and \textit{vice-versa}. By having the real-time knowledge about the operator's carrying capacity, the robot was able to adapt its assistance level to maintain human's load constant, despite substantial changes in the operator's capacity profile and despite the his changing placement in the workspace. 
+
+In summary, the experimental validation, presented in this section, demonstrates the benefits of integrating accurate real-time information about, both the human operator's and the robot's, physical abilities within the robot control strategy in the context of human-robot physical collaboration.
+
+The proposed robot control strategy exploits both robot's and human's physical abilities, while guaranteeing that neither of their abilities is surpassed. As demonstrated in the experiments, even though their individual abilities are not suitable for executing this task on their own, by collaborating the task become feasible, as their combined abilities (as a single system) are higher than the requirements of the task. In addition to efficiently combining both operator's and robot's physical abilities, the proposed control strategy was able to further ensure safety and operator's engagement in the task, by modulated the weight carried by the human operator in accordance with the proposed Assist-As-Needed (AAN) strategy. 
+
+Finally, the proposed strategy relies entirely on the real-time information about the carrying capacities, enabling very flexible collaborative behaviours, where the robot is able to adapt to any trajectory chosen by the operator as well as any change in his placement in space. 
 
 
 \begin{landscape}
@@ -352,24 +386,18 @@ To demonstrate this adaptability even further, in addition to  experiments 1 and
 \end{figure}
 \end{landscape}
 
-\subsubsection{Prospective for human-robot collaboration}
+\subsubsection{Discussion on limitations}
 \label{sec:human_robot_prospective}
+
 The proposed algorithm presents a new and efficient way of calculating human's wrench capabilities which, as opposed to the known methods (ellipsoids \cite{yoshikawa1985manipulability}\cite{sasaki2011vertex} or RSM algorithm \cite{carmichael2011Towards}), can guarantee user defined level of accuracy. It opens many possibilities for wider use of human wrench polytopes in the area of the human-robot collaboration, by both reducing the computation time and enabling the use of more complete human models, better describing human subjects \cite{sohn2019effects}.
 
-Analysis based on the more complete human models and their pathology could enhance the exoskeleton and prosthesis design, while the efficiency might accelerate analysis of wider anthropomorphic groups of people and improve the design of collaborative workspaces. The algorithm's real-time ability, on the other hand, may enable higher degree of human-centered robot control. The operators' accurate real-time capacity, based on the detailed musculoskeletal models, could be used not only to enforce safety and improve engagement, but to provide the operator-specific assistance profiles. Preventing the development of the work related injuries and potentially even enabling the rehabilitation in the factory context.
+Analysis based on the more complete human models and their pathology could enhance the exoskeleton and prosthesis design, while the efficiency might accelerate analysis of wider anthropomorphic groups of people and improve the design of collaborative workspaces. The algorithm's real-time ability, on the other hand, may enable higher degree of human-centred robot control. The operators' accurate real-time capacity, based on the detailed musculoskeletal models, could be used not only to enforce safety and improve engagement, but to provide the operator-specific assistance profiles. Preventing the development of the work related injuries and potentially even enabling the rehabilitation in the factory context.
 
-Furthermore, the  also relate to the inclusion of capability alteration models related to fatigue but also cognitive factors. This potential increase in models complexity advocates for systematic experimental validations of the results they lead to \cite{biomechanics1010008}.
+Furthermore, the results also relate to the inclusion of capability alteration models related to fatigue but also cognitive factors. This potential increase in models complexity advocates for systematic experimental validations of the results they lead to \cite{biomechanics1010008}.
 
 The potential of the method to be used for collaborative robot control is demonstrated in a collaborative carrying experiment, where the human operator and a robot jointly carry a 7kg object. The experiment shows that by combining the real-time human's capacity evaluation with a simple control law, a highly flexible collaboration scenario can be created. 
 
 Even though the proposed algorithm itself is independent of any musculoskeletal model, it relies entirely on the model's real-time representation of the operator. Therefore, for practical implementations, the key challenges become: evaluating human posture in the real-time, precise enough and in a minimally intrusive way, as well as performing the individual scaling and calibration of the used musculoskeletal models for a given operator \cite{correa20112782}.
-
-\section{Reachable space shaping}
-\label{ch:human_robot_reachable_space}
-
-
-\section{Perceived mass shaping}
-\label{ch:human_robot_percieved_mass}
 
 
 \section{Conclusion}
