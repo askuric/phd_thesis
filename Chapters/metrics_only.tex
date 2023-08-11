@@ -236,7 +236,7 @@ When it comes to using polytopes in practical applications, there are two standa
 Furthermore, as discussed by \citet{Finotello1998}, polytopes enable calculating many other local different performance metrics, such as Maximum Available Value (MAV) corresponding to the highest achievable magnitude of the task space variable (velocity, acceleration, force, static error, etc.), Maximal Isotropic Value (MIV) corresponding to the maximal value achievable in all the directions in space or Directional Index (DI) \cite{boschetti_minto_2023} corresponding to the maximum achievable task space variable in certain direction in space or calculating. Additionally, polytope volume and major (preferred) axis can be used as performance metrics as well \cite{chiacchio_global_1991, Long2018Evaluating}.
 
 In case of characterising physical abilities, transforming the polytopes to the vertex representation enables using efficient triangulation algorithms from computational geometry. Most of the standard visualisation tools can visualise such triangulated meshes in very efficient manner, even in real time. 
-In the context of human-robot collaboration, an example application of polytope visualisation was proposed by \citet{Zolotas2021}, where the robot's velocity polytopes were used to inform the operator about the robot's movement capacity during the teleportation task. Similar application was recently proposed by \citet{Weistroffer2022Using}, where the polytopes of robot's force capacity were visualised to the operator designing the collaborative workspace with the aim to improve its safety and ergonomics. 
+In the context of human-robot collaboration, an example application of polytope visualisation was proposed by \citet{Zolotas2021}, where the  robot's velocity polytopes were used to inform the operator about the robot's movement capacity during the teleportation task. Similar application was recently proposed by \citet{Weistroffer2022Using}, where the polytopes  of robot's force capacity were visualised to the operator designing the collaborative workspace with the aim to improve its safety and ergonomics. 
 
 Polytopes can be expressed as a set of linear inequalities $A\bm{x}\leq\bm{b}$, that can be integrated into different optimisation problems in a form of linear inequality constraints. Most of the standard Quadratic Programming (QP) \cite{boggs_tolle_1995} and Linear Programming (LP) \cite{GOLDFARB198973} solvers support the inequality constraints in an efficient manner. A typical example applications often based on different optimisation strategies are robot control and trajectory planning applications. In the context of human-robot collaboration, being able to consider both robot's and human's physical abilities with in those contexts, opens doors for creating more human-centred robot control (or trajectory planning) strategies where robot's behaviour is adapted (planned), not just with respect to its own physical abilities, but also to the ones of the human.
 Potential benefits of considering human's physical abilities for creating human-centred robot control were demonstrated in the context of assistive exoskeletons. In these scenarios, the robot provides the assistance to the operator adapted to his current physical ability, so called \textit{Assist As Needed} (AAN)\cite{carmichael2013admittance} control paradigm.
@@ -778,15 +778,15 @@ Different versions of this scenario are shown on \Cref{fig:collaboration_types},
 
 \subsection{Human-robot collaboration scenario}
 \label{ch:which_metric_which}
+
+A classical human-robot physical interaction scenario is considered, where the human operator and the robot are physically interacting in order to manipulate an object which is rigidly fixed both in the robot's end-effector and the human's hand. A simplified view of this collaboration scenario is shown on \Cref{fig:table_inter}, while a more general view of this scenario, with different actors (humans and robots), is shown on \Cref{fig:collaboration_types}.
+
 \begin{wrapfigure}{r}{0.5\textwidth}
     \centering
     \includegraphics{Chapters/imgs/example_inter.pdf}
     \caption{A collaborative example scenario where a human and a robot interact over an object fixed rigidly in the end-effector of the robot and in the hand of the human.}
     \label{fig:table_inter}
 \end{wrapfigure}
-
-A classical human-robot physical interaction scenario is considered, where the human operator and the robot are physically interacting in order to manipulate an object which is rigidly fixed both in the robot's end-effector and the human's hand. A simplified view of this collaboration scenario is shown on \Cref{fig:table_inter}, while a more general view of this scenario, with different actors (humans and robots), is shown on \Cref{fig:collaboration_types}.
-
 When it comes to commonly manipulating an object held by both human and the robot, the supposition of rigid contact with the object can be used to formulate the force equilibrium equation and the relative motion constraints \cite{Prattichizzo2016}. 
 
 As they both apply forces on the object, the resulting force $\bm{f}$ the object will exert on the environment (if in contact with it) or transform into motion follows from the force equilibrium ( sum of all forces $\bm{f}_i$ is equal to zero ), and is equal to the sum of the applied forces by the robot $\bm{f}_r$ and the human $\bm{f}_h$. 
@@ -959,6 +959,7 @@ Common polytope formulations, described in \Cref{ch:robot_metrics} for robots an
 where the polytope $\mathcal{P}_x$ represents the achievable set of the task space variable $\bm{x}\in\mathbb{R}^m$, $\bm{y}\in\mathbb{R}^k$ is the input (actuator) variable limited within input set (actuator limits) $\mathcal{P}_y$. The input set $\mathcal{P}_y$ is often defined in the form of intervals of different input (actuator) variables, however in general case it can have a polytope shape as well. The linearised dynamics and kinematics equations can be represented, in a generic case, using the equation $A\bm{x}\!=\!B\bm{y}\!+\!\bm{b}$, where the matrix $A\in\mathbb{R}^{k\times m}$ is a linear transformation matrix from the $m$ dimensional output (task) space to the $k$ dimensional intermediate space, the matrix $B\in\mathbb{R}^{k\times d}$ is a transformation matrix from the $n$ dimensional input space to the intermediate space and $\bm{b}\in\mathbb{R}^k$ is a bias vector expressed in the intermediate space. Furthermore, the dimensions of output (task) space $m$ is lower than the intermediate space dimension $k\!\geq\! m$ , which is in term lower than the input (actuator) space dimension $n\!\geq\! k\!\geq\! m$. This condition comes from the fact that when characterising the physical abilities, the polytopes map higher dimensional input space (ex. joint space or muscle force space) to the lower dimensional output space (ex. Cartesian space).
 
 \begin{table}[!b]
+% \hspace{-1cm}
 \scalefont{0.9}
 \centering
 \begin{tabular}{|l|c|c|c|c|c|c|c|c|c|}

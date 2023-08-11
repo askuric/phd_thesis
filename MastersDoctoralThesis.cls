@@ -232,7 +232,7 @@
 \NewDocumentCommand{\bhrule}{}{\typeout{--------------------}}
 \NewDocumentCommand{\tttypeout}{m}{\bhrule\typeout{\space #1}\bhrule}
 
-\newcommand{\HRule}{\rule{.9\linewidth}{.6pt}} % New command to make the lines in the title page
+\newcommand{\HRule}{\rule{.9\linewidth}{.6pt}} % New command to make the lines in thetitle page
 \newcommand{\decoRule}{\rule{.8\textwidth}{.4pt}} % New command for a rule to be used under figures
 
 \setcounter{tocdepth}{3} % The depth to which the document sections are printed to the table of contents
@@ -407,8 +407,9 @@ KOMA-script documentation for details.}]{fancyhdr}
 %----------------------------------------------------------------------------------------
 %	ACKNOWLEDGEMENTS PAGE DESIGN
 %----------------------------------------------------------------------------------------
-
 \usepackage{xcolor}
+\definecolor{inriaRed}{HTML}{C42021}
+\definecolor{inriaBlue}{HTML}{2B363B}
 \colorlet{mdtRed}{red!50!black}
 \newcommand{\acknowledgementname}{Acknowledgements}
 \providecaptionname{american,australian,british,canadian,english,newzealand,UKenglish,USenglish} {\acknowledgementname}{Acknowledgements} % Acknowledgement text for English countries

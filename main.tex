@@ -31,7 +31,7 @@ singlespacing, % Single line spacing, alternatives: onehalfspacing or doublespac
 %nolistspacing, % If the document is onehalfspacing or doublespacing, uncomment this to set spacing in lists to single
 %liststotoc, % Uncomment to add the list of figures/tables/etc to the table of contents
 %toctotoc, % Uncomment to add the main table of contents to the table of contents
-%parskip, % Uncomment to add space between paragraphs
+% parskip, % Uncomment to add space between paragraphs
 nohyperref, % Uncomment to not load the hyperref package
 headsepline, % Uncomment to get a line under the header
 % chapterinoneline, % Uncomment to place the chapter title next to the number on one line
@@ -48,7 +48,7 @@ headsepline, % Uncomment to get a line under the header
 \usepackage[utf8]{inputenc} % Required for inputting international characters
 \usepackage[T1]{fontenc} % Output font encoding for international characters
 
-
+\usepackage{afterpage}
 \usepackage{pdflscape}
 
 \usepackage{amsmath}
@@ -97,15 +97,15 @@ pdfstartview={FitV},
 
 \usepackage[nameinlink]{cleveref}
 
-\renewcommand*{\repr}[1]{\mathscr{#1}}
+\newcommand*{\repr}[1]{\mathscr{#1}}
 % \renewcommand*{\conv}[1]{onv\left(#1\right)}
-\renewcommand*{\conv}[1]{\text{Conv}\left(#1\right)}
-\renewcommand*{\vol}[1]{\mathcal{V}ol\left(#1\right)}
-\renewcommand*{\img}[1]{\mathcal{I}m\left(#1\right)}
+\newcommand*{\conv}[1]{\text{Conv}\left(#1\right)}
+\newcommand*{\vol}[1]{\mathcal{V}ol\left(#1\right)}
+\newcommand*{\img}[1]{\mathcal{I}m\left(#1\right)}
 \renewcommand*{\ker}[1]{\mathcal{K}er\left(#1^T\right)}
 
 
-\renewcommand*{\qrimg}[3]{
+\newcommand*{\qrimg}[3]{
 \begin{wrapfigure}{r}{0.2\linewidth}
 \vspace{-0.5cm}
     \centering
@@ -118,9 +118,35 @@ pdfstartview={FitV},
 
 \usepackage[scr=pxtx]{mathalpha}
 
+
+% \renewcommand{\hyp}[2]{\textbf{Hypothesis H#1}: #2\par}
+
+
+
+\usepackage{thmtools}
+\usepackage{nameref}
+\newtheorem{hypothesis}{Hypothesis}
+\crefname{hypothesis}{hypothesis}{hypotheses}
+\Crefname{hypothesis}{Hypothesis}{Hypotheses}
+
+\makeatletter
+\newcommand{\myref}[1]{\cref{#1}\mynameref{#1}{\csname r@#1\endcsname}}
+\newcommand{\Myref}[1]{\Cref{#1}\mynameref{#1}{\csname r@#1\endcsname}}
+
+\def\mynameref#1#2{%
+  \begingroup
+    \edef\@mytxt{#2}%
+    \edef\@mytst{\expandafter\@thirdoffive\@mytxt}%
+    \ifx\@mytst\empty\else
+    \space(\nameref{#1})\fi
+  \endgroup
+}
+\makeatother
+
 \usepackage{bbm}
 
 \usepackage{cancel}
+\usepackage{scalefnt}
 %----------------------------------------------------------------------------------------
 %	MARGIN SETTINGS
 %----------------------------------------------------------------------------------------
@@ -135,9 +161,9 @@ pdfstartview={FitV},
 	%showframe, % Uncomment to show how the type block is set on the page
 }
 
-\usepackage{scalefnt}
+% use paragraph seperation and no indentation
+\usepackage[skip=.5\baselineskip]{parskip}
 
-\usepackage{lscape}
 
 %----------------------------------------------------------------------------------------
 %	THESIS INFORMATION
@@ -262,9 +288,10 @@ pdfstartview={FitV},
 %----------------------------------------------------------------------------------------
 %	LIST OF CONTENTS/FIGURES/TABLES PAGES
 %----------------------------------------------------------------------------------------
-
+{
+\hypersetup{linkcolor=black}
 \tableofcontents % Prints the main table of contents
-
+}
 % \listoffigures % Prints the list of figures
 
 % \listoftables 
@@ -314,8 +341,8 @@ pdfstartview={FitV},
 % alternative view
 \include{Chapters/Intro}
 % \part{Polytopes of physical abilities}
-% \include{Chapters/metrics_only}
-% \include{Chapters/generic_view}
+\include{Chapters/metrics_only}
+\include{Chapters/generic_view}
 
 % \part{Theoretic contribution}
 % \include{Papers/icra2021}
@@ -327,8 +354,8 @@ pdfstartview={FitV},
 % \part{Applications}
 % \include{Chapters/force}
 \include{Papers/carrying} 
+\include{Papers/hfr2022}
 % \include{Papers/topca}
-% \include{Papers/hfr2022}
 % \include{Chapters/motion}
 
 \chapter{Software - pycapacity}
@@ -347,9 +374,8 @@ pdfstartview={FitV},
 % Include the appendices of the thesis as separate files from the Appendices folder
 % Uncomment the lines as you write the Appendices
 
-\include{Appendices/appendix_image}
-\include{Appendices/appendix_operation}
-%\include{Appendices/AppendixC}
+% \include{Appendices/appendix_image}
+% \include{Appendices/appendix_operation}
 
 %----------------------------------------------------------------------------------------
 %	BIBLIOGRAPHY

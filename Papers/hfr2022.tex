@@ -9,7 +9,7 @@ The accuracy of the proposed method is evaluated using simulations of robot's no
 The accuracy analysis results show that the proposed method has good performance for the time horizons up to $t_h\!\leq$250ms, encapsulating most of the simulated robot's reachable space while maintaining comparable volume. For a 7 dof robot, the method has an average execution time of 50ms, independent of the horizon time, potentially enabling real-time applications.
 
 \section{Introduction}
-\vspace{-0.3cm}
+
 
 Collaborative robots, designed for safe physical interaction with humans, have a great potential to find their way in many spheres of industry, research and potentially become a part of our everyday lives. Apart from replacing rigid and dangerous manipulators in the industrial applications, their main potential is creating new robotic assistance scenarios leveraging high degree of physical human-robot interaction. Such scenarios demand not only many safety guarantees, but a high degree of operator's situation awareness both in terms of robot's behaviour and its physical abilities in real-time.  
 
@@ -34,10 +34,10 @@ The paper has the following structure. In the chapter \ref{ch:polytope} the form
 
 
 
-\vspace{-0.1cm}
+
 \section{Convex polytope of reachable space}
 \label{ch:polytope}
-\vspace{-0.2cm}
+
 
 Robot dynamics in joint space can be expressed as
 \begin{equation}
@@ -96,7 +96,7 @@ The convex polytope of reachable cartesian space $\mathcal{P}_x$ can then be def
 
 \begin{figure}[!t]
     \centering
-    \includegraphics[width=\linewidth]{horizon_limits.png}
+    \includegraphics[width=\linewidth]{Papers/images/horizon_limits.png}
     \caption{Three images on the left show the comparison of the size of the reachable space polytope $\mathcal{P}_x$ of a \textit{Franka Emika Panda}\protect\footnotemark robot's end-effector for 3 horizons  (left to right) $t_h$ = 0.05, 0.15 and 0.25s, for the same configuration. Whereas the three figures on the right show the constraining effect of the joint position limits on the $\mathcal{P}_x$ for a fixed horizon time ($t_h$=0.15s).
     Third image from the right shows the robot in its initial position $\bm{q}=[0,0,0,-\pi/2, 0, 3\pi/5,0]$, close to the center of the joint ranges. In the second image form the right, the robot's joints $q_1$ and $q_3$ at their limits, $\bm{q}=[0,-1.59,0,-2.9,0,3\pi/5,0,0]$. On the last image, robot's joints $q_0$ and $q_2$ are at their limits $\bm{q}=[-2.72,0, -2.72,-\pi/2,0,13\pi/5,0,0]$, preventing the robot to rotate around the z axis in one direction.} 
     \label{fig:horizon}
@@ -112,10 +112,10 @@ The convex polytope of reachable cartesian space $\mathcal{P}_x$ can then be def
 
 \begin{figure}[!t]
     \centering
-    \includegraphics[width=\linewidth]{vel_object.png}
+    \includegraphics[width=\linewidth]{Papers/images/vel_object.png}
     \caption{Three images on the left show the shifting effect on the reachable space polytope $\mathcal{P}_x$ produced by certain cartesian velocity at the beginning of the horizon, from left to right: $\dot{\bm{x}}_k$ = $[0,0,0]$, $[0,1,0] $ and $[0,0,-1]m/s$. Three images on the right show the reducing effect on the polytope $\mathcal{P}_x$ by three different carried object masses (left to right) $m_o$ = 0, 2 and 5kg. Horizon used is $t_h$=0.15s and the robot is in initial configuration.}
     \label{fig:velocity}
-    \vspace{-1cm}
+    
 \end{figure}
 
 % \begin{figure}[b!]
@@ -140,7 +140,7 @@ Figures \ref{fig:horizon} and \ref{fig:velocity} showcase the influences of diff
 
 
 
-\vspace{-0.3cm}
+
 \subsection{Influence of the carried object}
 
 If the robot is carrying a payload, an object with a mass $m_o$ and inertia $i_o$ attached to its end-effector, this object will have an influence on the robot's dynamics, modifying the mass matrix $M$, coriolis matrix $C$ and the gravity vector $\bm{\tau}_g$ \cite{hamad2019}.
@@ -177,15 +177,15 @@ The figure \ref{fig:velocity} shows the influence of different object masses $m_
 %     \label{fig:objectt}
 % \end{figure}
 
-\vspace{-0.2cm}
+
 \subsection{Integration of the environment}
 
 \begin{figure}[!t]
     \centering
-    \includegraphics[width=0.75\linewidth]{env.png}
+    \includegraphics[width=0.75\linewidth]{Papers/images/env.png}
     \caption{Resulting reachable space polytope $\mathcal{P}_x$ for a \textit{Franka Emika Panda} robot's end-effector when integrating the environmental constraints, horizon time used is $t_h$=0.15s. Environment is defined as $z\geq0.5$m and $y\geq-0.2$m.}
     \label{fig:env}
-    \vspace{-0.5cm}
+    
 \end{figure}
 
 If the robot's environment can be defined as a set of convex inequalities
@@ -212,7 +212,7 @@ and then included in the $\mathcal{P}_x$ calculation (\ref{eq:polytope_simple})
 Figure \ref{fig:env} showcases the influence of the environmental constraints on the shape of the $\mathcal{P}_x$.
 
 
-\vspace{-0.2cm}
+
 \subsection{Integration of robot's link geometry}
 
 If the robot link $l_i$ is considered to be a straight line, to calculate the predicted reachable space of a robot's link $l_i$ the polytope $\mathcal{P}_x$ can be calculated at the start $\mathcal{P}_{xs}$ and the end $\mathcal{P}_{xe}$ of the line $l_i$.  Finally the reachable space of this idealised robot link $l_i$ can then be calculated as the \textit{convex-hull} ($\conv{\cdot}$) of the polytopes $\mathcal{P}_{xs}$ and $\mathcal{P}_{xe}$
@@ -257,14 +257,14 @@ By evaluating the polytope $\mathcal{P}_{xli}$ for each robot's link one can obt
 
 \begin{figure}[!t]
     \centering
-    \includegraphics[width=\linewidth]{minkowski3.png}
+    \includegraphics[width=\linewidth]{Papers/images/minkowski3.png}
     \caption{ First four images show the construction of the reachable space polytope of the panda robot's link 3, $\mathcal{P}_{xl3}$. From left to right they show, robot's link 3 as a line segment (in red) with polytopes $\mathcal{P}_{xs}$ and $\mathcal{P}_{xe}$, their convex-hull, an example of the enveloping space $\mathcal{L}_3$ of the link 3 (in red), and the final polytope $\mathcal{P}_{xl3}$ calculated as a convex hull of the reachable space polytopes of each one of the 8 vertices (shown in yellow) of $\mathcal{L}_3$.
     Last two images further show an example of 4 enveloping spaces $\mathcal{L}_i$ for each one of the robot's links, and their reachable space polytopes $\mathcal{P}_{xli}$. Robot is in its initial configuration, and the horizon time used is 150ms.}
     \label{fig:minkowski}
-\vspace{-0.3cm}
+
 \end{figure}
 
-\vspace{-0.2cm}
+
 \subsection{Enumerating reachable space polytope}
 \label{ch:enumerating}
 
@@ -318,11 +318,11 @@ In the extent of the proposed experiments, the considered reachable space is the
 
 \begin{figure}[!t]
     \centering
-    \includegraphics[width=\linewidth]{simulation.pdf}
+    \includegraphics[width=\linewidth]{Papers/images/simulation.pdf}
     \caption{Images show the steps (left to right) of the nonlinear simulation procedure on a simplified 2 link planar robot. First the polytope $\mathcal{P}_x$ of the end-effector is determined. For each vertex of the $\mathcal{P}_x$, joint torque $\tau$ generating the vertex is applied to the robot simulation (figures 2 and 3). All the robot's end-effector positions in all the simulation time steps $\Delta t$ are saved for further analysis.}
     \label{fig:simulation}
-    % \vspace{-0.5cm}
-\vspace{-0.3cm}
+    % 
+
 \end{figure}
 
 To analyse the approximation accuracy of the  reachable space polytope $\mathcal{P}_x$, a simple discrete non-linear robot dynamics simulation, subject to the constraints (\ref{eq:limits}) is employed. Simulation is carried out by discretizing the equation (\ref{eq:robot_model}) to determine the instantaneous joint acceleration $\ddot{\bm{q}}_{k}$ and followed by its numerical integration to determine joint velocity $\dot{\bm{q}}_{k+1}$ and position $\bm{q}_{k+1}$ in the step $k\!+\!1$. 
@@ -353,10 +353,10 @@ $$
 
 \begin{figure}[!t]
     \centering
-    \includegraphics[width=0.8\textwidth]{metrics.pdf}
+    \includegraphics[width=0.8\textwidth]{Papers/images/metrics.pdf}
     \caption{Depiction of the defined quantitative metrics for a simple 2 link planar robot. }
     \label{fig:metrics_defintition}
-\vspace{-0.3cm}
+
 \end{figure}
 
 
@@ -382,7 +382,7 @@ The third metric, $m_3$, is defined as the ratio of the volumes of the polytope 
 The metric $m_3$ gives insight about the ratio of the volumes of the polytope $\mathcal{P}_x$ and the simulated reachable space of the robot $\conv{\mathcal{X}}$. This metric is designed to asses the quality of the volume of the $\mathcal{P}_x$ as a metric. The further this metric from 1 the less confidence one has in the volume of the $\mathcal{P}_x$.
 
 \subsection{Benchmark comparison}
-\vspace{-0.1cm}
+
 To benchmark the accuracy of convex polytope approach $\mathcal{P}_x$, it is compared with the coarse approximation of the robot's end-effector reachable space using fixed cartesian velocity $\dot{\bm{x}}$ and acceleration $\ddot{\bm{x}}$ limits specified by robot manufacturer.
 \begin{equation}
     \ddot{\bm{x}}\in [~ \ddot{\bm{x}}_{min},  \ddot{\bm{x}}_{max}], \qquad \dot{\bm{x}} \in [~ \dot{\bm{x}}_{min},  \dot{\bm{x}}_{max}]
@@ -391,10 +391,10 @@ To benchmark the accuracy of convex polytope approach $\mathcal{P}_x$, it is com
 
 \begin{figure}[!t]
     \centering
-    \includegraphics[width=\linewidth]{comp_200.png}
+    \includegraphics[width=\linewidth]{Papers/images/comp_200.png}
     \caption{Comparison of the end-effector reachable space approximation using the convex polytope $\mathcal{P}_x$ (blue) and the cube $\mathcal{C}_x$ (orange) for the \textit{Franka Emika Panda} robot with the horizon time $t_h$=200ms. They are both evaluated in robot's initial position and the figures show two different views.}
     \label{fig:cube}
-\vspace{-0.3cm}
+
 \end{figure}
 
 
@@ -409,10 +409,10 @@ The cartesian space limitations (\ref{eq:limits_cart}) assume that the robot's a
 
 Figure \ref{fig:cube} shows the visual comparison of the two approaches: $\mathcal{P}_x$ and $\mathcal{C}_x$ calculated for one pose of the \textit{Franka Emika Panda} robot. 
 
-\vspace{-0.2cm}
+
 \section{Results}
 \label{ch:results}
-\vspace{-0.2cm}
+
 The proposed analysis of the reachable space polytope accuracy is illustrated on the simulation of the collaborative robotic manipulator \textit{Franka Emika Panda} with 7 degrees of freedom.
 Robot modeling and kinematics as well as simulations of robot dynamics are built using the python implementation of the \textsc{robotics-toolbox}\cite{rtb} package. 
 
@@ -428,16 +428,16 @@ The proposed method implementation as well as the code used for the experiments 
 
 All the simulations are run on a computer with 1.90GHz Intel i7-8650U processor and 32Gb of RAM memory.
  
-\vspace{-0.1cm}
+
 \subsection{Execution time}
-\vspace{-0.1cm}
+
 \begin{figure}[!t]
     \centering
-    \includegraphics[width=0.7\linewidth]{time.png}
-    \vspace{-0.2cm}
+    \includegraphics[width=0.7\linewidth]{Papers/images/time.png}
+    
     \caption{Execution time of the polytope $\mathcal{P}_x$ enumeration using ICHM algorithm. Average and standard deviation calculated over 1000 executions for each of the 8 horizon lengths.}
     \label{fig:exec_time}
-\vspace{-0.3cm}
+
 \end{figure}
 
 Figure \ref{fig:exec_time} shows the polytope $\mathcal{P}_x$ execution time averaged over 1000 random robot configurations for each of the 8 horizon lengths. From the figure it can be seen that the execution time is relatively consistent through all the horizon lengths, with the average value of around 50ms. The constant execution time is expected because the horizon length $t_h$ does not have a big influence on the geometrical complexity of the polytope (number of vertices and faces) but its scale, and the scale itself does have a big influence the execution time.
@@ -452,15 +452,15 @@ The average execution time of the nonlinear simulation for $t_h$=50ms and $\Delt
 
 \begin{figure}[!t]
     \centering
-    \includegraphics[width=0.75\linewidth]{time_constriant.png}
+    \includegraphics[width=0.75\linewidth]{Papers/images/time_constriant.png}
     \caption{Average execution time and standard deviation calculated over 1000 executions for each of the 8 horizon lengths, with different number of added environmental constraints, ranging from 0 to 1000.}
     \label{fig:exec_time_constraints}
-    \vspace{-0.3cm}
+    
 \end{figure}
 
-\vspace{-0.3cm}
+
 \subsection{Accuracy analysis}
-\vspace{-0.1cm}
+
 Figure \ref{fig:accuracy} shows the evolution of the three metrics $m_1$, $m_2$ and $m_3$ with respect to the horizon length $t_h$ for the $\mathcal{P}_x$ and $\mathcal{C}_x$, averaged over 100 random robot configurations. 
 
 The first graph on the figure \ref{fig:accuracy} shows the metric $m_1$. It can be seen that the ratio of simulated robot positions $\bm{x}_k \in \mathcal{X}$ inside the polytope $\mathcal{P}_x$ decreases with the increasing horizon length $t_h$, while it increases for the $\mathcal{C}_x$. For larger horizon lengths the robot is able to move far from the initial joint configuration $\bm{q}$ at the beginning of the horizon, making the assumption of linearity of the robot model, made for calculating $\mathcal{P}_x$, largely inaccurate. The approach $\mathcal{C}_x$, on the other hand, improves with the increase in horizon length, since the space bounded by the cube $\mathcal{C}_x$ increases linearly with the horizon length $t_h$, at some point it encapsulates the whole workspace of the robot. However, it can be seen that even though the ratio $m_1$ decreases, the polytope $\mathcal{P}_x$ still contains the most ($\geq$60\%) of the simulated robot's reached positions $\bm{x}_k\in\mathcal{X}$. Finally, it can also be seen that the variance of the $m_1$ increases considerably, lowering the confidence of the polytope $\mathcal{P}_x$ for longer horizons.
@@ -476,18 +476,16 @@ However, for the shorter horizon times $t_h\leq0.25$s the ratio $m_3$ is very cl
 
 \begin{figure}[!t]
     \centering
-    \includegraphics[width=0.95\textwidth]{metrics_results_double.png}
+    \includegraphics[width=0.95\textwidth]{Papers/images/metrics_results_double.png}
     \caption{Accuracy measures calculated for $\mathcal{P}_x$ and $\mathcal{C}_x$, averaged over 100 random poses of the \textit{Franka Emika panda} robot for each of 8 horizon lengths.}
     \label{fig:accuracy}
-    \vspace{-0.5cm}
+    
 \end{figure}
 
 
 Overall, this numerical analysis shows that the reachable space approximation based on the convex polytope $\mathcal{P}_x$ works reasonably well for low horizon times $t_h\leq250$ms, while for the longer horizon times $t_h>250$ms the assumption of the linearity of the system produces a large error in the reachable space estimation, producing the polytope $\mathcal{P}_x$ with volume several times higher than the real reachable space of the robot (shown by the metric $m_3$), most of which is not reachable by the robot at all (showed by the metric $m_2$). Finally, the results show that the polytope $\mathcal{P}_x$, even though a coarse approximation, has better performance across all the defined metrics then the $\mathcal{C}_x$ based on the constant cartesian limits, at the same time having smaller average volume for the all the horizon times. These results remind, once again, that robot's cartesian capacity is not constant and by modeling their evolution, even in a coarse manner, a substantial improvement in the estimation accuracy can be reached.
-\vspace{-0.3cm}
 \section{Discussion}
 \label{ch:discussion}
-\vspace{-0.2cm}
 Approximating the reachable space of the robot using convex polytopes $\mathcal{P}_x$ is an efficient and relatively fast way of gaining information about the potential robot's position for the horizon of interest. Even though this approximation approach is neither an under or an over approximation of the true reachable space of the robot, as shown in the numerical analysis, for shorter horizon times $t_h\leq250$ms this metric is reasonably precise. Due to its efficiency, easy and intuitive integration of different environmental constraints, possibility to consider the robot's link geometry and the fact that its output has the form of a convex set of inequality constraints (convex polytope $\mathcal{P}_x$), it has a potential to be a useful tool for robot performance and safety analysis. However there are several important limitations of this approach.
 
 \subsection{Main limitations}
@@ -498,7 +496,7 @@ state, which is again a strong assumption and only valid for short horizon times
 
 Finally, the polytope formulation from the section \ref{ch:polytope}, considers only constant joint torques $\bm{\tau}$ applied to the robot during the whole horizon length $t_h$. The polytope $\mathcal{P}_x$ calculates the joint torque vectors $\bm{\tau}$ that will produce the largest possible displacements in cartesian space given the robot and environment constraints. This calculation is based on the robot's linearised model at the beginning of the horizon, which in term, once again, limits the precision of the approximation to the small displacements around the initial robot state, preventing longer horizon lengths $t_h$, as confirmed in the analysis section \ref{ch:results}.
 
-\vspace{-0.3cm}
+
 
 \subsection{Potential applications}
 
