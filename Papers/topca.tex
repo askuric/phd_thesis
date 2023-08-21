@@ -1,19 +1,19 @@
 
-\chapter{Capacity aware cartesian space trajectory planning}
+\chapter{Polytopes for near time-optimal and reactive Cartesian space trajectory planning}
 \label{ch:topca}
 
 \newcommand{\DD}[1]{\textcolor{teal}{[dd] #1}}
 \newcommand{\redo}[1]{\todo[inline]{[redo] #1}}
 
-With many promising collaborative robot applications in dynamical and unstructured human environments, there is an increasing need for real-time adaptable robot motion planning strategies. To reach the real-time execution times needed to ensure online adaptations, common techniques often make assumptions on robot's movement capacity considering them constant during the movement execution. However, robot's task-space movement capacity is state dependant and thus can evolve significantly during the execution of the movement.
-To adapt to the real-time evolution of the robot's capacity, this paper proposes a method for real-time trajectory planning based on time-optimal Trapezoidal acceleration profile (TAP) trajectories. 
-In each planning step, the robot's movement capacity is evaluated using an efficient approach for projecting the robot's kinematic limits in the trajectory direction, leveraging the convex polytope algebra.
-\textcolor{red}{In addition to the robot's movement limits, the proposed method enables integrating task and environment-specific constraints as well.}
+% With many promising collaborative robot applications in dynamical and unstructured human environments, there is an increasing need for real-time adaptable robot motion planning strategies. To reach the real-time execution times needed to ensure online adaptations, common techniques often make assumptions on robot's movement capacity considering them constant during the movement execution. However, robot's task-space movement capacity is state dependant and thus can evolve significantly during the execution of the movement.
+% To adapt to the real-time evolution of the robot's capacity, this paper proposes a method for real-time trajectory planning based on time-optimal Trapezoidal acceleration profile (TAP) trajectories. 
+% In each planning step, the robot's movement capacity is evaluated using an efficient approach for projecting the robot's kinematic limits in the trajectory direction, leveraging the convex polytope algebra.
+% \textcolor{red}{In addition to the robot's movement limits, the proposed method enables integrating task and environment-specific constraints as well.}
 
-\textcolor{red}{
-The method has been compared with state-of-the-art time-optimal joint space planning method TOPP-RA and traditional task-space TAP planning assuming constant movement capacity, given by the manufacturer. Results show that the proposed method has a comparable trajectory execution time as TOPP-RA, while exploiting the robot's movement capacity better and having lower tracking error than the traditional TAP approach. A mockup experiment is presented where the proposed method is used for collaborative waste sorting using a Franka Emika Panda robot, showing the efficiency of the approach in a real-world application.}
+% \textcolor{red}{
+% The method has been compared with state-of-the-art time-optimal joint space planning method TOPP-RA and traditional task-space TAP planning assuming constant movement capacity, given by the manufacturer. Results show that the proposed method has a comparable trajectory execution time as TOPP-RA, while exploiting the robot's movement capacity better and having lower tracking error than the traditional TAP approach. A mockup experiment is presented where the proposed method is used for collaborative waste sorting using a Franka Emika Panda robot, showing the efficiency of the approach in a real-world application.}
 
-\section{Introduction}
+\section{Motivation}
 
 The field of collaborative robotics has seen a unprecedented growth in recent years with the development of safer and cheaper robots with promising applications in industry, research, and even everyday life \cite{ajoudani2018progress}. However, as the complexity of the environments in which these robots operate increases, planning for robot trajectories becomes a significant challenge.  The robots need to adapt to changing environmental conditions and tasks, as well as the presence of humans. 
 At the same time, in order to be safe, collaborative robots tend to be smaller and relatively limited in performance compared to more traditional industrial robots \cite{smu}. Therefore, it is becoming increasingly important to utilise the physical abilities of these robots fully in order for their applications to become viable, rather than investing in larger, more expensive industrial robots. 
@@ -22,35 +22,35 @@ At the same time, in order to be safe, collaborative robots tend to be smaller a
 
 When it comes to planning robot motions, the most common approach is to decouple path and trajectory planning \cite{Pardo1996}. First, the robot's geometric path is found, accomplishing certain task and potentially avoiding the obstacles in the environment. Then the optimal sequence of movements along this path is calculated in order to optimise certain criteria, the most common ones used in the literature being minimum energy, minimum jerk and minimum execution time. The criteria that aims to exploit full robot's movement capacity corresponds to finding the the time-optimal (minimum time) trajectories \cite{gasparetto2012trajectory}. 
 
-Traditional time-optimal trajectory planning techniques, developed for industrial robots, find trajectories with the highest possible speeds, within robot's and task constraints, along predefined paths. Time-optimal algorithms, such as ones proposed Bobrow et al. \cite{bobrow1985time} and recently by Pham and Pham \cite{Pham2018}, assume full in advance knowledge about both robot's path and the the environment. However in collaborative scenarios, environment is often dynamic and conditions may change rapidly, requiring real-time changes in the trajectory and the task. To account for these changes the trajectory needs to be adapted in real-time, however time-optimal approaches have long execution times due to their computational complexity, making such implementations unpractical. 
+Traditional time-optimal trajectory planning techniques, developed for industrial robots, find trajectories with the highest possible speeds, within robot's and task constraints, along predefined paths. Time-optimal algorithms, such as ones proposed \citet{bobrow1985time} and recently by \citet{Pham2018}, assume full in advance knowledge about both robot's path and the the environment. However in collaborative scenarios, environment is often dynamic and conditions may change rapidly, requiring real-time changes in the trajectory and the task. To account for these changes the trajectory needs to be adapted in real-time, however time-optimal approaches have long execution times due to their computational complexity, making such implementations unpractical. 
 
 
 \begin{figure}[!t]
     \centering
-    \includegraphics[width=0.8\linewidth]{img/comp_poly2.png}
+    \includegraphics[width=0.8\linewidth]{Papers/imgs/comp_poly2.png}
     \caption{End-effector linear velocity limits as computed using the fixed Cartesian limits provided by the manufacturer (orange) and using an estimation based on the joint space velocity limits and the current configuration of the robot (blue) (scale: 1 m.s$^{-1}$/ 10 cm). The true robot's velocity capacity are in some directions higher and in the others significantly lower than the manufacturer's limits, depending on the configuration.}
     \label{fig:comp_cube_poly}
 \end{figure}
 
 
 
-On the other end of the spectrum, the real-time capable trajectory planning approaches often abstract the robot as a generator of ideal movements without accounting for its true capacity. With this simplification, they have short execution times and can quickly adapt to any changes in the robot's path, environment or the task itself. Such algorithms, as proposed by Macfarlane et al. \cite{Macfarlane2003}, Haschke et al. \cite{haschke2008line} or Svarny et al.\cite{Svarny2022}, are often based on S-curve trajectories \cite{FANG2019} with an appropriate order, producing smooth trajectories that respect a set of fixed velocity, acceleration, jerk and sometimes even snap (jerk derivative) limits enforced by the task and robot's capacity that are assumed to be constant \cite{modernrobotics}. However, robot's movement capacity is not constant and can vary significantly during the trajectory execution, therefore such approaches are not capable of fully exploiting the robot's capacity, resulting in trajectories that might underestimate or sometimes even overestimate its movement capacity. Figure \ref{fig:comp_cube_poly} shows an example of this effect on a Franka Emika Panda collaborative robot.
+On the other end of the spectrum, the real-time capable trajectory planning approaches often abstract the robot as a generator of ideal movements without accounting for its true capacity. With this simplification, they have short execution times and can quickly adapt to any changes in the robot's path, environment or the task itself. Such algorithms, as proposed by \citet{Macfarlane2003}, \citet{haschke2008line} or \citet{Svarny2022}, are often based on S-curve trajectories \cite{FANG2019} with an appropriate order, producing smooth trajectories that respect a set of fixed velocity, acceleration, jerk and sometimes even snap (jerk derivative) limits enforced by the task and robot's capacity that are assumed to be constant \cite{modernrobotics}. However, robot's movement capacity is not constant and can vary significantly during the trajectory execution, therefore such approaches are not capable of fully exploiting the robot's capacity, resulting in trajectories that might underestimate or sometimes even overestimate its movement capacity. \Cref{fig:comp_cube_poly} shows an example of this effect on a Franka Emika Panda collaborative robot.
 
 
 \textcolor{red}{
-Several approaches have been proposed recently trying to bridge the gap proposing solutions that exploit robot's capacity while enabling different kinds of real-time adaptations. Palleschi et al.\cite{Palleschi2021} have used reactive real-time re-planning to adapt the pre-calculated time-optimal trajectory with the aim to guarantee human safety. Springer et al. \cite{dmp2014} have used dynamic motion primitives (DMP) to model an time-optimal point-to-point robot trajectory offline and then refined it during the real-time execution in order to account for changing target. Zhang et al. \cite{ZHANG2020} have proposed a real-time method for time-optimal trajectory planning based on a machine learning aided simplification of the robot's dynamical model resulting in more efficient calculation times. However, all these methods require a substantial degree of in advance computation in order to work properly.
+Several approaches have been proposed recently trying to bridge the gap proposing solutions that exploit robot's capacity while enabling different kinds of real-time adaptations. \citet{Palleschi2021} have used reactive real-time re-planning to adapt the pre-calculated time-optimal trajectory with the aim to guarantee human safety. \citet{dmp2014} have used dynamic motion primitives (DMP) to model an time-optimal point-to-point robot trajectory offline and then refined it during the real-time execution in order to account for changing target. \citet{ZHANG2020} have proposed a real-time method for time-optimal trajectory planning based on a machine learning aided simplification of the robot's dynamical model resulting in more efficient calculation times. Howeve, all these methods require a substantial degree of in advance computation in order to work properly.
 }
 
 \textcolor{red}{
-A promising family of real-time solutions producing reactive and optimal trajectories without requiring \textit{a priori} knowledge about the desired path are the optimal control approaches such as Model predictive control (MPC). They have a potential to consider the robot's evolving movement capacity and adapt to the environmental changes in real-time \cite{torresalberto2022}\cite{Eckhoff2022}. However, they are still complex and challenging to implement as they often rely on nonlinear optimisation techniques \cite{kelff2021,Massaro2023}.}
+A promising family of real-time solutions producing reactive and optimal trajectories without requiring \textit{a priori} knowledge about the desired path are the optimal control approaches such as Model Predictive Control (MPC). They have a potential to consider the robot's evolving movement capacity and adapt to the environmental changes in real-time \cite{torresalberto2022}\cite{Eckhoff2022}. However, they are still complex and challenging to implement as they often rely on nonlinear optimisation techniques \cite{kelff2021,Massaro2023}.}
 
 
-In this paper, a real-time approach based on the time-optimal Trapezoidal acceleration profile (TAP) \cite{modernrobotics} planning in Cartesian space (CS) is proposed. The proposed approach evaluates the robot's movement capacity in real-time and plans the time-optimal TAP trajectory in each time-step. By leveraging the computational efficiency of TAP planning, the approach can create a real-time reactive trajectory generation while producing time-efficient trajectories that consider the robot's true capacity. The proposed approach provides a balance between reactive real-time adaptable solutions and time-optimal solutions, making it well-suited for dynamic environments where conditions change rapidly such as human-robot collaboration. 
+In this paper, a real-time approach based on the time-optimal Trapezoidal Acceleration Profile (TAP) \cite{modernrobotics} planning in Cartesian space (CS) is proposed. The proposed approach evaluates the robot's movement capacity in real-time and plans the time-optimal TAP trajectory in each time-step. By leveraging the computational efficiency of TAP planning, the approach can create a real-time reactive trajectory generation while producing time-efficient trajectories that consider the robot's true capacity. The proposed approach provides a balance between reactive real-time adaptable solutions and time-optimal solutions, making it well-suited for dynamic environments where conditions change rapidly such as human-robot collaboration. 
 Experimental results demonstrate the effectiveness of the proposed approach on a Franka Emika Panda collaborative robot, showing that the generated trajectories have comparable execution time (even shorter in some cases) as the state-of-the art offline time-optimal method TOPP-RA \cite{Pham2018}. Additionally the results confirm that the proposed method achieves faster and more precise trajectories than the standard TAP planning with fixed movement capacity given by the manufacturer. 
 
 \todo{a sentence about waste sorting}
 
-The paper gives an overview of the Cartesian space TAP planning and the description of the real-time planning strategy in section \ref{ch:tap}. A real-time method for robot's Cartesian kinematic capacity evaluation is described in section \ref{ch:capacity}. The experimental setup for assessing the performance of the proposed method on a Franka Emika Panda collaborative robot is given in section \ref{ch:setup}. A comparative study of the performance of the proposed algorithm with the time-optimal joint space and Cartesian space planning is given in \ref{ch:comp_study}. A mockup experiment of collaborative waste sorting is presented in \ref{ch:experiment_mockup}. Discussion about the limitations of the method is given in section \ref{ch:discussion}.
+The paper gives an overview of the Cartesian space TAP planning and the description of the real-time planning strategy in \Cref{ch:tap}. A real-time method for robot's Cartesian kinematic capacity evaluation is described in \Cref{ch:capacity}. The experimental setup for assessing the performance of the proposed method on a Franka Emika Panda collaborative robot is given in \Cref{ch:setup}. A comparative study of the performance of the proposed algorithm with the time-optimal joint space and Cartesian space planning is given in \Cref{ch:comp_study}. A mockup experiment of collaborative waste sorting is presented in \Cref{ch:experiment_mockup}. Discussion about the limitations of the method is given in \Cref{ch:discussion}.
 
 
 \section{Problem statement: Capacity aware trajectory planning }\label{ch:problem_statement}
@@ -82,10 +82,24 @@ The main limitation of this approach is that the joint space is usually higher d
 
 \begin{figure}[!t]
     \centering 
-    \includegraphics[width=\linewidth]{img/problem_statement_2link2.pdf}
-    \caption{On the example of a 2 link planar robot, executing the trajectory form point $\mathcal{X}_a$ to $\mathcal{X}_b$. It's Cartesian space velocity capacity $\mathcal{P}(\bm{q})$ is shown in three different configurations. Finally the left plot shows the influence of the approximation strategy when representing these ever changing CS capacities with a fixed ranges $\mathcal{L}$. }
-    \label{fig:2link}
+    \includegraphics[width=\linewidth]{Papers/imgs/motivation_topca.pdf}
+    \caption{}
+    \label{fig:motiv_topca}
 \end{figure}
+
+\begin{figure}[!t]
+    \centering 
+    \includegraphics[width=\linewidth]{Papers/imgs/unre_over_poly.pdf}
+    \caption{}
+    \label{fig:under_over}
+\end{figure}
+
+% \begin{figure}[!t]
+%     \centering 
+%     \includegraphics[width=\linewidth]{Papers/imgs/problem_statement_2link2.pdf}
+%     \caption{On the example of a 2 link planar robot, executing the trajectory form point $\mathcal{X}_a$ to $\mathcal{X}_b$. It's Cartesian space velocity capacity $\mathcal{P}(\bm{q})$ is shown in three different configurations. Finally the left plot shows the influence of the approximation strategy when representing these ever changing CS capacities with a fixed ranges $\mathcal{L}$. }
+%     \label{fig:2link}
+% \end{figure}
 
 
 Complementary approach consists in transforming the robot's joint actuator limits $\mathcal{Q}$ to the Cartesian space and find the optimal time evolution of the Cartesian variable $\bm{x}(t)$
@@ -94,7 +108,7 @@ Complementary approach consists in transforming the robot's joint actuator limit
 \end{equation}
 The resulting trajectory guarantees that $\bm{x}(t)$ is feasible given the joint limits $\mathcal{Q}$, without choosing the joint path $\bm{q}(t)$ directly. \textcolor{red}{The actual joint trajectory $\bm{q}(t)$ can then be found in real-time by using a lower level real-time control approaches such as inverse velocity kinematics solvers.\todo{qp paper here} Such approaches are capable of exploiting robot redundant degrees of freedom as well, there along the trajectory following, they can accomplish additional tasks such as avoiding singularities \cite{Cheng1995} or ensuring human safety\cite{joseph2020}. }
 
-However, these new CS limits, obtained by projecting JS limits $\mathcal{Q}$ using robot's nonlinear kinematics $f(\mathcal{Q})$, have complex geometry forming robot configuration $\bm{q}$ dependant convex polytopes $\mathcal{P}(\bm{q}) = f(\mathcal{Q})$. Figure \ref{fig:2link} demonstrates an example of a two link planar robot executing a CS trajectory from pose $\mathcal{X}_a$ to $\mathcal{X}_b$. Its end-effector Cartesian velocity capacity polytope is shown in blue. It can be seen that its capacity varies substantially during the trajectory execution. In practice, to simplify the mapping $\mathcal{P}(\bm{q})$, the manufacturers often chose to transform it into fixed ranges of cartesian variables $\mathcal{P}(\bm{q}) \approx \mathcal{L}$. However, such choice typically requires a degree of under or over approximation of robot's abilities, as shown in the example on Figure \ref{fig:2link}. As a result, these limits $\mathcal{L}$ may not accurately represent the true limits of the robot's movement capacity $Q \neq f^{-1}(\mathcal{L})$. Figure \ref{fig:comp_cube_poly} shows the real world example of this discrepancy in the case of a Franka Emika Panda robot. 
+However, these new CS limits, obtained by projecting JS limits $\mathcal{Q}$ using robot's nonlinear kinematics $f(\mathcal{Q})$, have complex geometry forming robot configuration $\bm{q}$ dependant convex polytopes $\mathcal{P}(\bm{q}) = f(\mathcal{Q})$. \Cref{fig:2link} demonstrates an example of a two link planar robot executing a CS trajectory from pose $\mathcal{X}_a$ to $\mathcal{X}_b$. Its end-effector Cartesian velocity capacity polytope is shown in blue. It can be seen that its capacity varies substantially during the trajectory execution. In practice, to simplify the mapping $\mathcal{P}(\bm{q})$, the manufacturers often chose to transform it into fixed ranges of Cartesian variables $\mathcal{P}(\bm{q}) \approx \mathcal{L}$. However, such choice typically requires a degree of under or over approximation of robot's abilities, as shown in the example on \Cref{fig:2link}. As a result, these limits $\mathcal{L}$ may not accurately represent the true limits of the robot's movement capacity $Q \neq f^{-1}(\mathcal{L})$. \Cref{fig:comp_cube_poly} shows the real world example of this discrepancy in the case of a Franka Emika Panda robot. 
 
 In this paper an approach for trajectory planning in Cartesian space is proposed, able to fully exploit ever changing robot's movement capacity polytopes $\mathcal{P}(\bm{q})$ by efficiently evaluating them in the real-time and recalculating the optimal trajectory $\bm{x}(t)$ with updated limits $\mathcal{P}(\bm{q})$ in every step of the trajectory execution. In this way the proposed method is able to exploit robot's true movement capacity and at the same time it does not limit the robot's redundant degrees of freedom, which might be used for other tasks. 
 \textcolor{red}{The proposed method is based on the assumption of straight line point to point motions in the Cartesian space. When considering straight line movements the task space becomes 1d and the limits $\mathcal{P}(\bm{q})$ become intervals. This simplification enables efficient and exact real-time evaluation of the movement capacity $\mathcal{P}(\bm{q})$ able to be executed online. }
@@ -117,13 +131,13 @@ TAP is a classical approach to finding the Cartesian space time-optimal or minim
 \end{split}
 \label{eq:limits_cs}
 \end{equation}
-An example of a TAP profile is shown on Figure \ref{fig:tap_profile}.
+An example of a TAP profile is shown on \Cref{fig:tap_profile}.
 }
 \textcolor{red}{
-However, as the robot's Cartesian space movement capacity is evolving in real-time with the changes in it's joint configuration $\bm{q}$, the limits (\ref{eq:limits_cs}) are no longer constant. To account for their changes, the proposed approach recalculates the optimal TAP trajectory in real-time, while updating the limits (\ref{eq:limits_cs}) in every planning step. Figure \ref{fig:replanning} shows the intuition of the proposed approach.
+However, as the robot's Cartesian space movement capacity is evolving in real-time with the changes in it's joint configuration $\bm{q}$, the limits (\ref{eq:limits_cs}) are no longer constant. To account for their changes, the proposed approach recalculates the optimal TAP trajectory in real-time, while updating the limits (\ref{eq:limits_cs}) in every planning step. \Cref{fig:replanning} shows the intuition of the proposed approach.
 }
 
-\textcolor{red}{ Section \ref{ch:tap} introduces the basics of the TAP planning followed by the section \ref{ch:update_cap} giving further insights in the real-time planning. }
+\textcolor{red}{ \Cref{ch:tap} introduces the basics of the TAP planning followed by the \Cref{ch:update_cap} giving further insights in the real-time planning. }
 
 
 \subsection{Trapezoidal acceleration profile basics}\label{ch:tap}
@@ -148,12 +162,12 @@ as well as the limits on all its derivatives:
 \dddot{s}\!\in\! [\!\dddot{s\!}_{min}, \dddot{s\!}_{max}] 
 \end{split}\label{eq:s_limits}
 \end{equation}
-where $T$ is the trajectory duration, $\dot{s}_{0}$ and $\ddot{s}_{0}$ represent the velocity and acceleration at the beginning of the path $\mathcal{T}(s)$, while the $\dot{s}_{T}$ and $\ddot{s}_{T}$ represent their final values at the end of the trajectory. One example of the TAP profile is shown on Figure \ref{fig:tap_profile}.
+where $T$ is the trajectory duration, $\dot{s}_{0}$ and $\ddot{s}_{0}$ represent the velocity and acceleration at the beginning of the path $\mathcal{T}(s)$, while the $\dot{s}_{T}$ and $\ddot{s}_{T}$ represent their final values at the end of the trajectory. One example of the TAP profile is shown on \Cref{fig:tap_profile}.
 
 
 \begin{figure}
     \centering
-    \includegraphics[width=\linewidth]{img/tap_profile.pdf}
+    \includegraphics[width=\linewidth]{Papers/imgs/tap_profile.pdf}
     \caption{Trapezoidal acceleration profile example, all the initial and final conditions are set to 0.}
     \label{fig:tap_profile}
 \end{figure}
@@ -210,8 +224,8 @@ Finally, once both translation and orientation TAP trajectories are found result
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=\linewidth]{img/tap_replanning3.pdf}
-    % \includegraphics[width=\linewidth]{img/ICRA2023.drawio (25).pdf}
+    \includegraphics[width=\linewidth]{Papers/imgs/tap_replanning3.pdf}
+    % \includegraphics[width=\linewidth]{Papers/imgs/ICRA2023.drawio (25).pdf}
     \caption{Velocity curve, updated in the real time with instantaneous maximal values. At each time-step $t_k$ during the trajectory execution (ex. $t_1$ and $t_2$) the TAP planning calculates the remaining trajectory considering that maximal velocity $\dot{s}_{max}$ constant till the end of the movement (black dotted lines). As the maximal velocity $\dot{s}_{max}$ increases during the trajectory execution (red dashed line), the final trajectory duration is considerably shorter. }
     \label{fig:replanning}
 \end{figure}
@@ -233,7 +247,7 @@ geometric path to the target position can be calculated as $d_k = s_{t,T} - s_t(
 Finally, an updated TAP trajectory can then be calculated for the translation $s_t(t)$ and the orientation $s_r(t)$, resulting in an optimal robot trajectory given the updated robot's limits (\ref{eq:s_limits}) and the initial conditions (\ref{eq:rt_init}). 
 The assumption of constant limits (\ref{eq:s_limits}) for the duration of the remaining trajectory is a simplification that might not hold true in practice, as the robot's movement capacity can change significantly over time. However, this issue is addressed through real-time planning, which constantly updates the plan using the latest information on the robot's current ability. The TAP planning algorithm is well-suited for this approach, as it is highly efficient in computing optimal trajectories in real-time. 
 
-An example of the generated velocity $\dot{s}$ profile using real-time TAP replanning, with constantly changing limits $\dot{s}_{max}$, is shown on Figure \ref{fig:replanning}. 
+An example of the generated velocity $\dot{s}$ profile using real-time TAP replanning, with constantly changing limits $\dot{s}_{max}$, is shown on \Cref{fig:replanning}. 
 
 \section{Real-time robot's capacity evaluation}
 \label{ch:capacity}
@@ -313,7 +327,7 @@ whereas the minimum can be found by minimising it%\cite{Skuric2022}.
 
 % \begin{figure}
 %     \centering
-%     \includegraphics[width=0.7\linewidth]{img/dirs.pdf}
+%     \includegraphics[width=0.7\linewidth]{Papers/imgs/dirs.pdf}
 %     \caption{Can be removed}
 %     \label{fig:normal_lp}
 % \end{figure}
@@ -335,9 +349,9 @@ where $\bm{v}_b \in \bm{R}^6$ is zero vector. Substituting this relationship int
 \end{equation}
 The equivalent LP expressions for finding the maximal acceleration $\ddot{s}$ and jerk $\dddot{s}$ are obtained by substituting $\dot{\bm{q}}$ and $\bm{v}_b$ with  $\ddot{\bm{q}}$, $\bm{a}_b$ and $\dddot{\bm{q}}$, $\bm{j}_b$. The minimal values are found by minimising the same problem.
 
-\subsection{Task induced cartesian limits}
+\subsection{Task induced Cartesian limits}
 
-In many cases however, when planning for CS movement, the task requires limiting maximal cartesian velocity, acceleration and jerk. For example, when executing trajectories in the human vicinity, it is common practice to limit the robot's CS velocity $\dot{\bm{x}}$ to minimise the potential impact forces due to the robot's moment of inertia \cite{smu} and kinetic energy \cite{joseph2020}.
+In many cases however, when planning for CS movement, the task requires limiting maximal Cartesian velocity, acceleration and jerk. For example, when executing trajectories in the human vicinity, it is common practice to limit the robot's CS velocity $\dot{\bm{x}}$ to minimise the potential impact forces due to the robot's moment of inertia \cite{smu} and kinetic energy \cite{joseph2020}.
 On the other hand, when designing trajectories of robotic manipulation of liquids, in order to prevent its sloshing or spilling, translation acceleration $\ddot{\bm{x}}$ continuity needs to be ensured \cite{moriello2018}, which in term corresponds to introducing CS jerk $\dddot{\bm{x}}$ limits.
 
 Therefore, if an additional task specific limit of a CS variable $\bm{y}$ (velocity, acceleration or jerk) is required that can be expressed as an interval
@@ -347,9 +361,9 @@ Therefore, if an additional task specific limit of a CS variable $\bm{y}$ (veloc
 or more generally in a form of polytope defined by a set of inequality constraints
 \begin{equation}
 \mathcal{C} = \left\{ \bm{y} ~|~ A \bm{y} \leq \bm{b} \right\}
-\label{eq:cartesian_polytope_additional}
+\label{eq:Cartesian_polytope_additional}
 \end{equation}
-Then the LP problem (\ref{eq:lp_general}) can be extended to account for the polytope (\ref{eq:cartesian_polytope_additional})
+Then the LP problem (\ref{eq:lp_general}) can be extended to account for the polytope (\ref{eq:Cartesian_polytope_additional})
 \begin{equation}
 \begin{split}
     \max_{\bm{y}} ~c^T \bm{y}& \\
@@ -425,7 +439,7 @@ These new modulated JS limits can then be used to calculate the polytopes $\math
 
 \begin{figure}[tb!]
     \centering
-    \includegraphics[width=\linewidth]{img/heuristics.png}
+    \includegraphics[width=\linewidth]{Papers/imgs/heuristics.png}
     \caption{Examples of negative effects that arise when considering robot's acceleration limits constant until the end of the trajectory. Figure on the left shows the effect of diminishing braking capacity towards the end of the trajectory, where the end result is an overshoot. The figure on the right shows the effect of augmenting braking capacity towards the end of the trajectory. Due to, in some cases, inverse proportional coupling between the robot's velocity $\dot{\bm{q}}$ and the braking capacity, more the robot brakes, more its velocity $\dot{\bm{q}}$ decreases and more the braking capacity increases. This effect produces an oscillatory behavior as showed in the zoomed view and the accompanying table. }
     \label{fig:overshoot_shema}
 \end{figure}
@@ -433,18 +447,18 @@ These new modulated JS limits can then be used to calculate the polytopes $\math
 The proposed approach adapts to the constant changes of the robot's motion capabilities by planning the new TAP trajectory at each time step $t_k$. For each planning iteration it considers constant robot's capabilities until the end of the trajectory. This assumption is reasonable as only the first step of each planned trajectory is used, in which the calculated robot's capabilities are valid. 
 However, based on the prediction of robot's constant movement capacity the TAP planning decides the phase of the trajectory, when to stop accelerating and when to start braking. Therefore, in some cases, especially when robot's capacity changes significantly towards the end of the trajectory, TAP planning can produce oscillations and an overshoot due to the switching between the modes of braking and accelerating.
 
-As shown on Figure \ref{fig:overshoot_shema}, there are two main scenarios that generate unwanted behavior, both related to the robot's deceleration (braking) capacity. 
+As shown on \Cref{fig:overshoot_shema}, there are two main scenarios that generate unwanted behavior, both related to the robot's deceleration (braking) capacity. 
 
-\subsubsection{Decreasing braking capacity} When the robot's deceleration capacity decreases towards the end of the trajectory, left plot on Figure \ref{fig:overshoot_shema}, the planned trajectory will have an overshoot. Due to considering robot's capacity constant, robot's braking capacity is overestimated and when the TAP planning decides to start braking, at the time step $t_k$, it is already too late, the robot is not able to stop before it reaches the target position. 
+\subsubsection{Decreasing braking capacity} When the robot's deceleration capacity decreases towards the end of the trajectory, left plot on \Cref{fig:overshoot_shema}, the planned trajectory will have an overshoot. Due to considering robot's capacity constant, robot's braking capacity is overestimated and when the TAP planning decides to start braking, at the time step $t_k$, it is already too late, the robot is not able to stop before it reaches the target position. 
 
-This is an inherent challenge of real-time planning and cannot be solved without adding a degree of prediction of the robot's future capabilities. One such approach to mitigate the overshoot is to predict the robot's minimal braking capacity for the remaining cartesian path $P\left(s(t_i)\right)$ until the end of the trajectory $ t_i \in \left[t_k, T\right]$ and use this value for TAP planning.
+This is an inherent challenge of real-time planning and cannot be solved without adding a degree of prediction of the robot's future capabilities. One such approach to mitigate the overshoot is to predict the robot's minimal braking capacity for the remaining Cartesian path $P\left(s(t_i)\right)$ until the end of the trajectory $ t_i \in \left[t_k, T\right]$ and use this value for TAP planning.
 \begin{equation}
     \ddot{s}_{min} = \max \left\{\ddot{s}_{min}(t_i)\right\} \quad t_i \in \left[t_k ,~ T\right]
 \label{eq:minimal_braking_capacity}
 \end{equation}
 This approach in many cases results in more conservative trajectories as the robot's braking capacity is underestimated, but at the same time it guarantees the overshoot removal. As the robot's braking capacity depends on its joint configuration $\bm{q}$, finding the minimal braking capacity (\ref{eq:minimal_braking_capacity}) requires either knowing the exact robot's joint space path until the end of the trajectory, which is by definition not known, or finding all the possible joint configurations the robot can be in on the remaining path, which is very long and not practical for most real-time applications.
 
-In this paper a sampling based approximation of (\ref{eq:minimal_braking_capacity}) is proposed based on sampling the remaining the path into $N$ cartesian posses $\mathcal{X}_i$. The most probable predictions joint space configurations $\bm{q}_i$ at each of the poses $\mathcal{X}_i$ is proposed to be found as the robot's inverse kinematics solution the closest to the current pose $\bm{q}_k$. Finally, the prediction of (\ref{eq:minimal_braking_capacity}) can be found as the minimal braking capacity among all the sampled ones $\ddot{s}_{i, min}$
+In this paper a sampling based approximation of (\ref{eq:minimal_braking_capacity}) is proposed based on sampling the remaining the path into $N$ Cartesian posses $\mathcal{X}_i$. The most probable predictions joint space configurations $\bm{q}_i$ at each of the poses $\mathcal{X}_i$ is proposed to be found as the robot's inverse kinematics solution the closest to the current pose $\bm{q}_k$. Finally, the prediction of (\ref{eq:minimal_braking_capacity}) can be found as the minimal braking capacity among all the sampled ones $\ddot{s}_{i, min}$
 \begin{equation}
     \ddot{s}_{min} = \max \left\{\ddot{s}_{0, min},~ \ldots,~ \ddot{s}_{N, min}\right \}
 \end{equation}
@@ -452,7 +466,7 @@ In this paper a sampling based approximation of (\ref{eq:minimal_braking_capacit
 \todo[inline]{I am not talking about how to decide which joint velocity $\dot{\bm{q}}_i$ to use!}
 
 \subsubsection{Increasing braking capacity}
-When the robot's breaking capacity increases along the trajectory, scenario shown on the right plot of Figure \ref{fig:overshoot_shema}, the proposed method can result in oscillatory behavior.  Due to considering robot's capacity constant, robot's braking capacity is underestimated and the decision of the TAP planning to start braking, at the time step $t_k$, comes too soon. In the next step $t_{k+1}$ the robot's breaking capacity increases which in term makes TAP planning stop braking. The repetitions of this sequence create the oscillations of the planed acceleration profile and produces jerky trajectories. 
+When the robot's breaking capacity increases along the trajectory, scenario shown on the right plot of \Cref{fig:overshoot_shema}, the proposed method can result in oscillatory behavior.  Due to considering robot's capacity constant, robot's braking capacity is underestimated and the decision of the TAP planning to start braking, at the time step $t_k$, comes too soon. In the next step $t_{k+1}$ the robot's breaking capacity increases which in term makes TAP planning stop braking. The repetitions of this sequence create the oscillations of the planed acceleration profile and produces jerky trajectories. 
 
 The effect of these oscillations is greatly amplified as the robot's braking capacity $\ddot{s}_{min}$ is inverse proportional to the robot's current joint velocity $\dot{\bm{q}}_{k}$ through the bias term $\bm{a}_b = \dot{J}(\bm{q}_k,\dot{\bm{q}}_k)\dot{\bm{q}}_k$. Lowering the the joint velocity $\dot{\bm{q}}_{k}$, lowers the bias $\bm{a}_b$ and increases the braking capacity $\ddot{s}_{min}$. This effect creates a closed loop behavior, where more the robot brakes, more its braking capacity increases. 
 
@@ -483,7 +497,7 @@ say also that this interpolation is an approximation and the longer the $\Delta 
 % \begin{equation}
 %     \bm{a}^*_{k,b} = \alpha  \bm{a}_{k,b} +  (1-\alpha)  \bm{a}^*_{k-1,b}, \quad \alpha = \frac{T_s}{T_s + T_c}
 % \end{equation}
-% where $T_s$ is the sampling time of the trajectory planning and $T_c$ is the time constant of the filter corresponding to $T_c = 1/f_c$, where $f_c$ is the cutoff frequency of the filter. The new filtered bias $\bm{a}^*_{k,b}$ can then be used for determining the braking capacity $\ddot{s}_{k,min}$ as explained in the section \ref{ch:capacity_lp}. }
+% where $T_s$ is the sampling time of the trajectory planning and $T_c$ is the time constant of the filter corresponding to $T_c = 1/f_c$, where $f_c$ is the cutoff frequency of the filter. The new filtered bias $\bm{a}^*_{k,b}$ can then be used for determining the braking capacity $\ddot{s}_{k,min}$ as explained in the \Cref{ch:capacity_lp}. }
 
 
 
@@ -492,37 +506,68 @@ say also that this interpolation is an approximation and the longer the $\Delta 
 \label{ch:setup}
 
 
-All the experiments, both in simulation and in real world, are conducted on a Franka Emika Panda robot. The robot's kinematic limits in joint space and the Cartesian space are obtained from Franka Emika's official datasheet\cite{frankadata}.
+All the experiments, both in simulation and in real world, are conducted on a Franka Emika Panda robot. The robot's kinematic limits in joint space and the Cartesian space are obtained from Franka Emika's official datasheet~\cite{frankadata}.  These values are publicly available\footnote{\label{note:franka}Full datasheet available at: \url{https://frankaemika.github.io/docs/control_parameters.html}} and are listed in \Cref{tab:panda_limits_js} and \Cref{tab:franka_limits}.
 
 \begin{table}[h!]
     \centering
- \caption{Franka Emika Panda robot joint space (JS) kinematic limits.}
-    \begin{tabular}{c|ccc}
-Joint & $\dot{\bm{q}}_{max}$ $[{rad}/{s}]$ & $\ddot{\bm{q}}_{max}$  $[{rad}/{s^2}]$ & $\dddot{\bm{q}}_{max}$   $[{rad}/{s^3}]$
-\vspace{0.05cm}\\
-\hline
- 1 & 2.175 & 15 & 7500 \\
- 2 & 2.175 & 7.5 & 3750 \\
- 3 & 2.175 & 10 & 5000 \\
- 4 & 2.175 & 12.5 & 6250 \\
- 5 & 2.61 & 15 & 7500 \\
- 6 & 2.61 & 20 & 10000 \\
- 7 & 2.61 & 20 & 10000\\
-\end{tabular}
+    \begin{tabular}{|c|ccccccc|}
+        \hline
+        Limits & $q_0$ & $q_1$ & $q_2$ & $q_3$ & $q_4$ & $q_5$ & $q_6$ \\
+        \hline
+        $\dot{\bm{q}}_{max}$ $[{rad}/{s}]$ & 2.175 & 2.175 & 2.175 & 2.175 & 2.61 & 2.61 & 2.61 \\
+        $\ddot{\bm{q}}_{max}$ $[{rad}/{s}]$ & 15 & 7.5 & 10 & 12.5 & 15 & 20 & 20 \\
+        $\dddot{\bm{q}}_{max}$ $[{rad}/{s}]$ & 7500 & 3750 & 5000 & 6250 & 7500 & 10000 & 10000 \\
+        \hline
+    \end{tabular}
+    \caption{Franka Emika Panda robot joint space (JS) kinematic limits\footref{note:franka}.}
     \label{tab:panda_limits_js}
 \end{table}
 
+	
 \begin{table}[h]
-\caption{Franka Emika Panda robot Cartesian Space (CS) limits.}
-\label{table:franka_limits}
-\centering
-\begin{tabular}{c|ccc}
-Limits & $\dot{\bm{x}}_{max}$ & $\ddot{\bm{x}}_{max}$ & $\dddot{\bm{x}}_{max}$ \\
-\hline
-Translation & 1.7 $m/s$ & 13 $m/s^2$  & 6500 $m/s^3$\\
-Orientation & 2.5 $rad/s$ & 25 $rad/s^{2}$  & 12500 $rad/s^{3}$\\
-\end{tabular}
+    \centering
+    \begin{tabular}{|c|cc|}
+        \hline
+        Limits & Translation & Orientation \\
+        \hline
+        $\dot{\bm{x}}_{max}$ & 1.7 $m/s$ & 2.5 $rad/s$ \\
+        $\ddot{\bm{x}}_{max}$ & 13 $m/s^2$ & 25 $rad/s^{2}$\\
+        $\dddot{\bm{x}}_{max}$ & 6500 $m/s^3$ & 12500 $rad/s^{3}$\\
+        \hline
+    \end{tabular}
+    \caption{Franka Emika Panda robot Cartesian Space (CS) kinematic limits\footref{note:franka}.}
+    \label{tab:franka_limits}
 \end{table}
+
+% \begin{table}[h!]
+%     \centering
+%  \caption{Franka Emika Panda robot joint space (JS) kinematic limits.}
+%     \begin{tabular}{c|ccc}
+% Joint & $\dot{\bm{q}}_{max}$ $[{rad}/{s}]$ & $\ddot{\bm{q}}_{max}$  $[{rad}/{s^2}]$ & $\dddot{\bm{q}}_{max}$   $[{rad}/{s^3}]$
+% \vspace{0.05cm}\\
+% \hline
+%  1 & 2.175 & 15 & 7500 \\
+%  2 & 2.175 & 7.5 & 3750 \\
+%  3 & 2.175 & 10 & 5000 \\
+%  4 & 2.175 & 12.5 & 6250 \\
+%  5 & 2.61 & 15 & 7500 \\
+%  6 & 2.61 & 20 & 10000 \\
+%  7 & 2.61 & 20 & 10000\\
+% \end{tabular}
+%     \label{tab:panda_limits_js}
+% \end{table}
+
+% \begin{table}[h]
+% \caption{Franka Emika Panda robot Cartesian Space (CS) limits.}
+% \label{table:franka_limits}
+% \centering
+% \begin{tabular}{c|ccc}
+% Limits & $\dot{\bm{x}}_{max}$ & $\ddot{\bm{x}}_{max}$ & $\dddot{\bm{x}}_{max}$ \\
+% \hline
+% Translation & 1.7 $m/s$ & 13 $m/s^2$  & 6500 $m/s^3$\\
+% Orientation & 2.5 $rad/s$ & 25 $rad/s^{2}$  & 12500 $rad/s^{3}$\\
+% \end{tabular}
+% \end{table}
 
 
 The implementation of the TAP trajectory generator is based on the open-source library ruckig \cite{ruckig}, while the efficient LP solver used for real-time CS limit calculation is GLPK\cite{glpk}.
@@ -532,12 +577,12 @@ The implementation of the TAP trajectory generator is based on the open-source l
 
 \begin{figure}[!tb]
     \centering
-    \includegraphics[width=\linewidth]{img/schema.pdf}
+    \includegraphics[width=\linewidth]{Papers/imgs/schema.pdf}
     \caption{Proposed method schematic overview in the context of the robot control, elements in blue present the extension of a standard CS based TAP planning.}
     \label{fig:schema}
 \end{figure}
 
-The schematic diagram of the proposed approach within the robot control paradigm is shown on Figure \ref{fig:schema}. Given the robot's current configuration $\bm{q}_k$, $\dot{\bm{q}}_k$, $\ddot{\bm{q}}_k$ in step $k$, the approach first determines the robot's current CS velocity $\dot{\bm{x}}_{max}$, acceleration $\ddot{\bm{x}}_{max}$ and jerk $\dddot{\bm{x}}_{max}$ limits. Then it calculates the new optimal trajectory, based on the TAP planning, given the robot's current Cartesian state $\mathcal{X}_k$,$\dot{\bm{x}}_k$,$\ddot{\bm{x}}_k$, the target state $\mathcal{X}_t$,$\dot{\bm{x}}_t$,$\ddot{\bm{x}}_t$ and the robot's kinematic limits $\dot{\bm{x}}_{max}$,$\ddot{\bm{x}}_{max}$,$\dddot{\bm{x}}_{max}$. 
+The schematic diagram of the proposed approach within the robot control paradigm is shown on \Cref{fig:schema}. Given the robot's current configuration $\bm{q}_k$, $\dot{\bm{q}}_k$, $\ddot{\bm{q}}_k$ in step $k$, the approach first determines the robot's current CS velocity $\dot{\bm{x}}_{max}$, acceleration $\ddot{\bm{x}}_{max}$ and jerk $\dddot{\bm{x}}_{max}$ limits. Then it calculates the new optimal trajectory, based on the TAP planning, given the robot's current Cartesian state $\mathcal{X}_k$,$\dot{\bm{x}}_k$,$\ddot{\bm{x}}_k$, the target state $\mathcal{X}_t$,$\dot{\bm{x}}_t$,$\ddot{\bm{x}}_t$ and the robot's kinematic limits $\dot{\bm{x}}_{max}$,$\ddot{\bm{x}}_{max}$,$\dddot{\bm{x}}_{max}$. 
 Once the optimal TAP trajectory has been found, desired states $\mathcal{X}_{d}$,$\dot{\bm{x}}_d$,$\ddot{\bm{x}}_d$ are sent to the inverse velocity kinematics layer of the control architecture. 
 
 In the case of this paper, robot control strategy for real-time Cartesian trajectory following is formulated as a Quadratic Program (QP) and solved in each control loop. As a secondary (regularization) task of the QP, the robot's redundant degrees of freedom are used to dampen the movement in the trajectory \textit{null-space} and keep the robot away from its joint limits.
@@ -587,7 +632,7 @@ In the experiments, the PD controller gains used are $K_p=\text{diag}([170.0, 17
 
 \subsection{Compensating the overshoot and oscillation effects}
 
-As proposed in section \ref{ch:heuristics}, in order to avoid the overshoot due to the decreasing robot's braking capabilities and the oscillations induced by the coupling bias $\bm{a}_b$, two compensation strategies are used in the experiments
+As proposed in \Cref{ch:heuristics}, in order to avoid the overshoot due to the decreasing robot's braking capabilities and the oscillations induced by the coupling bias $\bm{a}_b$, two compensation strategies are used in the experiments
 \begin{itemize}
     \item predicting robot's future braking capability
     \item down-sampling the TAP planning  
@@ -595,7 +640,7 @@ As proposed in section \ref{ch:heuristics}, in order to avoid the overshoot due 
 
 \begin{figure}[!tb]
     \centering
-    \includegraphics[width=\linewidth]{img/compensation_comp.pdf}
+    \includegraphics[width=\linewidth]{Papers/imgs/compensation_comp.pdf}
     \caption{Plots showing the comparison of the average overshoot (left) and average execution time (right) of the proposed method with and without overshoot compensation. For each length ranging from $d=0.1$ to $1m$, means and variances are calculated over 100 random trajectories. }
     \label{fig:compensatiopn_comp}
 \end{figure}
@@ -605,19 +650,19 @@ As proposed in section \ref{ch:heuristics}, in order to avoid the overshoot due 
     \ddot{s}_{min} = \max\left\{\ddot{s}_{k,min}, \ddot{s}_{T,min}\right\}
 \end{equation}
 
-Figure \ref{fig:compensatiopn_comp} presents a comparison between the proposed method's performance with and without overshoot compensation. To evaluate the methods, 1000 random translation trajectories (random fixed orientation) were generated in the robot's workspace, ranging in length from $d\!=\!10cm$ to $d\!=\!1m$. The overshoot and execution time were recorded for each trajectory. The results indicate that the proposed method with overshoot compensation significantly reduces the expected overshoot compared to the method without compensation, going from $3mm$ average overshoot to $0.1mm$. Moreover, the compensation strategy does not have a negative impact on the trajectory execution time. On the contrary, it slightly reduces the average execution time, as shown in the figure.
+\Cref{fig:compensatiopn_comp} presents a comparison between the proposed method's performance with and without overshoot compensation. To evaluate the methods, 1000 random translation trajectories (random fixed orientation) were generated in the robot's workspace, ranging in length from $d\!=\!10cm$ to $d\!=\!1m$. The overshoot and execution time were recorded for each trajectory. The results indicate that the proposed method with overshoot compensation significantly reduces the expected overshoot compared to the method without compensation, going from $3mm$ average overshoot to $0.1mm$. Moreover, the compensation strategy does not have a negative impact on the trajectory execution time. On the contrary, it slightly reduces the average execution time, as shown in the figure.
 
 \todo[inline]{calculated the end pose braking capacity only once}
 
-\subsubsection{TAP planning down-sampling} has been implemented as suggested in section \ref{ch:heuristics}, where the TAP planning was executed each $\Delta t_{p}\!=\!10ms$, each $10$ steps of the control algorithm. In order to find an optimal down-sampling time an empirical study has been conducted for 100 random trajectories with lengths $d=40cm$, $60cm$ and $80cm$ in the robots workspace. Four down sampling times were compared $\Delta t_p =1ms$, $5ms$, $10ms$ and $50ms$. For each executed trajectory the maximal deviation from the path and the Cartesian jerk variance is evaluated. 
+\subsubsection{TAP planning down-sampling} has been implemented as suggested in \Cref{ch:heuristics}, where the TAP planning was executed each $\Delta t_{p}\!=\!10ms$, each $10$ steps of the control algorithm. In order to find an optimal down-sampling time an empirical study has been conducted for 100 random trajectories with lengths $d=40cm$, $60cm$ and $80cm$ in the robots workspace. Four down sampling times were compared $\Delta t_p =1ms$, $5ms$, $10ms$ and $50ms$. For each executed trajectory the maximal deviation from the path and the Cartesian jerk variance is evaluated. 
 \begin{figure}[!t]
     \centering
-    \includegraphics[width=\linewidth]{img/compensation_comp_oscillations.pdf}
+    \includegraphics[width=\linewidth]{Papers/imgs/compensation_comp_oscillations.pdf}
     \caption{Plots showing the comparison of the jerk variance(left) and following error (right) of the proposed method with and without oscillation compensation, for trajectory lengths $d=0.4$, $0.6$ and $0.8m$. Means and variances are calculated over 100 random trajectories. }
     \label{fig:compensatiopn_comp_oscillations}
 \end{figure}
 
-Figure \ref{fig:compensatiopn_comp_oscillations} demonstrates an inverse proportionality between the down sampling time and the jerk variance. Additionally, it reveals that as the planning time step $\Delta t_p$ increases, there is a corresponding increase in the deviation from the desired path. This implies that a trade-off must be made, and the optimal planning step $\Delta t_p$ appears to fall between the range of $5ms$ to $10ms$.
+\Cref{fig:compensatiopn_comp_oscillations} demonstrates an inverse proportionality between the down sampling time and the jerk variance. Additionally, it reveals that as the planning time step $\Delta t_p$ increases, there is a corresponding increase in the deviation from the desired path. This implies that a trade-off must be made, and the optimal planning step $\Delta t_p$ appears to fall between the range of $5ms$ to $10ms$.
 
 \section{Comparative study}
 \label{ch:comp_study}
@@ -626,14 +671,14 @@ A simulation based comparative study is conducted to evaluate the performance of
 Both comparative studies are implemented in python
 using open-source implementations of TOPP-RA \cite{Pham2018} and TAP planning (Ruckig library \cite{ruckig}). 
 Robot rigid body dynamics simulation was implemented using the open-source library Pinocchio \cite{pinocchio2021}. 
-All the code used for the experiments is open-source and can be found on gitlab\footnote{https://gitlab.inria.fr/auctus-team/people/antunskuric/papers/tap_capacity}.
+All the code used for the experiments is open-source and can be found on GitLab\footnote{\url{https://GitLab.inria.fr/auctus-team/people/antunskuric/papers/tap_capacity}}.
 
 \subsection{Benchmarking against time-optimal JS planning}
 
 \begin{figure}[!t]
     \centering
-    \includegraphics[width=\linewidth]{img/ruckig_toppra_comp1679478306.pdf}
-    \includegraphics[width=\linewidth]{img/ruckig_toppra_comp1681374566.pdf}
+    \includegraphics[width=\linewidth]{Papers/imgs/ruckig_toppra_comp1679478306.pdf}
+    \includegraphics[width=\linewidth]{Papers/imgs/ruckig_toppra_comp1681374566.pdf}
     \caption{The plots show the comparison of the path velocity, acceleration and jerk, generated by the proposed approach (blue) and TOPP-RA(red), for two different trajectories (up and down). }
     \label{fig:comparison_trajectory}
 \end{figure}
@@ -648,12 +693,12 @@ Both approaches are tested using 50\% of the robot's JS velocity, acceleration a
 \todo[inline]{argue about the 5cm waypoint and 50\% capacity.}
 
 
-\subsubsection*{Results} Comparison of the planned velocity, acceleration and jerk profiles for two trajectories are shown on Figure \ref{fig:comparison_trajectory}. It can be seen that both methods find similar time profiles for all the path variables, indicating the effectiveness of the proposed approach. Moreover, even though TOPP-RA plans entirely in joint space its Cartesian space trajectory respects the CS velocity and acceleration limits calculated by the proposed method, demonstrating the accuracy of limit calculations. Additionally, TOPP-RA does not limit the jerk which can be seen on the jerk plots in Figure \ref{fig:comparison_trajectory}.
+\subsubsection*{Results} Comparison of the planned velocity, acceleration and jerk profiles for two trajectories are shown on \Cref{fig:comparison_trajectory}. It can be seen that both methods find similar time profiles for all the path variables, indicating the effectiveness of the proposed approach. Moreover, even though TOPP-RA plans entirely in joint space its Cartesian space trajectory respects the CS velocity and acceleration limits calculated by the proposed method, demonstrating the accuracy of limit calculations. Additionally, TOPP-RA does not limit the jerk which can be seen on the jerk plots in \Cref{fig:comparison_trajectory}.
 
 Additionally, the influence of the overshoot compensation strategy can be observed in the second (bottom) trajectory. The proposed approach starts braking earlier and does not use the full braking capacity of the robot. The resulting trajectory does not have an overshoot, even though the robot's braking capacity drops significantly towards the end of the trajectory. This demonstrates the effectiveness of the proposed strategy in reducing overshoot while not significantly increasing the execution time.
 
 \todo[inline]{Something like that}
-The trajectory execution time comparison is presented in Figure \ref{fig:comparison_time}. The figure shows that the proposed method has a comparable execution time for all tested trajectory lengths. Interestingly, for lengths over $40cm$, our approach is even faster than TOPP-RA. This can be attributed to the fact that our method takes a different joint space (JS) path than TOPP-RA, which in some cases might be more optimal than the one calculated in advance. 
+The trajectory execution time comparison is presented in \Cref{fig:comparison_time}. The figure shows that the proposed method has a comparable execution time for all tested trajectory lengths. Interestingly, for lengths over $40cm$, our approach is even faster than TOPP-RA. This can be attributed to the fact that our method takes a different joint space (JS) path than TOPP-RA, which in some cases might be more optimal than the one calculated in advance. 
 \textcolor{red}{This effect is more present for longer trajectories where taking the joint space path the closest to the initial joint configuration might not be the most optimal criteria. }
 
 
@@ -661,7 +706,7 @@ The trajectory execution time comparison is presented in Figure \ref{fig:compari
 
 \begin{figure}[!t]
     \centering
-    \includegraphics[width=\linewidth]{img/toppra_ruckig_time_comp.pdf}
+    \includegraphics[width=\linewidth]{Papers/imgs/toppra_ruckig_time_comp.pdf}
     \caption{Plots showing the comparison of the trajectory execution time of the proposed method with TOPP-RA, for trajectory lengths ranging from $d=0.1$ to $1m$. Left graph shows the comparison of the execution time, while the graph on the right shows the difference in execution time in a form of percentage. Means and variances are calculated over 100 random trajectories.}
     \label{fig:comparison_time}
 \end{figure}
@@ -671,22 +716,22 @@ The trajectory execution time comparison is presented in Figure \ref{fig:compari
 
 \begin{figure*}[!t]
     \centering
-    \includegraphics[width=\linewidth]{img/comparison_fixed_cs.pdf}
+    \includegraphics[width=\linewidth]{Papers/imgs/comparison_fixed_cs.pdf}
     \caption{Result of the benchmarking experiment comparing the fixed CS planning approach (red) to the proposed method (blue). The graph on the left shows comparison of the max tracking error with respect to the ratio of the capacity $\alpha$ used while the graph in the middle shows the trajectory execution time comparison. The graph on the right unites the two graphs on the left in order to show the relation of the trajectory execution time against the max tracking error. Means and variances are calculated on 100 random robot trajectories. }
     \label{fig:comp_fixed_cs}
 \end{figure*}
-The proposed adaptive approach is further compared to the standard TAP trajectory planning using fixed Cartesian kinematic limits. The Cartesian space limits for the Franka Emika panda robot are taken from the standard datasheet \cite{frankadata}, as given in Table \ref{table:franka_limits}.
+The proposed adaptive approach is further compared to the standard TAP trajectory planning using fixed Cartesian kinematic limits. The Cartesian space limits for the Franka Emika panda robot are taken from the standard datasheet \cite{frankadata}, as given in \Cref{table:franka_limits}.
 
 The approaches are compared over 100 random robot straight line trajectories (with random fixed orientation), in the robot's workspace, with a fixed length of $d=50cm$. The performance of the two approaches is compared for different scaling levels $\alpha$, starting at 10\% ($\alpha$=0.1) of robot's capacity and going to 90\% ($\alpha$=0.9). The scaling strategy is chosen to be equal for velocity, acceleration and jerk $\alpha\!=\!\alpha_v\!=\!\alpha_a\!=\!\alpha_j$. 
 
 
 
-The implementation of the TAP trajectory generator for both approaches is done using the open-source library ruckig \cite{ruckig}. The robot control strategy implemented for trajectory following is the same for both approaches as detailed in the section \ref{ch:qp}.
+The implementation of the TAP trajectory generator for both approaches is done using the open-source library ruckig \cite{ruckig}. The robot control strategy implemented for trajectory following is the same for both approaches as detailed in the \Cref{ch:qp}.
 
-\subsubsection*{Results} In Figure \ref{fig:comp_fixed_cs}, the results of a comparative study between the proposed method and the TAP planning method with fixed CS limits are presented. Both methods show a linear relationship between the tracking error and the ratio of capacity used ($\alpha$), however the proposed approach has a significantly lower mean error and variance for the same $\alpha$. This can be attributed, in part, to the overestimated CS limits (Table \ref{table:franka_limits}) provided by the manufacturer for the Panda robot, see Figure \ref{fig:comp_cube_poly}.
+\subsubsection*{Results} In \Cref{fig:comp_fixed_cs}, the results of a comparative study between the proposed method and the TAP planning method with fixed CS limits are presented. Both methods show a linear relationship between the tracking error and the ratio of capacity used ($\alpha$), however the proposed approach has a significantly lower mean error and variance for the same $\alpha$. This can be attributed, in part, to the overestimated CS limits (\Cref{table:franka_limits}) provided by the manufacturer for the Panda robot, see \Cref{fig:comp_cube_poly}.
 
 
-Figure \ref{fig:comp_fixed_cs} further shows that using 30\% of the manufacturer's CS limits (i.e., $\alpha$=0.3) results in a tracking error of around 1.2cm, which is higher than any of the mean errors achieved by the proposed method for all tested values of $\alpha$.
+\Cref{fig:comp_fixed_cs} further shows that using 30\% of the manufacturer's CS limits (i.e., $\alpha$=0.3) results in a tracking error of around 1.2cm, which is higher than any of the mean errors achieved by the proposed method for all tested values of $\alpha$.
 While for $\alpha$=0.3, the fixed CS planning has the execution time of 1.1 seconds, the proposed method has lower execution time for all $\alpha\geq0.7$. 
 \textcolor{red}{These results therefore confirm that when it comes to planning for highly dynamical trajectories, taking in consideration robot's true movement capacity results in faster and more precise movements. }
 
@@ -695,7 +740,7 @@ While for $\alpha$=0.3, the fixed CS planning has the execution time of 1.1 seco
 
 % \begin{figure*}[!t]
 %     \centering
-%     \includegraphics[width=\linewidth]{img/ruckig_plots_change_aio1680176621.pdf}
+%     \includegraphics[width=\linewidth]{Papers/imgs/ruckig_plots_change_aio1680176621.pdf}
 %     \caption{Write this}
 %     \label{fig:change target}
 % \end{figure*}
@@ -706,21 +751,24 @@ While for $\alpha$=0.3, the fixed CS planning has the execution time of 1.1 seco
 \label{ch:experiment_mockup}
 % \begin{figure*}[!t]
 %     \centering
-%     \includegraphics[width=0.26\linewidth]{img/setup.jpg}   \includegraphics[width=0.73\linewidth]{img/experiment_main.jpg}
+%     \includegraphics[width=0.26\linewidth]{Papers/imgs/setup.jpg}   \includegraphics[width=0.73\linewidth]{Papers/imgs/experiment_main.jpg}
 %     \caption{Write this}
 %     \label{fig:setup}
 % \end{figure*}
+\afterpage{
+\begin{landscape}
 \begin{figure*}[!t]
     \centering
-    \includegraphics[width=\linewidth]{img/experiment_main_v2.3.jpg}   
+    \includegraphics[width=\linewidth]{Papers/imgs/experiment_main_v2.3.jpg}   
     \caption{Figure on the left shows the experimental setup for the mockup waste sorting experiment. Franka Emika Panda robot is uses as well as six objects two cans and two cartons and two sorting bins, all tracked in real time using Motion capture system Optitrack. The images on the bottom show some key moments of the experiment, while the plot (up right) shows the time evolution of the real-time executed trajectories. The plot shows the position $s_t$ and orientation $s_r$ path evolution in time as well as translation $\dot{s}_t$ and rotation $\dot{s}_r$ velocity on the path and their calculated maximal values (dotted lines).  In the experiment, the operator first brings the sorting bins to the robot workstation, then introduces the waste objects to the robot with unknown positions and orientations. Robot plans and executes in real-time the trajectories necessary in order to place, as fast as possible, the objects into the appropriate sorting bin.}
     \label{fig:setup}
 \end{figure*}
-
+\end{landscape}
+}
 Waste sorting is an important ecological issue that can benefit from the use of robotics and computer vision technologies in order to greatly improve the waste processing efficiency and the volume \cite{Koskinopoulou2021}. However, waste sorting is a highly dynamic and unstructured environment, presenting a challenge for robot movement generation.
 To be viable, waste sorting robots need to be able to operate at high speeds, where they use pick-and-place or pick-and-toss \cite{Hassan2022} techniques to sort the waste in different material groups.
 
-Several robotic solutions have been proposed in the literature to address waste sorting tasks \cite{SARC2019}, such as \textit{Zenrobotics Fast picker}\footnote{https://zenrobotics.com/de/} or \textit{SELMA}\footnote{https://www.opteknik.se} . However, these solutions are based on expensive industrial robots and are only viable for large scale recycling facilities.
+Several robotic solutions have been proposed in the literature to address waste sorting tasks \cite{SARC2019}, such as \textit{Zenrobotics Fast picker}\footnote{Zenrobotics Fast picker: \url{https://zenrobotics.com/de/}} or \textit{SELMA}\footnote{SELMA: \url{https://www.opteknik.se}} . However, these solutions are based on expensive industrial robots and are only viable for large scale recycling facilities.
 
 In this work, we propose a mocap interactive (collaborative) scenario for waste sorting that leverages the proposed real-time trajectory planning method in order to create fast and adaptable robot movement. 
 
@@ -736,10 +784,10 @@ Waste items (two cans and two cartons) are tracked in real-time using a motion c
     \item Release the object
 \end{enumerate}
 
-Robot control architecture, as described in chapter \ref{ch:qp}, and the proposed real-time planning approach are implemented in 
-programming language c++, using \textit{Robot Operating System} (ROS) framework, and run in real-time at the frequency of 1kHz. For this experiment, 60\% of robot's capacity has been used ($\alpha$=0.6) in order to keep the tracking error under 1cm, as shown on Figure \ref{fig:comp_fixed_cs}.
+Robot control architecture, as described in \Cref{ch:qp}, and the proposed real-time planning approach are implemented in 
+programming language c++, using \textit{Robot Operating System} (ROS) framework, and run in real-time at the frequency of 1kHz. For this experiment, 60\% of robot's capacity has been used ($\alpha$=0.6) in order to keep the tracking error under 1cm, as shown on \Cref{fig:comp_fixed_cs}.
 
-Figure \ref{fig:setup} shows the time evolution of one run of the experiment. The plot shows the evolution of the translation $s_t$ and orientation $s_r$ in time as well as their respective velocities  $\dot{s}_t$,  $\dot{s}_r$. The gray areas show the moments in time where the gripper was closing or opening in order to grasp or let go of an object. Several moments during the experiment run are shown on the images around the plot.
+\Cref{fig:setup} shows the time evolution of one run of the experiment. The plot shows the evolution of the translation $s_t$ and orientation $s_r$ in time as well as their respective velocities  $\dot{s}_t$,  $\dot{s}_r$. The gray areas show the moments in time where the gripper was closing or opening in order to grasp or let go of an object. Several moments during the experiment run are shown on the images around the plot.
 
 The experiment starts with the human operator bringing the sorting bins (metal and paper) and placing them in the robot's workspace. Then the operator introduces the objects (sometimes multiple at a time) on the robot's workstation table, while the robot plans and executes the necessary trajectories in real time, in order to place the objects in appropriate sorting bins. Objects' and bins' positions and orientations are not known in advance and can change in real-time. 
 
@@ -751,7 +799,7 @@ The adaptability of the proposed approach is further demonstrated as the final w
 figure out what else to conclude here. Maybe add how this approach could be used for safety.
 }
 
-\section{Discussion on the limitations}
+\section{Discussion on limitations}
 \label{ch:discussion}
 
 \todo[inline]{
@@ -765,7 +813,7 @@ The consequence of such assumption is that the planned trajectory can guarantee 
 
 Different consequence of this issue is that the proposed approach assumes translation and orientation paths independent. However, the limits on velocity, acceleration and jerk of both paths are not independent, as both translation and rotation are generated by the same robot actuators with the limits (\ref{eq:kin_limits}). The true limits on the path variables $s_t$ and $s_r$ would have a form of a polytope. A way to avoid this issue could be to define the path in Lie space, where the rotation and translation could be represented in one path variable. However, in that case, the robot would no longer move in straight lines in Cartesian space. In order to minimise the coupling effect between the rotation and translation, in the context of this paper, translation limits are calculated while considering constant rotation velocity, while rotation limits are calculated considering constant translation velocity. 
 
-Another limitation of the proposed approach is the assumption of the constant robot's capacity for every planning iteration. As described in the section \ref{ch:heuristics}, this can lead to certain negative effects such as an overshoot or oscillations.  In order to overcome this issue, instead of considering only instantaneous robot's capacity for each trajectory generation execution, it would be necessary to predict the robot's kinematic capacity along the remaining trajectory. This is a challenging research topic which results might be applied not just in TAP planning techniques but also to the optimal control methods such as Model predictive control (MPC).  
+Another limitation of the proposed approach is the assumption of the constant robot's capacity for every planning iteration. As described in the \Cref{ch:heuristics}, this can lead to certain negative effects such as an overshoot or oscillations.  In order to overcome this issue, instead of considering only instantaneous robot's capacity for each trajectory generation execution, it would be necessary to predict the robot's kinematic capacity along the remaining trajectory. This is a challenging research topic which results might be applied not just in TAP planning techniques but also to the optimal control methods such as Model predictive control (MPC).  
 
 Finally, the robot's joint space kinematic limits (\ref{eq:kin_limits}) are considered constant in time, which is generally not the case.
 These limits will depend on the robot's actuation limits $\bm{\tau}$ and different dynamical and gravitational effects acting on the robot, as well of the robot's joint state $\{\bm{q},\dot{\bm{q}}\}$. Therefore, for highly dynamical robot's movements, the available actuation capacity of the robot might reduce certain of the limits (\ref{eq:kin_limits}). Therefore, the integration of the robot's actuation limits $\bm{\tau}$ could make the proposed approach more robust and it is a promising direction for future research. 

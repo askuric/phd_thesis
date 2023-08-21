@@ -103,7 +103,10 @@ pdfstartview={FitV},
 \newcommand*{\vol}[1]{\mathcal{V}ol\left(#1\right)}
 \newcommand*{\img}[1]{\mathcal{I}m\left(#1\right)}
 \renewcommand*{\ker}[1]{\mathcal{K}er\left(#1^T\right)}
+\newcommand{\fk}[1]{f_{fk}\left(#1\right)}
 
+\usepackage{caption}
+\usepackage{subcaption}
 
 \newcommand*{\qrimg}[3]{
 \begin{wrapfigure}{r}{0.2\linewidth}
@@ -122,6 +125,9 @@ pdfstartview={FitV},
 % \renewcommand{\hyp}[2]{\textbf{Hypothesis H#1}: #2\par}
 
 
+\newcommand\Chapter[2]{
+  \chapter[#1\hfil\hbox{}\protect\linebreak{\itshape#2}]{#1\\\medskip\huge\itshape#2}
+}
 
 \usepackage{thmtools}
 \usepackage{nameref}
@@ -163,7 +169,6 @@ pdfstartview={FitV},
 
 % use paragraph seperation and no indentation
 \usepackage[skip=.5\baselineskip]{parskip}
-
 
 %----------------------------------------------------------------------------------------
 %	THESIS INFORMATION
@@ -282,7 +287,16 @@ pdfstartview={FitV},
 
 % \begin{acknowledgements}
 % \addchaptertocentry{\acknowledgementname} % Add the acknowledgements to the table of contents
-% The acknowledgments and the people to thank go here, don't forget to include your project advisor\ldots
+
+% \todos{
+% \begin{itemize}
+%     \item JP Merlet
+%     \item the guys at Notheastern (Taskin, Mark) and Philip (maybe not, I dont know)
+%     \item Claire 
+%      \item \ldots
+% \end{itemize}
+% }
+
 % \end{acknowledgements}
 
 %----------------------------------------------------------------------------------------
@@ -341,22 +355,13 @@ pdfstartview={FitV},
 % alternative view
 \include{Chapters/Intro}
 % \part{Polytopes of physical abilities}
-\include{Chapters/metrics_only}
-\include{Chapters/generic_view}
-
-% \part{Theoretic contribution}
-% \include{Papers/icra2021}
-% \include{Papers/icra2022}
-% \part{Polytope applications}
-% \include{Chapters/force}
-% \include{Chapters/motion}
+% \include{Chapters/metrics_only}
+% \include{Chapters/generic_view}
 
 % \part{Applications}
-% \include{Chapters/force}
-\include{Papers/carrying} 
-\include{Papers/hfr2022}
-% \include{Papers/topca}
-% \include{Chapters/motion}
+% \include{Papers/carrying} 
+% \include{Papers/hfr2022}
+\include{Papers/topca}
 
 \chapter{Software - pycapacity}
 \label{ch:software}

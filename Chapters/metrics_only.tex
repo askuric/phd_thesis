@@ -24,7 +24,7 @@ Numerous polytope-based physical ability metrics have been developed in the lite
 \section{Common physical ability metrics}
 % \todos{
 % \begin{itemize}
-%     \item Physical ability metrics are defined as mapping of the actuation space limits of robots and humans to the cartesian / task space 
+%     \item Physical ability metrics are defined as mapping of the actuation space limits of robots and humans to the Cartesian / task space 
 %     \item many different metrics in the literature
 %     \end{itemize}
 % }
@@ -41,7 +41,7 @@ Therefore, this section brings an overview of different physical ability metrics
 In robotics, physical abilities are characterised as different performance indicators, establishing the relationship between the robot's actuator limits (joint positions, velocities, torques, etc.), its kinematics and dynamics equations, and the achievable sets of different task related physical values, such as achievable positions, velocities, external wrenches and similar. The metrics quantifying different physical abilities are usually divided in two groups with respect to their scope: \textit{Global} and \textit{Local} metrics  \cite{russo2022measuring}. 
 
 Global metrics present robot state independent metrics evaluated by taking in consideration all the possible robot states.
-One example of such metric is the robot's reachable workspace \cite{Gosselin1991Synthesis,Vahrenkamp2016,kucuk2005robot}, characterising the set of cartesian positions the robot can reach given its geometry and the limitations of its actuator's positions. More generally, workspace analysis based tools find the set of robot's reachable cartesian positions given the limitations of its actuators, its kinematics and dynamics and different task related variables. Examples of such metrics are  constant orientation workspace \cite{Merlet1999Determination} representing robot's reachable positions with a given fixed orientation, singularity free workspace \cite{Jiang2008} representing the reachable positions without no singular configurations, or wrench closure workspace \cite{gouttefarde2006determination,Lau2011} which corresponds to robot's reachable positions guaranteeing the ability to apply certain set of wrenches.
+One example of such metric is the robot's reachable workspace \cite{Gosselin1991Synthesis,Vahrenkamp2016,kucuk2005robot}, characterising the set of Cartesian positions the robot can reach given its geometry and the limitations of its actuator's positions. More generally, workspace analysis based tools find the set of robot's reachable Cartesian positions given the limitations of its actuators, its kinematics and dynamics and different task related variables. Examples of such metrics are  constant orientation workspace \cite{Merlet1999Determination} representing robot's reachable positions with a given fixed orientation, singularity free workspace \cite{Jiang2008} representing the reachable positions without any singular configurations, or wrench closure workspace \cite{gouttefarde2006determination,Lau2011} which corresponds to robot's reachable positions guaranteeing the ability to apply certain set of wrenches.
 One traditional application for such performance metrics is robot dimensional design, as they enable verifying and guaranteeing that the robotic system, being designed, is compliant with all the requirements of the tasks. 
 However, these reachable workspace analysis tools have relatively complex geometry which can be challenging to exploit when it comes practical applications. 
 
@@ -66,7 +66,7 @@ The hypothesis of equal capacity (ease of generating motion, forces, acceleratio
     ||W\dot{\bm{q}}||_2 \leq 1, \quad W=\text{diag}\left(\left[\dot{q}_{1,max} ,~\dot{q}_{2,max} , ~\ldots\right]\right)^{-1}
     \label{eq:scaled_norm}
 \end{equation}    
-where scaling matrix $W$ normalises the robot joint velocity capacity. However, they still make the assumption that the limits can be represented in the euclidean norm  $||.||_2$ form, implying that the robot's actuator limits are mutually interdependent, which in a general case is not true\cite{Lee1997manip}. Furthermore, as the real robot limits are usually expressed in a form of independent ranges $ \dot{\bm{q}}_{min} \leq \dot{\bm{q}} \leq \dot{\bm{q}}_{max}$, the euclidean norm (\ref{eq:scaled_norm}) based representation is an underestimation of the true robot's capacities. This effect is shown on the example of manipulability ellipsoid metric on \Cref{fig:ellip_poly_dif}. 
+where scaling matrix $W$ normalises the robot joint velocity capacity. However, they still make the assumption that the limits can be represented in the euclidean norm  $||.||_2$ form, implying that the robot's actuator limits are mutually interdependent, which in a general case is not true \cite{Lee1997manip}. Furthermore, as the real robot limits are usually expressed in a form of independent ranges $ \dot{\bm{q}}_{min} \leq \dot{\bm{q}} \leq \dot{\bm{q}}_{max}$, the euclidean norm (\ref{eq:scaled_norm}) based representation is an underestimation of the true robot's capacities. This effect is shown on the example of manipulability ellipsoid metric on \Cref{fig:ellip_poly_dif}. 
 
 \begin{figure}
     \centering
@@ -291,7 +291,7 @@ where $M(\bm{q}) \in \mathbb{R}^{n \times n}$ and $C(\bm{q},\dot{\bm{q}})\in \ma
 
 Furthermore, the mapping between the $n$ dimensional space of robot's actuator (joint) positions $\bm{q}\in \mathbb{R}^n$ and the $m$ dimensional task space positions $\bm{x} \in \mathbb{R}^m$ can be found through the robot's forward kinematics 
 \begin{equation}
-    \bm{x} = f_{fk} (\bm{q})
+    \bm{x} = \fk{\bm{q}}
 \end{equation}
 whereas the task space velocity $\dot{\bm{x}}\in \mathbb{R}^m$, acceleration $\ddot{\bm{x}}\in \mathbb{R}^m$ and jerk $\dddot{\bm{x}}\in \mathbb{R}^m$ can be found through the state dependent  $\{\bm{q},\dot{\bm{q}},\ddot{\bm{q}}\}$  and nonlinear mapping
 \begin{subequations}
@@ -303,7 +303,7 @@ whereas the task space velocity $\dot{\bm{x}}\in \mathbb{R}^m$, acceleration $\d
 \end{subequations}
 were $J(\bm{q}) $ is the jacobian matrix
 \begin{equation}
-    J(\bm{q}) = \frac{\partial f_{fk} (\bm{q})}{\partial \bm{q}}
+    J(\bm{q}) = \frac{\partial \fk{\bm{q}}}{\partial \bm{q}}
 \end{equation}
 while $\dot{J}(\bm{q},\dot{\bm{q}})$ and $\ddot{J}(\bm{q},\dot{\bm{q}},\ddot{\bm{q}})$ are its first and second time derivatives.
 
@@ -504,9 +504,9 @@ The dynamical equation of a general musculoskeletal system, expressed in $n$ dim
 \end{equation}
 where $\bm{q},\dot{\bm{q}},\ddot{\bm{q}} \in \mathbb{R}^n $ are the joint level generalised positions, velocities and accelerations. $M(\bm{q})\in \mathbb{R}^{n\times n}$ is the inertia matrix, $C (\bm{q}, \dot{\bm{q}})\in \mathbb{R}^{n\times n}$ is the Coriolis-centrifugal matrix, $\bm{g}(\bm{q})\in \mathbb{R}^n$ is the joint torque produced by gravity, $\bm{\tau}\in \mathbb{R}^n$ is the joint torque vector generated by the muscle-tendon units, $J(\bm{q})\in\mathbb{R}^{m\times n}$ is the end effector Jacobian matrix and $\bm{f} \in \mathbb{R}^m$ is an $m$-dimensional external Cartesian wrench vector.
 
-As for the robotic manipulators, the kinematics mapping between human's $n$ dimensional joint space and the  $m$ dimensional task space (often Cartesian space) variables is given through the forward kinematics equations $f_{fk}$ 
+As for the robotic manipulators, the kinematics mapping between human's $n$ dimensional joint space and the  $m$ dimensional task space (often Cartesian space) variables is given through the forward kinematics equations $\fk(\cdot)$ 
 \begin{equation}
-    \bm{x} = f_{fk} (\bm{q})
+    \bm{x} = \fk{\bm{q}}
 \end{equation}
 while the velocity kinematics mapping is described through the jacobian matrix $J(\bm{q})$ and its time derivatives
 \begin{subequations}
@@ -686,7 +686,7 @@ The simplest form of task space velocity capacity describes the relationship bet
 \begin{equation}
     \mathcal{P}_v(\bm{q}) = \left\{ \dot{\bm{x}} \in \mathbb{R}^m ~|~ \dot{\bm{q}}\in\left[\dot{\bm{q}}_{min}, \dot{\bm{q}}_{max} \right], ~~ \dot{\bm{x}} = J(\bm{q})\dot{\bm{q}} \right\}
 \end{equation}
-This formulation is essentially the same as the one for robotic manipulators described in velocity \ref{ch:vel_poly} and all the considerations discussed in that chapter are valid for this formulation as well.
+This formulation is essentially the same as the one for robotic manipulators described in velocity \Cref{ch:vel_poly} and all the considerations discussed in that chapter are valid for this formulation as well.
 
 However, taking in account only human's joint velocity $\dot{\bm{q}}$ limits in a form of independent ranges (\ref{eq:human_js_vel_lim}) does not take in consideration the limits of muscle extension velocity $\dot{\bm{l}}\in\mathbb{R}^d$. The true limits of human joint velocities are configuration dependent, as they are a consequence of the limits of muscle extension velocities $\dot{\bm{l}}$. The relationship between the joint and muscle extension velocities is given through the muscle jacobian matrix $L(\bm{q}) \in \mathbb{R}^{d\times n}$, forming polytope shaped limits
 \begin{equation}

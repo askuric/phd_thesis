@@ -1,5 +1,6 @@
 
 \chapter{Enhancing human-robot physical collaboration with polytopes}
+\label{ch:physical_interaction}
 
 \Cref{ch:phisical_ability_metrics} presented benefits of polytope representations of physical abilities for robots and humans, based on their musculoskeletal models. The chapter showed that the polytopes, in addition to being their accurate representation, can be used to as a unifying view on their different physical abilities and allow for characterising their common physical abilities, as one system, in the same polytope form. \Cref{ch:transformin_polytopes} then presented some of the most efficient algorithms, porpoised in the literature, for transforming different polytope families into the standard forms suitable for different applications, such as visualisation or robot control. Furthermore, in \Cref{ch:enumerating}, two new efficient algorithms for polytope transformation are proposed: VEPOLI$^2$ (introduced in \Cref{sec:algorithm_vea}) and ICHM ( introduced in \Cref{ch:algorihtm_ichm}). These algorithms significantly reduce the computational complexity of the polytope transformation and enable their use in real-time applications.
 
@@ -425,15 +426,6 @@ In summary, the experimental validation, presented in this section, demonstrates
 The proposed robot control strategy exploits both robot's and human's physical abilities, while guaranteeing that neither of their abilities is surpassed. As demonstrated in the experiments, even though their individual abilities are not suitable for executing this task on their own, by collaborating the task become feasible, as their combined abilities (as a single system) are higher than the requirements of the task. In addition to efficiently combining both operator's and robot's physical abilities, the proposed control strategy was able to further ensure safety and operator's engagement in the task, by modulated the weight carried by the human operator in accordance with the proposed Assist-As-Needed (AAN) strategy. 
 
 Finally, the proposed strategy relies entirely on the real-time information about the carrying capacities, enabling very flexible collaborative behaviours, where the robot is able to adapt to any trajectory chosen by the operator as well as to the change in his placement in space. 
-
-% \subsubsection{Parallel with the admittance control}
-
-% The proposed collaborative control strategy consists in modulating the weight the operator operators carries with respect to its changing capacity. From the operator's point of view, his task then becomes weight compensation of the object with constantly changing mass  
-% \begin{equation}
-% m = \frac{f_r}{g} =  \frac{G-f_r}{g}
-% \end{equation}
-
-% As the task of weight compensation consists in 
 
 \section{Conclusion}
 
