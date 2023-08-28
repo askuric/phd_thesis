@@ -95,6 +95,12 @@ pdfstartview={FitV},
 }
 
 
+\usepackage{framed}
+\renewenvironment{framed}[1][black]
+  {\def\FrameCommand{\fboxsep=\FrameSep\fcolorbox{#1}{white}}%
+    \MakeFramed {\advance\hsize-\width \FrameRestore}}
+  {\endMakeFramed}
+
 \usepackage[nameinlink]{cleveref}
 
 \newcommand*{\repr}[1]{\mathscr{#1}}
@@ -115,6 +121,8 @@ pdfstartview={FitV},
     \href{#2}{\includegraphics[width=\linewidth]{#1}}\par \href{#2}{#3}
 \end{wrapfigure}
 }
+
+\usepackage{makecell}
 
 \usepackage{amsthm}
 \newtheorem*{remark}{Remark}
@@ -197,6 +205,76 @@ pdfstartview={FitV},
 % subsection counter
 \setcounter{secnumdepth}{5}
 
+
+\usepackage[numberedsection, abbreviations, automake, style=alttree]
+{glossaries-extra}
+\usepackage{glossary-tree}
+\glssetwidest{MCDRs}
+
+\renewcommand*{\glstextformat}[1]{{\textcolor{black}{#1}}} 
+% \usepackage[abbreviations, automake]{glossaries-extra}
+\makeglossaries
+\newabbreviation{mpc}{MPC}{Model Predictive Control}
+\newabbreviation{fk}{FK}{Forward Kinematics}
+\newabbreviation{ik}{IK}{Inverse Kinematics}
+\newabbreviation{pid}{PID}{Proportional Integral Derivative}
+\newabbreviation{qp}{QP}{Quadratic Program}
+\newabbreviation[shortplural={LPs},longplural=Linear Programs]{lp}{LP}{Linear Program}
+\newabbreviation{pd}{PD}{Proportional Derivative}
+\newabbreviation{cs}{CS}{Cartesian Space}
+\newabbreviation{js}{JS}{Joint Space}
+\newabbreviation{dof}{DoF}{Degree of Freedom}
+\newabbreviation{ros}{ROS}{Robot Operating System}
+\newabbreviation{aan}{AAN}{Assist-As-Needed}
+\newabbreviation{tap}{TAP}{Trapezoidal Acceleration Profile}
+\newabbreviation{ar}{AR}{Augmented Reality}
+\newabbreviation{vr}{VR}{Virtual Reality}
+\newabbreviation{mr}{MR}{Mixed Reality}
+\newabbreviation{dmp}{DMP}{Dynamic Motion Primitives}
+\newabbreviation[shortplural={MCDRs},longplural=Multi-link Cable-Driven Robots]{mcdr}{MCDR}{Multi-link Cable-Driven Robot}
+\newabbreviation{rsm}{RSM}{Ray Shooting Method}
+\newabbreviation{ina}{INA}{Incremental Algorithms}
+\newabbreviation{gta}{GTA}{Graph Traversal Algorithms}
+\newabbreviation{fme}{FME}{Fourier-Motzkin Elimination}
+\newabbreviation{esp}{ESP}{Equality-Set Projection}
+\newabbreviation{ddm}{DDM}{Double-Description Method}
+\newabbreviation{pim}{PIM}{Pivoting Method}
+\newabbreviation{hpsm}{HPSM}{Hyper-Plane Shifting Method}
+\newabbreviation{chm}{CHM}{Convex-Hull Method}
+\newabbreviation{svd}{SVD}{Singular Value Decomposition}
+\newabbreviation{reba}{REBA}{Rapid Entire Body Assessment}
+\newabbreviation{rula}{RULA}{Rapid Upper Limb Assessment}
+
+\preto\chapter{\glsresetall}
+\preto\section{\glsresetall}
+\preto\subsection{\glsresetall}
+
+\GlsXtrEnableLinkCounting[section]{general,abbreviation}
+\GlsXtrEnableLinkCounting[subsection]{general,abbreviation}
+
+% disable hyperlink if link count is greater than 1:
+\renewcommand*{\glslinkpresetkeys}{%
+ \ifnum\GlsXtrLinkCounterValue{\glslabel}>1
+  \setkeys{glslink}{hyper=false}%
+ \fi
+}
+
+
+\newcommand{\codet}[1]{\texttt{{#1}}}
+
+\usepackage{listings}
+\lstdefinestyle{mystyle}{
+    language=bash,
+    basicstyle=\ttfamily,
+    keywordstyle=\color{blue},
+    commentstyle=\color{gray},
+    stringstyle=\color{green},
+    showstringspaces=false,
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=4
+}
+\usepackage{minted}
 
 \begin{document}
 
@@ -304,8 +382,16 @@ pdfstartview={FitV},
 %----------------------------------------------------------------------------------------
 {
 \hypersetup{linkcolor=black}
+% \setcounter{tocdepth}{2}
 \tableofcontents % Prints the main table of contents
 }
+
+\clearpage
+% \printglossary[type=\acronymtype]
+\printglossary[type=\acronymtype]
+% \printunsrtglossary[type=\acronymtype]
+\clearpage
+
 % \listoffigures % Prints the list of figures
 
 % \listoftables 
@@ -354,17 +440,15 @@ pdfstartview={FitV},
 
 % alternative view
 \include{Chapters/Intro}
-% \part{Polytopes of physical abilities}
-% \include{Chapters/metrics_only}
-% \include{Chapters/generic_view}
+\include{Chapters/metrics_only}
+\include{Chapters/generic_view}
 
-% \part{Applications}
-% \include{Papers/carrying} 
-% \include{Papers/hfr2022}
+\include{Papers/carrying} 
+\include{Papers/hfr2022}
 \include{Papers/topca}
 
-\chapter{Software - pycapacity}
-\label{ch:software}
+
+\include{Papers/pycapacity}
 \chapter{Conclusion}
 
 % \include{Papers/icra2021}
@@ -379,8 +463,8 @@ pdfstartview={FitV},
 % Include the appendices of the thesis as separate files from the Appendices folder
 % Uncomment the lines as you write the Appendices
 
-% \include{Appendices/appendix_image}
-% \include{Appendices/appendix_operation}
+\include{Appendices/appendix_image}
+\include{Appendices/appendix_operation}
 
 %----------------------------------------------------------------------------------------
 %	BIBLIOGRAPHY
