@@ -351,7 +351,7 @@ Formulation & Eqn. & $\bm{x}$ & $A$ & $B$ & $\bm{y}$ & Input set $\mathcal{P}_y$
 Projection & \ref{eq:proj_poly} & $\bm{x}\in\mathbb{R}^m$ & $I_{m\times m}$& $B$ & $\bm{y}\in\mathbb{R}^n$ & $\mathcal{P}_y$ & $\bm{b}_x\in\mathbb{R}^m$ \\
 Intersection & \ref{eq:inter_poly} & $\bm{x}\in\mathbb{R}^m$ & $A$& $I_{n\times n}$ & $\bm{y}\in\mathbb{R}^n$ & $\mathcal{P}_y$ & $\bm{b}_y\in\mathbb{R}^n$ \\
 \hline
-\multicolumn{10}{c}{Special cases} \\
+\multicolumn{10}{c}{Combined cases} \\
 \hline
 Intersection-projection & \ref{eq:inter_proj_poly} & $\bm{x}\in\mathbb{R}^m$ & $A$& $B$ & $\bm{y}\in\mathbb{R}^n$ & $\mathcal{P}_y$ & $\bm{b}_z\in\mathbb{R}^k$ \\
 Projection-intersection & \ref{eq:proj_inter_poly} & $\bm{x}\in\mathbb{R}^m$ & $I_{m\times m}$& $B$ & $\bm{z}\in\mathbb{R}^k$ & $\mathcal{P}_z$ & $\bm{b}_x\in\mathbb{R}^m$ \\
@@ -416,7 +416,7 @@ There are two main families of approaches developed in the literature: \gls{ina}
 
 A comprehensive review of different conversion algorithm was proposed by \citet{avis1997how}, comparing the efficiency of different families of algorithms on different standard polytope benchmarks, as well as their available implementations. In general, the \gls{gta} methods are more efficient for higher dimensional problems, while \gls{ina} methods are more efficient for lower dimensional problems, for dimensions up to 12 \cite[Chapter 8.3]{fukuda2016lecture}.
 
-These methods are standard building blocks for using polytopes in practical applications as well as for computing different operations over polytopes, such as intersections, Convex-Hulls and Minkowski sums (described in the \Cref{ch:operations_over_poly_stategies}). However, the polytope formulations families described in the previous section are not expressed neither as $\repr{H}$ nor $\repr{V}$-representation. Therefore, these formulations require either additional steps in order to be used with standard \gls{ina} or \gls{gta}  algorithms or in some cases dedicated algorithms specific to their formulations. 
+These methods are standard building blocks for using polytopes in practical applications as well as for computing different operations over polytopes, such as intersections, Convex-Hulls and Minkowski sums (described in \Cref{ch:operations_over_poly_stategies}). However, the polytope formulations families described in the previous section are not expressed neither as $\repr{H}$ nor $\repr{V}$-representation. Therefore, these formulations require either additional steps in order to be used with standard \gls{ina} or \gls{gta}  algorithms or in some cases dedicated algorithms specific to their formulations. 
 
 
 \subsection{Strategies for the intersection formulation}
@@ -544,13 +544,13 @@ Several efficient algorithms, particularly in robotics literature, were develope
 
 An efficient algorithm for vertex enumeration of the intersection type polytope is proposed by \citet{gouttefarde_versatile_2015}, exploiting the geometry of the problem and assuming that the output space dimension is always $m=2$, in which case the polytope $\mathcal{P}_x$ becomes a 2D polygon, which boundaries are then efficiently navigated in search for extremities. However, this algorithm does not scale well to higher dimensional problems.
 
-A different algorithm, finding the $\repr{V}$-representation of the intersection polytope $\mathcal{P}_y$ with interval limits $\mathcal{I}_y$, is proposed by \citet{chiacchio_evaluation_1996}. The algorithm leverages the hyperrectangle geometry of the interval input set $\mathcal{I}_y$ and performs an efficient exhaustive search through its faces. This algorithm has been improved by \citet{sasaki_vertex_nodate}, where the computational complexity has been significantly reduced by exploiting the geometry of the intersection of the hyperrectangle (interval) $\mathcal{I}_y$ and the image of matrix $\img{A}$, leveraging the equivalent projection formulation of the intersection polytope, described in the \Cref{par:equivalent_proj}.
+A different algorithm, finding the $\repr{V}$-representation of the intersection polytope $\mathcal{P}_y$ with interval limits $\mathcal{I}_y$, is proposed by \citet{chiacchio_evaluation_1996}. The algorithm leverages the hyperrectangle geometry of the interval input set $\mathcal{I}_y$ and performs an efficient exhaustive search through its faces. This algorithm has been improved by \citet{sasaki2011vertex}, where the computational complexity has been significantly reduced by exploiting the geometry of the intersection of the hyperrectangle (interval) $\mathcal{I}_y$ and the image of matrix $\img{A}$, leveraging the equivalent projection formulation of the intersection polytope, described in the \Cref{par:equivalent_proj}.
 \begin{equation}
 \mathcal{P}_x=\{\bm{x}\in\mathbb{R}^m ~|~ \bm{x} = A^+\bm{y} + A^+\bm{b}_y,~ \bm{y} \in \img{A}\cap[\bm{y}_{min},\bm{y}_{max}]\}
 \label{eq:inter_hyp_inter}
 \end{equation}
 
-Both of these algorithms \citet{chiacchio_evaluation_1996} and \citet{sasaki_vertex_nodate} are based on the efficient exhaustive search of the hyperrectangle $\mathcal{I}_y$ faces. As the dimension of the input space $n$ grows the computational efficiency of these algorithms decreases, since the number of faces of the hypercube grows exponentially with the input space dimension
+Both of these algorithms \citet{chiacchio_evaluation_1996} and \citet{sasaki2011vertex} are based on the efficient exhaustive search of the hyperrectangle $\mathcal{I}_y$ faces. As the dimension of the input space $n$ grows the computational efficiency of these algorithms decreases, since the number of faces of the hypercube grows exponentially with the input space dimension
 $$
 N_{n,k}= 2^{n-k}\binom{n}{k}
 $$
@@ -799,9 +799,9 @@ Therefore the operation of enumerating all the vertices $\bm{x}_{v}$ of the poly
     \caption{Example of intersection vertices $\bm{y}_{vi}$ placement on $n\!-\!m$ dimensional faces of hyperrectangle $\mathcal{I}_y$. Left, $m=1$, the vertices $\bm{y}_{vi}$ are on $n\!-\!m\!=\!2$ dimensional faces (sides), while on the right $m=2$ the vertices re on $n\!-\!m\!=\!1$ dimensional faces (edges) }
     \label{fig:size_inter}
 \end{wrapfigure}
-In their work, \citet{sasaki_vertex_nodate} have shown that, when the input space dimension is $n$ and the image $\img{A}$ dimension is $m$, the extreme values (vertices) of the intersection $\bm{y}_{v}$ belong to the $n$-$m$ dimensional faces of the hyperrectangle $\mathcal{I}_y$. \Cref{fig:size_inter} demonstrates this relationship on an example of with input space dimension $n=3$ and two different output space dimensions $m=1$ and $m=2$. For $m=1$ the vertices $\bm{y}_{v}$ are on $m-n=2$ dimensional faces of the hyperrectangle corresponding to its sides, and when $m=2$ the vertices  $\bm{y}_{v}$ are on $m-n=1$ dimensional faces of the hyperrectangle, its edges.
+In their work, \citet{sasaki2011vertex} have shown that, when the input space dimension is $n$ and the image $\img{A}$ dimension is $m$, the extreme values (vertices) of the intersection $\bm{y}_{v}$ belong to the $n$-$m$ dimensional faces of the hyperrectangle $\mathcal{I}_y$. \Cref{fig:size_inter} demonstrates this relationship on an example of with input space dimension $n=3$ and two different output space dimensions $m=1$ and $m=2$. For $m=1$ the vertices $\bm{y}_{v}$ are on $m-n=2$ dimensional faces of the hyperrectangle corresponding to its sides, and when $m=2$ the vertices  $\bm{y}_{v}$ are on $m-n=1$ dimensional faces of the hyperrectangle, its edges.
 
-In order to find the  $\repr{V}$-representation of the intersection  $\mathcal{I}\cap \img{A}$, the state-of-the-art algorithms, proposed by \citet{chiacchio_evaluation_1996} and \citet{sasaki_vertex_nodate}, propose an exhaustive search over all the $n$-$m$ dimensional hyperrectangle faces to find the extreme values of $\bm{y}_{vi}$. In this work a new representation of output vector $\bm{y}$ is proposed enabling an efficient navigation of the $n-m$ dimensional hyperrectangle face. Additionally, an efficient approach to discarding the hyperrectangle faces that cannot contain vertices is integrated in the algorithm, further reducing the complexity of the exhaustive search.
+In order to find the  $\repr{V}$-representation of the intersection  $\mathcal{I}\cap \img{A}$, the state-of-the-art algorithms, proposed by \citet{chiacchio_evaluation_1996} and \citet{sasaki2011vertex}, propose an exhaustive search over all the $n$-$m$ dimensional hyperrectangle faces to find the extreme values of $\bm{y}_{vi}$. In this work a new representation of output vector $\bm{y}$ is proposed enabling an efficient navigation of the $n-m$ dimensional hyperrectangle face. Additionally, an efficient approach to discarding the hyperrectangle faces that cannot contain vertices is integrated in the algorithm, further reducing the complexity of the exhaustive search.
 
 \subsection{Proposed VEPOLI$^2$ algorithm}
 Consider an input vector $\bm{y}$ bounded within the input set $\mathcal{I}_y$. It can be defined as
@@ -943,14 +943,14 @@ N_c\leq2^m
 $$
 
 \subsection{Performance and complexity comparison}\label{sec:complexity}
-To demonstrate the efficiency of the VEPOLI$^2$ algorithm, it is compared to the polytope vertex search algorithm introduced by \citet{chiacchio_evaluation_1996}. Furthermore the comparison is extended to the algorithm proposed by \citet{sasaki_vertex_nodate} which is, to our knowledge, the only algorithm exploiting the geometric structure of the intersection formulation polytope with interval limits (\ref{eq:inter_hyp_revisit_algo}).
+To demonstrate the efficiency of the VEPOLI$^2$ algorithm, it is compared to the polytope vertex search algorithm introduced by \citet{chiacchio_evaluation_1996}. Furthermore the comparison is extended to the algorithm proposed by \citet{sasaki2011vertex} which is, to our knowledge, the only algorithm exploiting the geometric structure of the intersection formulation polytope with interval limits (\ref{eq:inter_hyp_revisit_algo}).
 
 
 \begin{table}[!h]
     \centering
     \begin{tabular}{|c|c|c|c|}
        \hline
-      \textbf{ System size }& \textbf{Chiacchio}\cite{chiacchio_evaluation_1996} & \textbf{Sasaki} \cite{sasaki_vertex_nodate}  &  \textbf{VEPOLI$^2$} \\
+      \textbf{ System size }& \textbf{Chiacchio}\cite{chiacchio_evaluation_1996} & \textbf{Sasaki} \cite{sasaki2011vertex}  &  \textbf{VEPOLI$^2$} \\
        \hline
        $(n,m)$& matrix inversions: $ \frac{2n!}{m!(2n-m)!}$  & $ \frac{n!}{m!(n-m)!} $ & $ \leq \frac{n!}{m!(n-m)!}$ \\
        &  matrix size:  $ 2n \times 2n$ & $m\times m$  & $n$-$m$ $\times$ $n$-$m$\\
@@ -1271,8 +1271,8 @@ The demonstrated efficiency of the proposed ICHM algorithm opens many doors for 
 
 \begin{figure}[!t]
     \centering
-    \includegraphics[width=0.5\linewidth]{Papers/images/bimanual.png}
-    \caption{\gls{cs} force polytope of a musculoskeletal model of both human upper limbs  \cite{saul2015benchmarking} with 7Dof and 50 muscles each, visualised in \textit{pyomeca bioviz} \cite{Michaud2021}. The polytopes are scaled with a ratio 1m : 1000N}
+    \includegraphics[width=\linewidth]{Papers/images/force.png}
+    \caption{\gls{cs} force polytope of a musculoskeletal model of human upper limb  \cite{saul2015benchmarking} with 7DOF and 50 muscles, evaluated for two different configurations using the proposed ICHM algorithm. The visualisation is performed using \codet{bioviz} \cite{Michaud2021} and polytopes are scaled with a ratio 1m : 1000N}
     \label{fig:images_bimanual}
 \end{figure}
 
@@ -1353,7 +1353,13 @@ While the literature presents numerous algorithms for transforming polytope form
 The aim of this overview is to provide a brief introduction into the applicable state-of-the-art methods when it comes to transforming different polytope formulations as well as to discuss their limitations and computational efficiency.
 
 The final two sections of this chapter bring introduce two contributions of this thesis in the domain of polytope transformations. The \Cref{sec:algorithm_vea} introduces an efficient vertex enumeration algorithm for the intersection polytope formulation with the interval input set. This algorithm is based on the work by \citet{sasaki2011vertex}, exploiting the geometry of the hyperrectangle input set in order to improve its computational complexity of its exhaustive search and reduce the execution time. The algorithm is particularly well suited for low dimensional polytope evaluation, that are common when it comes to polytope characterisations of physical abilities of robotic manipulators. The performance of the proposed algorithm is compared to the state-of-the-art methods on finding the $\repr{V}$-representation of the force capacity polytope for redundant robotic manipulators, introduced in \Cref{ch:poly_force}. The results show that the algorithm has significantly lower computational complexity and hence shorter execution time, in the order of magnitude of several milliseconds for standard robotic manipulators, implemented in Pyhton. Such short execution time opens doors for using these polytopes in real time applications, such as robot control. 
+\todos{
+This algorithm has been published in the context of the scientific paper \citet{skuric2021robot}.
+}
 
 \Cref{ch:algorihtm_ichm} brings a new polytope approximation algorithm based on the \gls{chm} by \citet{lassez1992quantifier}. The algorithm is developed for the generic polytope formulation directly and can therefore be used with all the common polytope formulation introduced in previous chapter. This algorithm performs an iterative approximation of the final polytope by using sequences of \glspl{lp} to find new vertices of the polytope and Convex-Hull to group the to faces. The algorithm improves the approximation accuracy in each iteration and continues iterating when desired user defined approximation accuracy is reached. The execution time of the algorithm depends directly of the complexity of the polytope being transformed (number of faces and verteices), therefore by appropriately setting the desired accuracy, the algorithm is capable of simplifying the final geometry of the polytope and lowering the execution time. This is particularly useful when it comes to the high-dimensional problems, where the input space dimension is much higher than the output space $n\!\gg \!m$, where the standard exact methods have intractable execution times, as they are based on different forms of the exhaustive search. Such high-dimensional problems are very common when it comes to characterising physical abilities of humans based on their musculoskeletal models, as they often have large number of muscles $n$, while their capacities are characterised in the \gls{cs} $m=3$. The performance of the proposed method is therefore tested on the challenging polytope formulation of the human's wrench capacity polytope, described in \Cref{ch:force_poly_human}. The results of the proposed methods in comparison to the state-of-the-art methods show that it has significantly shorter computation time while at the same time guaranteeing the user defined approximation accuracy. Furthermore, the results show that the porpoised algorithm, in the case of human's wrench capacity polytope, has execution time under half of a seconds for musculoskeletal models up to 100 muscles, opening many doors for using this polytope formulation in the real time applications.
+\todos{
+This algorithm has been published in the context of the scientific paper \citet{Skuric2022human,skuric2023dynamics}.
+}
 
 Following chapter leverages the proposed algorithms and formulations to propose several use-cases of the polytope based physical ability characterisations in the context of the real-time robot control in different human robot physical collaboration scenarios. \Cref{ch:topca} proposes a new \gls{cs} trajectory planning strategy exploiting the polytope algebra, while \Cref{ch:hfr} introduces a new polytope based approximation of the robot's reachable space within a horizon. Finally, \Cref{ch:software} presents the publicly available open-source software package implementing several algorithms introduced in this section and enabling an efficient, real-time compatible, evaluation of polytope based physical abilities for humans and robots.

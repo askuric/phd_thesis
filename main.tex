@@ -55,8 +55,6 @@ headsepline, % Uncomment to get a line under the header
 \usepackage{bm}
 
 \usepackage{wrapfig}
-\usepackage{cite}
-\usepackage[numbers]{natbib}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage[noend]{algorithmic}
 \usepackage{graphicx}
@@ -73,8 +71,52 @@ headsepline, % Uncomment to get a line under the header
 
 \usepackage{pdfpages}
 
+
+% \usepackage{cite}
+% \usepackage[numbers]{natbib}
+% \usepackage[resetlabels,labeled, numbered]{multibib}
+% \newcites{A}{ }
+% \newcommand{\citedon}[1]{%
+%   \par
+%   \vspace*{-\parskip}% Correct insertion of paragraph skip due to \par
+%   {\textsc{Cited on page #1}\par}}
+% \renewcommand*{\backref}[1]{%
+%   \ifx\relax#1\empty
+%   \else
+%     \citedon{#1}%
+%   \fi
+% }
+
+
 \usepackage[
-pagebackref=true,
+backend=biber, 
+style=ieee, 
+sorting=none, 
+defernumbers,
+backref=true,
+maxcitenames=2,
+mincitenames=1,
+citestyle=numeric-comp
+]{biblatex}
+\addbibresource{example.bib}
+\addbibresource{my.bib}
+% basckref format
+\DefineBibliographyStrings{english}{%
+  backrefpage = {\textsc{Mentioned on page}},% originally "cited on page"
+  backrefpages = {\textsc{Mentioned on pages}},% originally "cited on pages"
+}
+\renewcommand*{\finentrypunct}{}
+\usepackage{xpatch}
+\DeclareFieldFormat{backrefparens}{
+\par
+  \vspace*{-\parskip} \small{#1}
+}
+\xpatchbibmacro{pageref}{parens}{backrefparens}{}{}
+\newcommand{\citet}[1]{\textcite{#1}}
+
+
+\usepackage[
+% pagebackref=true,
 hypertexnames=true, % default is true since a long time
 colorlinks=true,% Set to false to disable coloring links
 citecolor=blue,% The color of citations
@@ -83,16 +125,6 @@ urlcolor=mdtRed,% The color of hyperlinks (URLs)
 pdfstartview={FitV},
 ]{hyperref}
 
-\newcommand{\citedon}[1]{%
-  \par
-  \vspace*{-\parskip}% Correct insertion of paragraph skip due to \par
-  {\textsc{Cited on page #1}\par}}
-\renewcommand*{\backref}[1]{%
-  \ifx\relax#1\empty
-  \else
-    \citedon{#1}%
-  \fi
-}
 
 
 \usepackage{framed}
@@ -144,22 +176,19 @@ pdfstartview={FitV},
 \Crefname{hypothesis}{Hypothesis}{Hypotheses}
 
 \makeatletter
+\def\mynameref#1#2{%
+  \begingroup
+    \space(\nameref{#1})
+  \endgroup
+}
 \newcommand{\myref}[1]{\cref{#1}\mynameref{#1}{\csname r@#1\endcsname}}
 \newcommand{\Myref}[1]{\Cref{#1}\mynameref{#1}{\csname r@#1\endcsname}}
 
-\def\mynameref#1#2{%
-  \begingroup
-    \edef\@mytxt{#2}%
-    \edef\@mytst{\expandafter\@thirdoffive\@mytxt}%
-    \ifx\@mytst\empty\else
-    \space(\nameref{#1})\fi
-  \endgroup
-}
 \makeatother
 
 \usepackage{bbm}
 
-\usepackage{cancel}
+\usepackage[normalem]{ulem}
 \usepackage{scalefnt}
 %----------------------------------------------------------------------------------------
 %	MARGIN SETTINGS
@@ -261,20 +290,10 @@ pdfstartview={FitV},
 
 
 \newcommand{\codet}[1]{\texttt{{#1}}}
-
-\usepackage{listings}
-\lstdefinestyle{mystyle}{
-    language=bash,
-    basicstyle=\ttfamily,
-    keywordstyle=\color{blue},
-    commentstyle=\color{gray},
-    stringstyle=\color{green},
-    showstringspaces=false,
-    breaklines=true,
-    breakatwhitespace=true,
-    tabsize=4
-}
 \usepackage{minted}
+
+\usepackage{csquotes}
+
 
 \begin{document}
 
@@ -440,20 +459,17 @@ pdfstartview={FitV},
 
 % alternative view
 \include{Chapters/Intro}
-\include{Chapters/metrics_only}
-\include{Chapters/generic_view}
+% \include{Chapters/metrics_only}
+% \include{Chapters/generic_view}
 
-\include{Papers/carrying} 
-\include{Papers/hfr2022}
-\include{Papers/topca}
-
-
-\include{Papers/pycapacity}
-\chapter{Conclusion}
-
-% \include{Papers/icra2021}
-% \include{Papers/icra2022}
+% \include{Papers/carrying} 
 % \include{Papers/hfr2022}
+% \include{Papers/topca}
+
+
+% \include{Papers/pycapacity}
+\include{Chapters/conclusion}
+
 %----------------------------------------------------------------------------------------
 %	THESIS CONTENT - APPENDICES
 %----------------------------------------------------------------------------------------
@@ -463,14 +479,17 @@ pdfstartview={FitV},
 % Include the appendices of the thesis as separate files from the Appendices folder
 % Uncomment the lines as you write the Appendices
 
-\include{Appendices/appendix_image}
-\include{Appendices/appendix_operation}
+% \include{Appendices/appendix_image}
+% \include{Appendices/appendix_operation}
 
 %----------------------------------------------------------------------------------------
 %	BIBLIOGRAPHY
 %----------------------------------------------------------------------------------------
-\bibliographystyle{IEEEtranN}
-\bibliography{example}
+
+% \bibliographystyle{IEEEtranN}
+% \bibliography{example}
+\newrefcontext[labelprefix=]
+\printbibliography[notkeyword={phd}, notkeyword={phd_out}]
 %----------------------------------------------------------------------------------------
 
 

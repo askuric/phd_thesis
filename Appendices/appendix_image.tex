@@ -18,7 +18,7 @@ In other words, for a given vector $\bm{y}$, the pseudo-inverse finds the closes
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{Chapters/imgs/pseudo_inverse_intuition_aio.pdf}
-    \caption{Caption}
+    \caption{Figure shows the example of the input space with dimension $n=3$ and output space $m=2$. The figure on the left shows the image $\img{A}$ space and the null-space $\ker{A}$ which is in this example $n-m=1$ dimensional. Figure on the right shows the intuition about the pseudo-inverse $A^+$ as the unique projector. If a vector $\bm{y}$ belongs to the image (as the vector $\bm{y}_a$, then its pseudo-inverse projection to the output space $\bm{x}_a=A^+\bm{y}_a$ is the unique projector and it is bijective $\bm{y}_a = AA^+\bm{y}_a$. If the vector $\bm{y}$ has a component is null-space (as the vector $\bm{y}_{b1}$), its pseudo-inverse projection  $\bm{x}_b=A^+\bm{y}_{b1}$ is no longer bijective. The inverse projection of the output vector $\bm{x}_b$ will result in the input vector $\bm{y}_b=A\bm{x}_b$ which belongs to the $\img{A}$. The obtained vector $\bm{y}_b$ is not equal to the initial vector $\bm{y}_{b1}\neq \bm{y}_b$.}
     \label{fig:pseudoinverse_intuition}
 \end{figure}
 
@@ -40,7 +40,7 @@ where $x_i$ are the scalar components of the vector $\bm{x}$.
 % \end{wrapfigure}
 
 Orthogonal to the $m$ dimensional image $\img{A}$, is the $n-m$ dimensional \textit{Null-space} or \textit{Kernel} space of the matrix $\ker{A}$. Together, the image $\img{A}$ and the $\ker{A}$, span the entire space of $\bm{y}\in\mathbb{R}^n$.
-Figure \ref{fig:pseudoinverse_intuition} shows a visual example of the image and the null-space construction on for the space dimensions $n=3$ and $m=2$.
+\Cref{fig:pseudoinverse_intuition} shows a visual example of the image and the null-space construction on for the space dimensions $n=3$ and $m=2$.
 
 In general case, the vector $\bm{y}$ has components both in the image $\img{A}$ and the Null-space $\ker{A}$ of the matrix $A$
 \begin{equation}
@@ -64,8 +64,6 @@ However, when the vector $\bm{y}$ consists of only image components $\bm{y}_i$, 
 Therefore, the $\bm{x}_o$, obtained using the pseudo-inverse $\bm{x}_o=A^+\bm{y}$, can be used to generate the original vector $\bm{y} = A\bm{x}_o$, only if the original $\bm{y}$ belongs to the image $\img{A}$ of the matrix $A$. 
 
 
-\todos{Finish!}
-
 \section{Characterising the image space}
 \label{ch:image_char}
 
@@ -84,6 +82,4 @@ As all the vectors $\bm{y}$ belonging to the image $\img{A}$ have the null-space
    \label{eq:image_poly}
 \end{equation}
 
-This set, corresponding to the image space $\img{A}$, is particularly useful when it comes to characterising different intersection polytope formulations, as described in section \ref{ch:inter_formulaiton}.
-
-\todos{SVD extension!}
+This set, corresponding to the image space $\img{A}$, is particularly useful when it comes to characterising different intersection polytope formulations, as described in \Cref{ch:inter_formulaiton}.
