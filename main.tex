@@ -59,7 +59,7 @@ headsepline, % Uncomment to get a line under the header
 \usepackage[noend]{algorithmic}
 \usepackage{graphicx}
 \usepackage{textcomp}
-\usepackage{xcolor}
+\usepackage{xcolor,colortbl}
 \usepackage{todonotes}
 \usepackage{graphicx}
 \usepackage{mathtools}
@@ -70,7 +70,9 @@ headsepline, % Uncomment to get a line under the header
 \usepackage{arydshln}
 
 \usepackage{pdfpages}
+\usepackage{changepage}
 
+\usepackage[export]{adjustbox}% http://ctan.org/pkg/adjustbox
 
 % \usepackage{cite}
 % \usepackage[numbers]{natbib}
@@ -171,9 +173,9 @@ pdfstartview={FitV},
 
 \usepackage{thmtools}
 \usepackage{nameref}
-\newtheorem{hypothesis}{Hypothesis}
-\crefname{hypothesis}{hypothesis}{hypotheses}
-\Crefname{hypothesis}{Hypothesis}{Hypotheses}
+\newtheorem{concept}{Concept}
+\crefname{concept}{concept}{concepts}
+\Crefname{concept}{Concept}{Concepts}
 
 \makeatletter
 \def\mynameref#1#2{%
@@ -459,15 +461,15 @@ pdfstartview={FitV},
 
 % alternative view
 \include{Chapters/Intro}
-% \include{Chapters/metrics_only}
-% \include{Chapters/generic_view}
+\include{Chapters/metrics_only}
+\include{Chapters/generic_view}
 
-% \include{Papers/carrying} 
-% \include{Papers/hfr2022}
-% \include{Papers/topca}
+\include{Papers/carrying} 
+\include{Papers/hfr2022}
+\include{Papers/topca}
 
 
-% \include{Papers/pycapacity}
+\include{Papers/pycapacity}
 \include{Chapters/conclusion}
 
 %----------------------------------------------------------------------------------------

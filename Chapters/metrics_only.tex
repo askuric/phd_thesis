@@ -32,7 +32,7 @@ The dynamical model, of a standard serial robotic manipulator with a fixed base,
 M(\bm{q})\ddot{\bm{q}} + C(\bm{q},\dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q}) + J^T(\bm{q})\bm{f} = \bm{\tau} 
 \label{eq:dyn_model_rob}
 \end{equation}
-where $M(\bm{q}) \in \mathbb{R}^{n \times n}$ and $C(\bm{q},\dot{\bm{q}})\in \mathbb{R}^{n \times n}$ are its inertia and Coriolis matrices, $\bm{g} (\bm{q})\in \mathbb{R}^n$ is the state dependent gravity vector, $J(\bm{q}) \in \mathbb{R}^{m\times n}$ is the state dependant jacobian matrix, $\bm{f}\in \mathbb{R}^m $ is the vector of applied external wrenches and $\bm{q},\dot{\bm{q}},\ddot{\bm{q}}$ are robot's joint positions, velocities and accelerations respectively.
+where $M(\bm{q}) \in \mathbb{R}^{n \times n}$ and $C(\bm{q},\dot{\bm{q}})\in \mathbb{R}^{n \times n}$ are its inertia and Coriolis matrices, $\bm{g} (\bm{q})\in \mathbb{R}^n$ is the state dependent gravity vector, $J(\bm{q}) \in \mathbb{R}^{m\times n}$ is the state dependant Jacobian matrix, $\bm{f}\in \mathbb{R}^m $ is the vector of applied external wrenches and $\bm{q},\dot{\bm{q}},\ddot{\bm{q}}$ are robot's joint positions, velocities and accelerations respectively.
 
 Furthermore, the mapping between the $n$ dimensional space of robot's actuator (joint) positions $\bm{q}\in \mathbb{R}^n$ and the $m$ dimensional task space positions $\bm{x} \in \mathbb{R}^m$ can be found through the robot's forward kinematics 
 \begin{equation}
@@ -46,7 +46,7 @@ whereas the task space velocity $\dot{\bm{x}}\in \mathbb{R}^m$, acceleration $\d
 \dddot{\bm{x}}&= J(\bm{q})\dddot{\bm{q}} + 2\dot{J}(\bm{q},\dot{\bm{q}})\ddot{\bm{q}} + \ddot{J}(\bm{q},\dot{\bm{q}},\ddot{\bm{q}})\dot{\bm{q}}\label{eq:js_to_cs_vaj:jerk}
  \end{align} \label{eq:js_to_cs_vaj}
 \end{subequations}
-were $J(\bm{q}) $ is the jacobian matrix
+were $J(\bm{q}) $ is the Jacobian matrix
 \begin{equation}
     J(\bm{q}) = \frac{\partial \fk{\bm{q}}}{\partial \bm{q}}
 \end{equation}
@@ -80,7 +80,7 @@ For any fixed robot configuration $\bm{q}$ the ranges of joint velocity limits
 \begin{equation}
    \dot{\bm{q}}\in\left[\dot{\bm{q}}_{min}, \dot{\bm{q}}_{max} \right]
 \end{equation}
-can be projected to the $m$ dimensional task space using the jacobian matrix $J(\bm{q})$, obtaining the convex polytope of achievable task space velocities  
+can be projected to the $m$ dimensional task space using the Jacobian matrix $J(\bm{q})$, obtaining the convex polytope of achievable task space velocities  
 \begin{equation}
     \mathcal{P}_v(\bm{q}) = \left\{ \dot{\bm{x}} \in \mathbb{R}^m ~|~ \dot{\bm{q}}\in\left[\dot{\bm{q}}_{min}, \dot{\bm{q}}_{max} \right], ~~ \dot{\bm{x}} = J(\bm{q})\dot{\bm{q}} \right\}
     \label{eq:poly_vel_rob}
@@ -211,7 +211,7 @@ This \gls{js} stiffness matrix $K_j$ can be used to find the robot state depende
      K_c(\bm{q})^{-1} = J(\bm{q}) K_j^{-1}J(\bm{q})^T
      \label{eq:stiffness_roobt_eef}
 \end{equation}
-The matrix $K_j$ is a square $n \times n$ matrix, which is in most cases diagonal and has a full rank, while the jacobian matrix is $m\times n$ shaped and configuration dependent. If the jacobian matrix $J(\bm{q})$ is approaching to its singularity, as the singularity can be seen as a reduction of the task space dimension $m$, the resulting robotic manipulator's stiffness would be approaching infinity in that direction. 
+The matrix $K_j$ is a square $n \times n$ matrix, which is in most cases diagonal and has a full rank, while the Jacobian matrix is $m\times n$ shaped and configuration dependent. If the Jacobian matrix $J(\bm{q})$ is approaching to its singularity, as the singularity can be seen as a reduction of the task space dimension $m$, the resulting robotic manipulator's stiffness would be approaching infinity in that direction. 
 %In singular case however, the task space stiffness matrix $K_c(\bm{q})$ cannot be obtained by simply inverting the equation (\ref{eq:stiffness_roobt_eef}). 
 
 Given the same range of expected external wrenches (\ref{eq:force_stiff_range}), the polytope of maximal task space displacements $\Delta\bm{x}$ can then be expressed as
@@ -253,7 +253,7 @@ As for the robotic manipulators, the kinematics mapping between human's $n$ dime
 \begin{equation}
     \bm{x} = \fk{\bm{q}}
 \end{equation}
-while the velocity kinematics mapping is described through the jacobian matrix $J(\bm{q})$ and its time derivatives
+while the velocity kinematics mapping is described through the Jacobian matrix $J(\bm{q})$ and its time derivatives
 \begin{subequations}
 \begin{align}
 \dot{\bm{x}}&= {J}(\bm{q})\dot{\bm{q}} \label{eq:js_to_cs_vaj_human:vel}\\
@@ -384,7 +384,7 @@ Or in its implicit formulation
     \label{eq:human_force_poly}
 \end{equation}
 
-The final polytope formulation $\mathcal{P}_f$ has an implicit form composed of two affine mappings. First the limits of the muscle tension forces $\bm{F}\in \mathbb{R}^d$ are projected into the limits of the joint torques $\bm{\tau}\in \mathbb{R}^n$, then the polytope of the joint torques $\mathcal{P}_\tau$ is transformed to the task space wrenches $\bm{f}\in \mathbb{R}^m$ using the jacobian transpose matrix $J(\bm{q})^T$. As the musculoskeletal models often have large number of muscles $d$, the ending polytope $\mathcal{P}_f$ geometry is complex (having a large number of vertices and faces), both due to the number of muscles considered and the inherent complexity of the affine mapping. Therefore, this metric has been mostly used for static in-advance analysis of human postures \cite{hernandez_toward_2015}, due to its long execution times. 
+The final polytope formulation $\mathcal{P}_f$ has an implicit form composed of two affine mappings. First the limits of the muscle tension forces $\bm{F}\in \mathbb{R}^d$ are projected into the limits of the joint torques $\bm{\tau}\in \mathbb{R}^n$, then the polytope of the joint torques $\mathcal{P}_\tau$ is transformed to the task space wrenches $\bm{f}\in \mathbb{R}^m$ using the Jacobian transpose matrix $J(\bm{q})^T$. As the musculoskeletal models often have large number of muscles $d$, the ending polytope $\mathcal{P}_f$ geometry is complex (having a large number of vertices and faces), both due to the number of muscles considered and the inherent complexity of the affine mapping. Therefore, this metric has been mostly used for static in-advance analysis of human postures \cite{hernandez_toward_2015}, due to its long execution times. 
 
 However, \citet{carmichael_estimating_2013, carmichael2011Towards} have proposed a method capable of improving the time efficiency of the polytope resolution that has a potential to be used even in real-time applications. This method is based on \gls{rsm} that samples the polytope in a set of predefined direction in task space. By choosing the directions of interest in advance, the method is capable of approximating the polytope, however it does not give any guarantees on the approximation accuracy.
 
@@ -425,13 +425,13 @@ Polytope $\mathcal{P}_a$ metrics have been used for musculoskeletal model analys
 
 \subsection{Velocity polytope}
 \label{ch:human_vel_poly}
-The simplest form of task space velocity capacity describes the relationship between the limited ranges (\ref{eq:human_js_vel_lim}) of human joint velocity $\dot{\bm{q}} \in \mathbb{R}^n$ and achievable task space velocities $\dot{\bm{x}} \in \mathbb{R}^m$, mapped through the jacobian matrix $J(\bm{q}) \in \mathbb{R}^{m\times n}$.
+The simplest form of task space velocity capacity describes the relationship between the limited ranges (\ref{eq:human_js_vel_lim}) of human joint velocity $\dot{\bm{q}} \in \mathbb{R}^n$ and achievable task space velocities $\dot{\bm{x}} \in \mathbb{R}^m$, mapped through the Jacobian matrix $J(\bm{q}) \in \mathbb{R}^{m\times n}$.
 \begin{equation}
     \mathcal{P}_v(\bm{q}) = \left\{ \dot{\bm{x}} \in \mathbb{R}^m ~|~ \dot{\bm{q}}\in\left[\dot{\bm{q}}_{min}, \dot{\bm{q}}_{max} \right], ~~ \dot{\bm{x}} = J(\bm{q})\dot{\bm{q}} \right\}
 \end{equation}
 This formulation is essentially the same as the one for robotic manipulators described in velocity \Cref{ch:vel_poly} and all the considerations discussed in that chapter are valid for this formulation as well.
 
-However, taking in account only human's joint velocity $\dot{\bm{q}}$ limits in a form of independent ranges (\ref{eq:human_js_vel_lim}) does not take in consideration the limits of muscle extension velocity $\dot{\bm{l}}\in\mathbb{R}^d$. The true limits of human joint velocities are configuration dependent, as they are a consequence of the limits of muscle extension velocities $\dot{\bm{l}}$. The relationship between the joint and muscle extension velocities is given through the muscle jacobian matrix $L(\bm{q}) \in \mathbb{R}^{d\times n}$, forming polytope shaped limits
+However, taking in account only human's joint velocity $\dot{\bm{q}}$ limits in a form of independent ranges (\ref{eq:human_js_vel_lim}) does not take in consideration the limits of muscle extension velocity $\dot{\bm{l}}\in\mathbb{R}^d$. The true limits of human joint velocities are configuration dependent, as they are a consequence of the limits of muscle extension velocities $\dot{\bm{l}}$. The relationship between the joint and muscle extension velocities is given through the muscle Jacobian matrix $L(\bm{q}) \in \mathbb{R}^{d\times n}$, forming polytope shaped limits
 \begin{equation}
     \mathcal{P}_{\dot{q}}(\bm{q}) = \left\{ \dot{\bm{q}} \in \mathbb{R}^n ~|~ \dot{\bm{l}}\in\big[\dot{\bm{l}}_{min}, \dot{\bm{l}}_{max} \big], ~~ L(\bm{q})\dot{\bm{q}} = \dot{\bm{l}} \right\}
     \label{eq:human_poly_joint_vel}
@@ -462,11 +462,11 @@ Stiffness metrics for human musculoskeletal models are used to evaluate the limi
     \label{eq:force_stiff_range_human}
 \end{equation}
 
-With a known muscle stiffness matrix $K_m$, that can be determined using the Hill's muscle model \cite{LATASH1993653}, the joint stiffness matrix $K_j\in \mathbb{R}^{n\times n}$ can be found using the muscle jacobian matrix $L(\bm{q}) \in \mathbb{R}^{d\times n}$
+With a known muscle stiffness matrix $K_m$, that can be determined using the Hill's muscle model \cite{LATASH1993653}, the joint stiffness matrix $K_j\in \mathbb{R}^{n\times n}$ can be found using the muscle Jacobian matrix $L(\bm{q}) \in \mathbb{R}^{d\times n}$
 \begin{equation}
     K_j = L(\bm{q}) K_m L(\bm{q})^T 
 \end{equation}
-This \gls{js} stiffness matrix $K_j$ can be used to find the robot state dependent task space stiffness $K_c  \in \mathbb{R}^{m\times m}$, through the jacobian matrix $J(\bm{q})\in\mathbb{R}^{m\times n}$  \cite{Salisbury1980,Ajoudani2018,Inouye2016}
+This \gls{js} stiffness matrix $K_j$ can be used to find the robot state dependent task space stiffness $K_c  \in \mathbb{R}^{m\times m}$, through the Jacobian matrix $J(\bm{q})\in\mathbb{R}^{m\times n}$  \cite{Salisbury1980,Ajoudani2018,Inouye2016}
 \begin{equation}
      K_c(\bm{q})^{-1} = J(\bm{q}) K_j^{-1}J(\bm{q})^T
 \end{equation}
@@ -700,7 +700,7 @@ Common polytope formulations, described in \Cref{ch:robot_metrics} for robots an
     \mathcal{P}_x = \{\bm{x}\in\mathbb{R}^m ~|~ A\bm{x}=B\bm{y} + \bm{b}, ~ \bm{y}\in\mathcal{P}_y\}
     \label{eq:generic_polyt_view}
 \end{equation}
-where the polytope $\mathcal{P}_x$ represents the achievable set of the task space variable $\bm{x}\in\mathbb{R}^m$, $\bm{y}\in\mathbb{R}^k$ is the input (actuator) variable limited within input set (actuator limits) $\mathcal{P}_y$. The input set $\mathcal{P}_y$ is often defined in the form of intervals of different input (actuator) variables, however in general case it can have a polytope shape as well. The linearised dynamics and kinematics equations can be represented, in a generic case, using the equation $A\bm{x}\!=\!B\bm{y}\!+\!\bm{b}$, where the matrix $A\in\mathbb{R}^{k\times m}$ is a linear transformation matrix from the $m$ dimensional output (task) space to the $k$ dimensional intermediate space, the matrix $B\in\mathbb{R}^{k\times d}$ is a transformation matrix from the $n$ dimensional input space to the intermediate space and $\bm{b}\in\mathbb{R}^k$ is a bias vector expressed in the intermediate space. Furthermore, the dimensions of output (task) space $m$ is lower than the intermediate space dimension $k\!\geq\! m$ , which is in term lower than the input (actuator) space dimension $n\!\geq\! k\!\geq\! m$. This condition comes from the fact that when characterising the physical abilities, the polytopes map higher dimensional input space (ex. \gls{js} or muscle force space) to the lower dimensional output space (ex. \gls{cs}).
+where the polytope $\mathcal{P}_x$ represents the achievable set of the task space variable $\bm{x}\in\mathbb{R}^m$, $\bm{y}\in\mathbb{R}^k$ is the input (actuator) variable limited within input set (actuator limits) $\mathcal{P}_y$. The input set $\mathcal{P}_y$ is often defined in the form of intervals of different input (actuator) variables, however in general case it can have a polytope shape as well. The linearised dynamics and kinematics equations can be represented, in a generic case, using the equation $A\bm{x}\!=\!B\bm{y}\!+\!\bm{b}$, where the matrix $A\in\mathbb{R}^{k\times m}$ is a linear transformation matrix from the $m$ dimensional output (task) space to the $k$ dimensional intermediate space, the matrix $B\in\mathbb{R}^{k\times d}$ is a transformation matrix from the $n$ dimensional input space to the intermediate space and $\bm{b}\in\mathbb{R}^k$ is a bias vector expressed in the intermediate space. Furthermore, the dimension of output (task) space $m$ is lower than the intermediate space dimension $k\!\geq\! m$ , which is in term lower than the input (actuator) space dimension $n\!\geq\! k\!\geq\! m$. This condition comes from the fact that when characterising the physical abilities, the polytopes map higher dimensional input space (ex. \gls{js} or muscle force space) to the lower dimensional output space (ex. \gls{cs}).
 
 \begin{table}[!b]
 % \hspace{-1cm}
@@ -745,37 +745,3 @@ Accurate representation of robot's physical abilities enables exploiting its abi
 Finally, a unified representation of their individual and common physical abilities might enable new task scheduling techniques capable of assessing if different tasks are more suitable for robots, human operators or are they more suitable for their collaboration. 
 
 However, polytope formulations, as introduced in \Cref{ch:robot_metrics} and \Cref{ch:human_metrics}, need to be transformed to more standard representations in order to  be used in practical implementations. The two most common ways to represent a polytope are as a set of vertices, or as a set of inequality constraints corresponding to its faces. Depending on the polytope formulation structure different transformation strategies, to the one of these forms, need to be employed, where the computational efficiency of the transformation operation can vary significantly with respect to the formulation complexity. Therefore following chapter focuses on providing a generic view on different formulation families present when characterising physical abilities of humans and robots, with the aim to specify different polytope transformation strategies applicable to each of the families as well as to discuss their computational complexity.
-
-
-% \pagebreak
-
-% \begin{landscape}
-% \centering
-% \begin{table}[!h]
-% \centering
-% \begin{tabular}{|l|c|c|c|c|c|c|c|c|c|}
-% \hline
-% Polytope capacity & Equation & $\bm{x}$ & $A$ & $B$ & $\bm{y}$ & Input set $\mathcal{I}$ & $\bm{b}$ & Conditions & Collaboration \\
-% \hline
-% \multicolumn{10}{c}{Robotic manipulators} \\
-% \hline
-% Velocity & \ref{eq:poly_vel_rob}& $\dot{\bm{x}}$ & - & $J$ & $\dot{\bm{q}}$& $[\dot{\bm{q}}_{min},\dot{\bm{q}}_{max}]$ & - & Kin & $\cap$ \\
-% Kin. Acceleration & \ref{eq:poly_accel_kin} & $\ddot{\bm{x}}$ & - & $J$ & $\ddot{\bm{q}}$ & $[\ddot{\bm{q}}_{min},\ddot{\bm{q}}_{max}]$ & $\bm{a}_b$ & Kin & $\cap$ \\
-% Kin. Jerk &\ref{eq:poly_jerk_kin} & $\dddot{\bm{x}}$ & - & $J$ & $\dddot{\bm{q}}$& $[\dddot{\bm{q}}_{min},\dddot{\bm{q}}_{max}]$ & $\bm{j}_b$ & Kin & $\cap$ \\
-% Precision & \ref{eq:poly_precision_rob} & $\delta\dot{\bm{x}}$ & - & $J$ & $\delta\bm{q}$ &$[\delta{\bm{q}}_{min},\delta{\bm{q}}_{max}]$ & - & Kin & $\cap$ \\
-% Force/Wrench & \ref{eq:poly_force_rob} & $\bm{f}$ & $J^T$ & - & $\bm{\tau}$ &$[\bm{\tau}_{min},\bm{\tau}_{max}]$ & -$\bm{\tau}_b$ & Dyn & $\oplus$ \\
-% Acceleration & \ref{eq:pol_accleration_rob} & $\ddot{\bm{x}}$ & - & $JM^{-1}$ & $\bm{\tau}$ &$[\bm{\tau}_{min},\bm{\tau}_{max}]$ & -$\bm{a}_b$ & Dyn & $\cap$ \\
-% Stiffness & \ref{eq:pol_sfr_rob}& $\Delta\bm{x}$ & $J^T$ & - & $\bm{\tau}$ &$[\bm{\tau}_{min},\bm{\tau}_{max}]$ & -$\bm{\tau}_b$ & Dyn & $\oplus$ \\
-% \hline
-% \multicolumn{10}{c}{Human musculoskeletal models} \\
-% \hline
-% Velocity &\ref{eq:velocity_polytope_human} & $\dot{\bm{x}}$ & - & $J$ & $\dot{\bm{q}}$ & $\mathcal{P}{\dot{\bm{q}}}$ & - & Kin & $\cap$ \\
-% Force/Wrench & \ref{eq:human_force_poly} & $\bm{f}$ & $J^T$ & $N$ & $\bm{F}$ & $[\bm{F}_{min},\bm{F}_{max}]$ & -$\bm{\tau}_b$ & Dyn & $\oplus$ \\
-% Acceleration & \ref{eq:poly_acceleration_hum} & $\ddot{\bm{x}}$ & - & $JM^{-1}N$ & $\bm{F}$ & $[\bm{F}_{min},\bm{F}_{max}]$ & -$\bm{a}_b$ & Dyn & $\cap$ \\
-% Stiffness & \ref{eq:stiffness_human_all} &$\Delta\bm{x}$ & $J^TK_c$ & $N$ & $\bm{F}$ & $[\bm{F}_{min},\bm{F}_{max}]$ & -$\bm{\tau}_b$ & Dyn & $\oplus$ \\
-% \hline
-% \end{tabular}
-% \caption{Comparison of Polytope-based Physical Ability Metrics}
-% \label{tab:merged_table}
-% \end{table}
-% \end{landscape}

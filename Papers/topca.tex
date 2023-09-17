@@ -709,7 +709,7 @@ The secondary task gains used are $k_{rp}=5 s^{-2}$ and $k_{rd}=2\sqrt{k_{rd}}s^
 
 \subsection{Software implementation details}
 The simulation experiments used for the comparative studies are implemented in Python
-using open-source implementations of TOPP-RA \cite{Pham2018} and \gls{tap} planning implementation within \codet{Ruckig} library \cite{ruckig}. The code used for the simulation experiments is open-source and can be found on GitLab\footnote{\url{https://gitlab.inria.fr/auctus-team/people/antunskuric/papers/tap_capacity}}.
+using open-source implementations of TOPP-RA \cite{Pham2018} and \gls{tap} planning implementation within \codet{Ruckig} library \cite{ruckig}. The code used for the simulation experiments is open-source and can be found on GitLab\footnote{\url{https://gitlab.inria.fr/auctus-team/people/antunskuric/papers/catp}}.
 
 For the mock-up experiment, the real-time execution of the proposed method is implemented in C++. The \gls{tap} planning is implemented using the open-source library \codet{Ruckig} \cite{ruckig}, while the efficient \gls{lp} solver used for real-time \gls{cs} limit calculation is GLPK \cite{glpk}. All the software components are integrated using \gls{ros}.
 
@@ -884,3 +884,5 @@ To evaluate the performance of the trajectories calculated by the proposed metho
 Furthermore, the proposed method is compared against the standard \gls{cs} time-optimal \gls{tap} planning approach, considering constant \gls{cs} limits given by the manufacturer. The results show than the proposed method exploits better robot's movement capacity and at the same time has lower tracking error. The comparative study is describe in \Cref{ch:comp_study}.
 
 To showcase a potential application of the proposed method, a mock-up experiment is conducted in the context of human-robot collaborative waste sorting. In the experiment, the human operator introduces different waste items on the collaborative workstation with unknown position and orientation in space and at any point in time. The proposed trajectory planning method is then used to generate the time-efficient robot's motions on the fly. The experiment shows that the proposed method enables the robot to execute the pick-and-place motions, placing the waste items in the appropriate sorting bins, as soon as the waste items were introduced and as fast as its movement's abilities allow it. Therefore, the experiment further demonstrates the practical potential of the proposed method in the human-robot collaboration scenarios, showcasing the reactiveness of the proposed approach, as well as its ability to efficiently use robot's movement capacity. 
+
+The next chapter, \Cref{ch:software}, presents the publicly available open-source software Python package \codet{pycapacity}. The package is developed in the context of this thesis and provides the efficient implementation of algorithms for evaluating polytope and ellipsoid based physical abilities of humans and robots.

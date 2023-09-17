@@ -15,7 +15,7 @@ This thesis is built on a vision of robotics and the industry of the future cent
 % }
 
 
-Creating such flexible collaborative systems in practice requires having a set of tools for characterising differnet abilities required to accomplish different tasks (\textbf{RQ1}), as well as the individual abilities of humans and robots in a unified manner (\textbf{RQ2}). Furthermore, in order to decide if a task is better suited for humans or robots, or if it might require their collaboration, their common abilities when collaborating (as one single system) has to be quantified as well (\textbf{RQ3}). Moreover, in order to provide the operators with personalised assistance requires quantifying different notions of the extent of assistance the operator needs, as well as the human safety and well-being (\textbf{RQ4}). Finally, as both their abilities and different safety concerns can evolve in time and can change significantly during the task execution, tools able to capture these changes online are needed (\textbf{RQ5}). 
+Creating such flexible collaborative systems in practice requires having a set of tools for characterising differnet abilities required to accomplish different tasks (\textbf{RQ1}), as well as the individual abilities of humans and robots in a unified manner (\textbf{RQ2}). Furthermore, in order to decide if a task is better suited for humans or robots, or if it might require their collaboration, their common abilities when collaborating (as one single system) have to be quantified as well (\textbf{RQ3}). Moreover, providing operators with personalised assistance requires quantifying different notions of the extent of assistance the operator needs, as well as their safety and well-being (\textbf{RQ4}). Finally, as both their abilities and different safety concerns can evolve in time and can change significantly during the task execution, tools able to capture these changes online are needed (\textbf{RQ5}). 
 
 % \todos{
 % \begin{itemize}
@@ -26,11 +26,11 @@ Creating such flexible collaborative systems in practice requires having a set o
 % \end{itemize}
 % }
 
-This thesis argues in favour of physical ability metrics as promising tools that can potentially answer to all those requirements (\textbf{RQ1}-\textbf{5}). More specifically, this thesis concentrates on polytope characterisations of human's and robot's physical abilities, as one of their most accurate characterisations. Different physical ability polytopes are well known tools for characterising robot's and human's physical abilities (\textbf{RQ2}), and as shown in \Cref{ch:phisical_ability_metrics}, they have a great potential to be used to characterise their common abilities when collaborating (\textbf{RQ3}). Moreover, polytopes are local metrics, being calculated for any given robot's or human's state. Therefore, they enable capturing the state dependent and changing nature of their physical abilities (\textbf{RQ5}). Finally, by comparing the physical abilities required to execute certain task (\textbf{RQ1}) with the changing physical abilities of the operator, enables evaluating the need of assistance of the operator as the lacking physical ability to execute the task. And create assistive robot control strategies that guarantee that the operator's physical ability is never surpassed having a direct impact on their safety and well-being (\textbf{RQ4}).
+This thesis argues in favour of physical ability metrics as promising tools that can potentially answer to all these requirements (\textbf{RQ1}-\textbf{5}). More specifically, this thesis concentrates on polytope characterisations of human's and robot's physical abilities, as one of their most accurate characterisations. Different physical ability polytopes are well known tools for characterising robot's and human's physical abilities (\textbf{RQ2}), and as shown in \Cref{ch:phisical_ability_metrics}, they have a great potential to be used to characterise their common abilities when collaborating (\textbf{RQ3}). Moreover, polytopes are local metrics, being calculated for any given robot's or human's state. Therefore, they enable capturing the state dependent and changing nature of their physical abilities (\textbf{RQ5}). Finally, polytopes enable evaluating the need of assistance of the operator as his lacking physical ability to execute a certain task. This need of assistance can be quantified by comparing the physical abilities required to execute certain task (\textbf{RQ1}), with the changing physical abilities of the operator. In that way, polytopes enable creating assistive robot control strategies that guarantee that the operator's physical abilities are never surpassed which has a direct impact on their safety and well-being (\textbf{RQ4}).
 
-However, due to the relatively high computational complexity of polytope evaluation the practical applications of physical ability polytopes in time-critical (online) applications are still relatively rare. 
+\section{Thesis contributions}
 
-Therefore the focus of the first two chapters of this thesis  (\Cref{ch:phisical_ability_metrics} and \Cref{ch:transformin_polytopes}) is put on developing tools for evaluating physical ability polytopes in an efficient manner and enable interactive and online applications.
+Due to the relatively high computational complexity of polytope evaluation, real-time (interactive) applications of physical ability polytope  are still relatively rare in practice. Therefore, the focus of the first two chapters of this thesis  (\Cref{ch:phisical_ability_metrics} and \Cref{ch:transformin_polytopes}) is put on developing efficient tools for evaluating physical ability polytopes, aiming to enable interactive and online applications.
 
 
 % \todos{
@@ -55,7 +55,7 @@ Therefore the focus of the first two chapters of this thesis  (\Cref{ch:phisical
 % }
 
 Building on this generic formulation, \Cref{ch:transformin_polytopes} then concentrates on efficient methods for transforming these polytopes to their standard representations that can be used with practical applications. First, the chapter proposes a structured overview of different families of polytope formulations, derived from the generic formulation, with respect to their transformation strategy. Then the chapter brings an overview of standard polytope transformation strategies applicable to the proposed families of formulations. 
-Following the literature overview of the standard strategies, two new polytope evaluation algorithms VEPOLI$^2$ and ICHM are introduced. The algorithms' complexity is experimentally evaluated and compares them to the state of the arm methods. The results show that the algorithms substantially reduce the complexity and the computation time of the standard methods and have a potential to be used in interactive online applications.
+Following the literature overview of the standard strategies, two new polytope evaluation algorithms VEPOLI$^2$ and ICHM are introduced. The algorithms' complexity is experimentally evaluated and compared against the state of the arm methods. The results show that the algorithms substantially reduce the complexity and the computation time of the standard methods and have a potential to be used in online applications.
 
 % \todos{
 % \begin{itemize}
@@ -76,8 +76,8 @@ Following three chapter (\Cref{ch:physical_interaction}, \Cref{ch:informaiton_po
 % \end{itemize}
 % }
 
-\Cref{ch:physical_interaction} focuses on a challenging problem of developing robot control strategies for an efficient human-robot physical interaction. The chapter is set in the context of collaborative carrying of a heavy object, inspired by LiChIE project. 
-The chapter shows two collaboration experiments: dual robot arm collaborative carrying and human-robot collaborative carrying. In these experiments the real-time polytope evaluation is used to estimate the changing physical abilities of the human and the robot online. This real-time information is then used for creating robot control strategies that adapt to their changes and distribute the weight accordingly. In the dual robot experiment, two Franka Emika Panda robots carry 12kg object, largely above their rated capacity (6kg). The results show that by having real-time information about both robots' carrying capacities, the proposed collaborative control strategy adapted to their changes in real-time and successfully distributed the weight of the object during the whole duration of the experiment. In the human-robot collaborative carrying experiment, human operator and a Franka robot carried 7kg object. The experiment showed that, having online information about their changing capacity enabled to use the robot's and human's physical potential without compromising their safety. Furthermore, even though neither the robot nor the human would have been able to carry the entire object's weight on their own, by collaborating they were able to accomplish the task.
+\Cref{ch:physical_interaction} focuses on a challenging problem of developing robot control strategies for an efficient human-robot physical interaction. The chapter is set in the context of collaborative carrying of a heavy object, inspired by the LiChIE project. 
+The chapter shows two collaboration experiments: dual robot arm collaborative carrying and human-robot collaborative carrying. In these experiments the real-time polytope evaluation is used to capture the changing physical abilities of the human and the robot online. This real-time information is then used for creating robot control strategies that adapt to their changes and distribute the weight accordingly. In the dual robot experiment, two Franka Emika Panda robots carry 12kg object, largely above their rated capacity (6kg). The results show that by having real-time information about both robots' carrying capacities, the proposed collaborative control strategy adapted to their changes in real-time and successfully distributed the weight of the object during the whole duration of the experiment. In the human-robot collaborative carrying experiment, human operator and a Franka robot carry 7kg object. The experiment showed that, having online information about their changing capacity enabled to use the robot's and human's physical potential without compromising their safety. Furthermore, even though neither the robot nor the human would have been able to carry the entire object's weight on their own, by collaborating they were able to accomplish the task.
  
 % \todos{
 % \begin{itemize}
@@ -92,7 +92,7 @@ The chapter shows two collaboration experiments: dual robot arm collaborative ca
 % }
 
 \Cref{ch:informaiton_polytopes} focuses on developing tools to provide the operator with the interactive insight into the robot's current state and its current abilities in the context of the human-robot interaction.
-The chapter argues that the polytope representation of robot's physical abilities could be used as a valuable visual communication tool. Especially since polytopes can be transformed into triangulated meshes they can be easily visualised with standard visualisation tools. Moreover, the chapter introduces a new polytope formulation developed particularly with the visualisation in mind, representing the robot's reachable space within a time horizon. Finally, the chapter brings the preliminary work on the development of the testing platform, based on \gls{ar} tools, with the long-term goal to validate the efficiency of polytopes in sharing information in their different visualisation modalities.
+The chapter argues that the polytope representation of robot's physical abilities could be used as a valuable visual communication tool. Especially since polytopes can be transformed into triangulated meshes that can be easily visualised with standard visualisation tools. Moreover, the chapter introduces a new polytope formulation developed particularly with the visualisation in mind, representing the robot's reachable space within a time horizon. Finally, the chapter brings the preliminary work on the development of the testing platform, based on \gls{ar} tools, with the long-term goal to validate the efficiency of polytopes in sharing information and their different visualisation modalities.
 % \todos{
 % \begin{itemize}
 %     \item \Cref{ch:informaiton_polytopes} discusses the application of polytopes as real-time visual feedback to operators
@@ -102,8 +102,8 @@ The chapter argues that the polytope representation of robot's physical abilitie
 % \end{itemize}
 % }
 
-\Cref{ch:topca} concentrates on developing the trajectory planning strategies suitable for dynamical environments, particularly present when it comes to the human-robot collaboration. Such trajectory planning strategies require being reactive to the changes in the environment, while at the same time efficiently exploiting robot's movement capacity. 
-The chapter, therefore, brings a new \gls{cs} trajectory planning strategy that calculates the robot's movement capacity in real-time using efficient polytope algebra tools, and re-plans the updated trajectory at each step. Moreover, by re-planning in real-time the proposed method is able to be reactive on the environmental changes as well. The method's time-efficiency is confirmed experimentally, by benchmarking it against the state of the art offline methods. The results shows that the proposes online re-planning method has similar trajectory execution times as the offline time-optimal methods, without requiring any in-advance computation. The method's practical utility is demonstrated in the mock-up experiment in the context of human-robot collaborative waste sorting. In this experiment the proposed method was used to plan for time-efficient trajectories on the fly and pick-and-place the waste items into the appropriate sorting bins. The waste items are introduced by the operator, while the robot does not have any a proiri knowledge about their position, orientation or the time they will arrive. 
+\Cref{ch:topca} concentrates on developing the trajectory planning strategies suitable for dynamical environments, particularly present when it comes to the human-robot collaboration. Such trajectory planning strategies require being reactive to the changes in the environment, while at the same efficiently exploiting robot's movement capacity. 
+The chapter brings a new \gls{cs} trajectory planning strategy that calculates the robot's movement capacity in real-time, using efficient polytope algebra tools, and re-plans the updated trajectory at each step to account for their changes. Moreover, by re-planning in real-time the proposed method is able to be reactive to the environmental changes as well. The method's time-efficiency is confirmed experimentally, by benchmarking it against the state of the art offline methods. The results shows that the proposed online re-planning method has similar trajectory execution times as the offline time-optimal methods, without requiring any in-advance computation. The method's practical utility is demonstrated in the mock-up experiment in the context of human-robot collaborative waste sorting. In this experiment the proposed method was used to plan for time-efficient trajectories on the fly and pick-and-place the waste items into the appropriate sorting bins. The waste items are introduced by the operator, while the robot does not have any a proiri knowledge about their position, orientation or the time they will arrive. 
 
 
 % \todos{
@@ -117,7 +117,7 @@ The chapter, therefore, brings a new \gls{cs} trajectory planning strategy that 
 % }
 
 
-Finally, \Cref{ch:software} presents the \codet{pycapacity} package.  An efficient framework for calculating different physical ability metrics for both humans and robots, based on polytopes and ellipsoids. The aim of the package is to provide an efficient set of tools for evaluation of different physical ability metrics in an easy to use framework. The package implements several state of the art algorithms for polytope evaluation and manipulation, including VEPOLI$^2$ and ICHM developed in the context of this thesis, bringing many of them to the interactive online capable execution times. At the same time, \codet{pycapacity} is open-source, easy to install and interface with other standard robotics and biomechanics libraries, and has relatively extensive documentation. Finally, the package is written in an user-friendly way with the aim to facilitate building applications and potentially bring these metrics to the wider community.
+Finally, \Cref{ch:software} presents the \codet{pycapacity} package.  An efficient framework for calculating different physical ability metrics for both humans and robots, based on polytopes and ellipsoids. The aim of the package is to provide an efficient set of tools for evaluation of different physical ability metrics in an easy to use framework. The package implements several state of the art algorithms for polytope evaluation and manipulation, including VEPOLI$^2$ and ICHM developed in the context of this thesis, bringing many of them to the interactive (online) capable execution times. At the same time, \codet{pycapacity} is open-source, easy to install and interface with other standard robotics and biomechanics libraries, and has relatively extensive documentation. Finally, the package is written in an user-friendly way with the aim to facilitate building applications and potentially bring these metrics to the wider community.
 
 % \todos{
 % \begin{itemize}
@@ -128,7 +128,7 @@ Finally, \Cref{ch:software} presents the \codet{pycapacity} package.  An efficie
 % }
 
 
-In conclusion, this thesis focuses on the vision of the future where the industry and the robotics are more human-centred and have a high degree of human-robot collaboration. Such close collaboration has a potential to benefit from both of their individual strengths to enhance their efficiency as well as humans safety and well-being. This thesis argues that the polytope characterisation of their physical abilities is a powerful tool that can help to make a step closer towards such future. Therefore, in this thesis, a set of fundamental tools for polytope evaluation is developed enabling the efficient polytope evaluation and setting the foundation for their use in online and interactive application. The thesis then demonstrated that the real-time physical ability polytopes evaluation can provide solutions to several challenging robotics questions in the context of human-robot interaction. Finally, with \codet{pycapacity} package, this thesis aims to facilitate the use of the polytope based tools and potentially bring them to the wider community.
+In conclusion, this thesis focuses on the vision of the future where the industry and the robotics are more human-centred and have a high degree of human-robot collaboration. Such close collaboration has a potential to benefit from both of their individual strengths and enhance the collaboration efficiency, as well as human's safety and well-being. This thesis argues that the polytope characterisation of their physical abilities is a powerful tool that can help to make a step towards such future, providing an unified view on physical abilities of humans and robots. Therefore, in this thesis, a set of fundamental tools for polytope evaluation is developed enabling the efficient polytope evaluation and setting the foundation for their use in online and interactive applications. The thesis then demonstrated that the real-time physical ability polytopes evaluation can provide solutions to several challenging robotics questions in the context of human-robot interaction. Finally, this thesis presents the \codet{pycapacity} package, aiming to facilitate the use of the polytope based tools and potentially bring them to the wider community.
 
 % \todos{in summary, closing statement
 % \begin{itemize}
@@ -144,49 +144,94 @@ In conclusion, this thesis focuses on the vision of the future where the industr
 
 \section{Perspectives}
 
+This section discusses the directions for further investigation in order to enhance the research findings of this thesis, as well as to apply them to different problems and domains. 
 
-Motion planning - robotics
-\todos{
-\begin{itemize}
-    \item use MPC to do se
-    \item use human polytopes within robot planning (for example velocity)
-  
-\end{itemize}
-}
+\subsection{Capacity aware Cartesian Space motion planning}
 
-Reachbale space
-\todos{
-\begin{itemize}
-    \item reachable space is interesting in terms of safety
-    \item but would need to guarantee the accuracy - interesting direction
-\end{itemize}
-}
+As described in \Cref{ch:topca}, real-time polytope evaluation enables creating reactive and on the fly trajectory planning strategies capable of exploiting robot's full movement potential. As discussed in \Cref{ch:topca_discussion}, the method proposed in this chapter has several limitations. The method makes the assumption of point-to-point straight-line paths, allowing it to consider only robot's movement capacity in the trajectory direction. Furthermore, the method uses \gls{tap} as its time-optimal trajectory planning strategy, which does not allow for considering polytope shaped movement capacity limits. A natural extension of this method is towards \gls{mpc} strategies that do not require any a priori on the path and can consider polytope shaped limits. Such \gls{mpc} approaches would allow to generate highly reactive and adaptable robot's trajectories on the fly, without the need to specify the path, while at the same time exploiting robot's full motion capacity. 
 
-Physical interaction 
-\todos{
-\begin{itemize}
-    \item robot control strategies combining multiple physical ability polytopes at one (precision and force for example)
-    \item task scheduling schemes that take in consideration their abilities   
-    \item use more complete models - see section discussion on musculoskeletal models
-\end{itemize}
-}
+A step in this direction is described in the thesis of Nicolas Torres Alberto, a member of the AUCTUS team. Their work proposes an efficient linear formulation of the \gls{mpc} in \gls{cs}, capable of integrating the polytope formulation of robot's state dependent physical abilities and allowing for sub-millisecond execution times.
 
-Biomechanics
-\todos{
-\begin{itemize}
-    \item better and more complete models
-    \item use in biomechanics to calibrate models to humans
-    \item to study influences on shoulder...
-\end{itemize}
-}
+Such approaches are not only limited to the robot's movement capacity constraints. As described in \Cref{ch:capacity}, they can additionally integrate different task and environment related constraints as well. This property has a great potential to be used for human-robot comanipulaiton, where the robot's motion planning would consider human's movement capacity in addition to the robot's ones. For example, such human aware strategy could enable the robot to plan for trajectories that are safe for the operator while at the same time allowing the operator to adapt the trajectory on the fly.
 
-Information sharing - visualisation
-\todos{
-\begin{itemize}
-    \item figure out what are the best ways to visualise polytopes
-    \item and which metrics
-    \item and in which situations
-    \item interesting for toleration and shared control
-    \item also potentially for safety!
-\end{itemize}
-}
+
+% \todos{
+% \begin{itemize}
+%     \item use MPC to do so - Nicolas
+%     \item use human polytopes within robot planning (for example velocity)
+% \end{itemize}
+% }
+
+
+\subsection{Safety applications of reachable space approximation}
+
+\Cref{ch:informaiton_polytopes} introduced two new characterisations of robot's reachable space within a horizon time, in the context of providing the operator with informative and timely visual feedback about robot's current state and its changing physical abilities. This metric represent the \gls{cs} space the robot can reach, from its current position, within a certain time horizon. This metric could be potentially very useful for safety considerations. For example by evaluating if the operator entered the space reachable by the robot and adapting the robot's behaviour accordingly. Similar approaches are proposed by \citet{pereira2017,schepp2022}, where the robot's reachable space was approximated using ellipsoids and cylinders, while the horizon time of interest was robot's maximal stopping time. 
+
+However, as discussed in \Cref{ch:informaiton_polytopes}, both introduced metrics are approximations of the robot's real reachable space which is highly nonlinear and hard to characterise. Moreover, the methods do not provide any formal guarantees on their approximation accuracy. Therefore, in order to enable their use in such safety applications, further work in necessary to improve and guarantee the accuracy of proposed metrics.  
+
+% \todos{
+% \begin{itemize}
+%     \item reachable space is interesting in terms of safety
+%     \item but would need to guarantee the accuracy - interesting direction
+% \end{itemize}
+% }
+
+\subsection{Human-robot physical collaboration}
+
+\Cref{ch:physical_interaction} showcased an example application which requires a high degree of physical collaboration: collaborative carrying of a heavy object. In this example, the chapter showcased that the real-time evaluation of human's and robot's physical abilities enables creating collaborative robot control strategies capable of efficiently distributing the weight between the robot and human, and at the same time guarantee their safety. In this example scenario, as the collaborative task is relatively simple, applying force in the vertical direction, both human's and robot's physical ability to execute this task is obtained from their wrench capacity polytopes. 
+
+However, polytope based collaborative strategies potentially allow for more advanced and more flexible scenarios, where multiple polytope metrics of multiple physical abilities of humans and robots can be considered. For example if the task requires applying a force and executing a movement at the same time. In that case, both wrench and movement capacity polytopes could be used within the collaborative robot control strategy, making sure to exploit both their wrench and movement abilities, while at the same time making sure to respect their safety.
+
+Another promising application of physical ability polytopes in the context of human-robot interaction is in task distribution. As discussed in \Cref{ch:phisical_ability_metrics}, both human's and robot's physical abilities can be accurately represented in polytope form, as well as their joint abilities when interacting physically. Therefore polytopes could be used as tools to evaluate if different tasks suite better human's or robot's set of skills or do they potentially require their collaboration. 
+
+Furthermore, as their physical abilities evolve in time, especially human ones, more dynamic task allocation strategies could be envisaged. Such dynamic task allocation strategies could benefit from the real-time evaluation of their abilities and take actions in real-time to avoid potential safety risks. Recently, a similar approach was proposed by \citet{Messeri2022allocation}, where the dynamic task distribution strategy was used coupled with the real-time evaluation of operators fatigue. The strategy proposed in their work distributes the tasks on the fly, by ensuring that the operator's fatigue level is within the safety limits.  
+
+% \todos{
+% \begin{itemize}
+%     \item robot control strategies combining multiple physical ability polytopes at one (precision and force for example)
+%     \item task scheduling schemes that take in consideration their abilities   
+% \end{itemize}
+% }
+
+
+\subsection{Efficient physical ability polytope evaluation for biomechanics}
+
+The proposed polytope evaluation algorithm ICHM (described in \Cref{ch:algorihtm_ichm}), enables efficiently calculating many different physical ability polytopes for human musculoskeletal models. 
+This algorithm opens many possibilities for wider use of human physical ability polytopes in the area of the human-robot collaboration, by both reducing the computation time and enabling the use of more detailed human models, better describing human subjects \cite{sohn2019effects}. \Cref{sec:human_robot_prospective} discusses more in detail the potential benefits of using such detailed models in the context of human-robot collaboration.
+
+However, the potential applications of the ICHM algorithm extend beyond robotics. Efficient evaluation of physical abilities of musculoskeletal models is a promising tool for biomechanics community as well. The method allows for analysing the physical abilities of very detailed musculoskeletal models, for which the standard methods would have been intractable. 
+
+One such use-case is developed in the context of the thesis of Gautier Laisne, AUCTUS team member, which aims to calibrate detailed musculoskeletal models to the human subjects. The thesis approaches this calibration by first measuring human subject's force capacity and then employs genetic algorithm based approach to find the parameters of the musculoskeletal model that produce the force polytope that match the measured data \cite{laisne2023Genetic}. Their approach leverages the efficiency of the the ICHM algorithm, which is used to efficiently calculate the force polytope of the simulated musculoskeletal models.  
+
+Additionally, the flexibility of the method allows extending common polytope formulations with additional human body limitations and in that way increases the estimation accuracy. Recently, \citet{rezzoug2023simulation} used the ICHM algorithm, to characterise the human arm wrench capacity polytope while taking in consideration the stability constrains of to glenohumeral (shoulder) joint.  
+
+
+% \todos{
+% \begin{itemize}
+%     \item use more complete models - see section discussion on musculoskeletal models
+%     \item better and more complete models
+%     \item use in biomechanics to calibrate models to humans - Gautier
+%     \item to study influences on shoulder... - Nasser
+% \end{itemize}
+% }
+
+
+\subsection{Information sharing - visualisation}
+
+\Cref{ch:informaiton_polytopes} discussed using polytope representation of robot's physical abilities for providing the real-time visual feedback to the operator about the robot's current state. Such interactive visualisation aims to improve the operators situational awareness which has a potential to improve the overall collaboration efficiency and operator's safety \cite{Camblor2022Signaling}. 
+
+However, choosing the appropriate modality of polytope visualisation is a challenging scientific question. \citet{Zolotas2021} showed that the direct visualisation of polytopes is not always the most intuitive for the operators. 
+There are several possible explanations of these observations. Polytopes are relatively complex geometrical structures, with many faces and vertices, making it challenging to the operator to extract the useful information. Furthermore, physical ability polytopes often represent abstract physical quantities that might not always be easy to interpret to the operators. 
+Therefore, in order to use polytope based visualisations as a source of useful information to the operators, it is important to determine the suitable visualisation modality, as well as the appropriate physical ability polytope with respect to their tasks. 
+
+In the context of this thesis, a preliminary work has been carried out on the testing platform for interactive visualisation, based on \gls{ar} tools. This platform has a long-term goal to enable studying and validating different ways of visualising polytope based metrics and quantify their information sharing effectiveness. Furthermore, the platform potentially enables testing different physical ability polytopes, while executing different tasks, and to study their influence on the collaborative performance and safety.  
+
+
+% \todos{
+% \begin{itemize}
+%     \item figure out what are the best ways to visualise polytopes
+%     \item and which metrics
+%     \item and in which situations
+%     \item interesting for teleoperation and shared control
+% \end{itemize}
+% }
