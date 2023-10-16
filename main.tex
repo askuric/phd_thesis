@@ -116,6 +116,16 @@ citestyle=numeric-comp
 \xpatchbibmacro{pageref}{parens}{backrefparens}{}{}
 \newcommand{\citet}[1]{\textcite{#1}}
 
+\DeclareSourcemap{
+    \maps[datatype=bibtex]{
+        \map[overwrite]{
+            \step[fieldsource=note, final] % CUSTOM BIBLIO options to put note at the end
+            \step[fieldset=addendum, origfieldval, final] % CUSTOM BIBLIO options to put note at the end
+            \step[fieldset=note, null] % CUSTOM BIBLIO options to put note at the end
+        }
+    }
+}
+
 
 \usepackage[
 % pagebackref=true,
@@ -176,6 +186,9 @@ pdfstartview={FitV},
 \newtheorem{concept}{Concept}
 \crefname{concept}{concept}{concepts}
 \Crefname{concept}{Concept}{Concepts}
+\newtheorem{requirement}{Requirement}
+\crefname{requirement}{requirement}{requirements}
+\Crefname{requirement}{Requirement}{Requirements}
 
 \makeatletter
 \def\mynameref#1#2{%
@@ -378,8 +391,9 @@ pdfstartview={FitV},
 %	ABSTRACT PAGE
 %----------------------------------------------------------------------------------------
 
-\includepdf[pagecommand={\thispagestyle{empty}}]{first_page/page_resume_FR_ENG.pdf}
+\includepdf[pages={1,2},pagecommand={\thispagestyle{empty}}]{first_page/page_resume_FR_ENG.pdf}
 
+\cleardoublepage
 %----------------------------------------------------------------------------------------
 %	ACKNOWLEDGEMENTS
 %----------------------------------------------------------------------------------------
@@ -389,9 +403,6 @@ pdfstartview={FitV},
 
 % \todos{
 % \begin{itemize}
-%     \item JP Merlet
-%     \item the guys at Notheastern (Taskin, Mark) and Philip (maybe not, I dont know)
-%     \item Claire 
 %      \item \ldots
 % \end{itemize}
 % }
@@ -455,8 +466,8 @@ pdfstartview={FitV},
 %	THESIS CONTENT - CHAPTERS
 %----------------------------------------------------------------------------------------
 
-\mainmatter % Begin numeric (1,2,3...) page numbering
 
+\mainmatter % Begin numeric (1,2,3...) page numbering
 \pagestyle{thesis} % Return the page headers back to the "thesis" style
 
 % alternative view
@@ -480,8 +491,6 @@ pdfstartview={FitV},
 
 % Include the appendices of the thesis as separate files from the Appendices folder
 % Uncomment the lines as you write the Appendices
-
-\include{Appendices/appendix_image}
 \include{Appendices/appendix_operation}
 
 %----------------------------------------------------------------------------------------

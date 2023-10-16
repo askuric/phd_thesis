@@ -1,7 +1,7 @@
 \chapter{\codet{pycapacity}: An efficient task-space capacity calculation Python package for robotics and biomechanics}
 \label{ch:software}
 
-Preceding chapters have demonstrated the potential of real-time evaluation of robot's and human's physical abilities for creating more flexible human-robot collaboration. \Cref{ch:physical_interaction} showed that the real-time evaluation of robot's and human's physical ability polytopes can be a valuable tool for creating adaptable robot control strategies for human-robot physical collaboration scenarios, able to adapt to their changing physical abilities.  \Cref{ch:informaiton_polytopes} discussed the potential of polytopes as a visual feedback tools for improving human operators' situational awareness, by providing them with real-time insight into the robot's current state and its changing abilities. Finally, \Cref{ch:topca} showed how real-time evaluation of robot's movement capacity enables creating more flexible trajectory planning strategies able to adapt to its changing physical abilities on the fly. 
+Preceding chapters demonstrate the potential of real-time evaluation of robot's and human's physical abilities for creating more flexible human-robot collaboration. \Cref{ch:physical_interaction} shows that the real-time evaluation of robot's and human's physical ability polytopes can be a valuable tool for creating adaptable robot control strategies for human-robot physical collaboration scenarios, able to adapt to their changing physical abilities.  \Cref{ch:informaiton_polytopes} discusses the potential of polytopes as a visual feedback tools for improving human operators' situational awareness, by providing them with real-time insight into the robot's current state and its changing abilities. Finally, \Cref{ch:topca} shows how real-time evaluation of robot's movement capacity enables creating more flexible trajectory planning strategies able to adapt to its changing physical abilities on the fly. 
 
 However, all the described approaches heavily rely on the efficient evaluation of different physical ability polytopes, requiring their 
 real-time their execution. As described more in detail in \Cref{ch:transformin_polytopes}, the computation complexity of polytope evaluation depends highly on its formulation and makes choosing the appropriate algorithm a crucial challenge when it comes to building such applications. 
@@ -12,7 +12,7 @@ Furthermore, \codet{pycapacity} is implemented as a open-source Python package w
 
 The package additionally implements a set of visualisation tools for polytopes and ellipsoids intended for fast prototyping and quick and interactive visualisation.
 
-\Cref{sec:pycpacity_motivation} brings more detailed motivation behind the development of this package. \Cref{sec:pycapacity_ellip_poly} then brings a brief introduction in the differences between ellipsoids and polytopes and their evaluation within the package. \Cref{sec:pycapacity_robot} and \Cref{sec:pycapacity_human} list the implemented physical ability ellipsoids and polytopes. \Cref{sec:pycapacity_impelmented_polytopes} lists the implemented polytope transformation algorithms, followed by \Cref{sec:pycapacity_performance} which brings the performance analysis of the implemented polytope algorithms for different physical ability polytopes. Finally, \Cref{sec:pycapacity_package_overview} introduces the brief overview of the software implementation of the package and an example code.
+\Cref{sec:pycpacity_motivation} brings more detailed motivation behind the development of this package. \Cref{sec:pycapacity_ellip_poly} then brings a brief introduction in the differences between ellipsoids and polytopes and their evaluation within the package. \Cref{sec:pycapacity_robot} and \Cref{sec:pycapacity_human} list the implemented physical ability ellipsoids and polytopes. \Cref{sec:pycapacity_algos} lists the implemented polytope transformation algorithms, followed by \Cref{sec:pycapacity_performance} which brings the performance analysis of the implemented polytope algorithms for different physical ability polytopes. Finally, \Cref{sec:pycapacity_package_overview} introduces the brief overview of the software implementation of the package and an example code.
 
 \section{Motivation}
 \label{sec:pycpacity_motivation}
@@ -30,9 +30,9 @@ Even though different efficient tools for evaluating ellipsoids are widely avail
 
 The evaluation of polytopes is often a computationally expensive task, as their resolution requires using different vertex and facet enumeration algorithms \cite{fukuda2004frequently}. Therefore, their computation time is often the limiting factor for the use of polytopes in real world applications, especially when it comes to their online use. Furthermore, even though there are several open-source projects that implement polytope evaluation algorithms, such as \codet{pypoman} \cite{pypoman}, Multi-Parametric Toolbox 3 (\codet{MPT3}) \cite{mpt3} or \codet{cddlib} \cite{cddlib}\cite{fukuda1997cdd}, they are often very generic and not easy to use with standard physical ability polytopes. On the other hand, more specific polytope resolution software solutions, such as \codet{constrained\_manipulability} package \cite{Long2018Evaluating}\cite{long_constrained_2020} or \codet{pygradientpolytope} \cite{pygradientpolytope}, are often very specific to their applications, they lack the documentation and flexibility to be extended to new metrics and integrated with other libraries.
 
-Therefore, this chapter presents a Python \codet{pycapacity} package in an effort to provide a set of tools specifically tailored for evaluating task-space physical ability metrics for humans and robots, based on polytopes and ellipsoids. This package groups a set of efficient algorithms for their evaluation in an easy to use framework that can be easily integrated with standard robotics and biomechanics libraries. Furthermore, the package implements several state of the art algorithms for polytope evaluation that bring many of the polytope metrics to the few milliseconds evaluation time, making it possible to use them in online and interactive applications. 
+Therefore, this chapter presents the \codet{pycapacity} Python package in an effort to provide a set of tools specifically tailored for evaluating task-space physical ability metrics for humans and robots, based on polytopes and ellipsoids. This package groups a set of efficient algorithms for their evaluation in an easy to use framework that can be easily integrated with standard robotics and biomechanics libraries. Furthermore, the package implements several state of the art algorithms for polytope evaluation that bring many of the polytope metrics to the few milliseconds evaluation time, making it possible to use them in online and interactive applications. 
 
-In the context of this thesis, \codet{pycapacity} package has been used for several real-time applications. In \Cref{ch:robot_robot_carrying} this package was used for real-time control of collaborative carrying using two Franka Emika Panda robots. \Cref{ch:robot_robot_carrying} used it to evaluate operator's carrying capacity online and implement a \gls{aan} control strategy for collaborative carrying task involving a human operator and a robot. The package has also been used to calculate the approximation of the robot's reachable space using convex polytope, described in \Cref{ch:hfr}, allowing for online execution and interactive visualisation.
+In the context of this thesis, \codet{pycapacity} package has been used for several real-time applications. In \Cref{ch:robot_robot_carrying} this package is used for real-time control of collaborative carrying using two Franka Emika Panda robots. \Cref{ch:human_robot_carrying} uses it to evaluate operator's carrying capacity online and implement a \gls{aan} control strategy for collaborative carrying task involving a human operator and a robot. The package has also been used to calculate the approximation of the robot's reachable space using convex polytope, described in \Cref{ch:hfr}, allowing for online execution and interactive visualisation.
 
 Finally, in the preliminary work from  \citet{laisne2023Genetic}, the package is used in the biomechanics context, with the aim to perform the advanced calibration of human musculoskeletal models to human subjects.
 
@@ -44,7 +44,7 @@ When it comes to characterizing these achievable sets, the two most common appro
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=0.8\textwidth]{Chapters/imgs/ellip_poly.pdf}
+    \includegraphics[width=0.9\textwidth]{Chapters/imgs/ellip_poly.pdf}
     \caption{An example manipulability polytope and ellipsoid geometry for a planar $m=2$ robot with $n=2$. The difference between the \gls{js} limits for ellipsoid described with $||\dot{\bm{q}}||_2\leq1$ (orange) and the range limits $\bm{-1}\leq\dot{\bm{q}}\leq\bm{1}$ (blue) is shown on the right. The difference in obtained achievable task-space velocity $\dot{{x}}$ polytope ${P}$ (blue) and ellipsoid ${E}$ (orange) is shown on the right plot. The plots show that both in joint and task-space the ellipsoid metric is an underestimation of the true robot's capacity.}
     \label{fig:ellip_poly_dif_revisit}
 \end{figure}
@@ -61,16 +61,16 @@ The equivalent polytope representation of the manipulability ellipsoid is the ma
 \mathcal{P} = \{ \dot{\bm{x}} ~|~ \dot{\bm{x}} = J({q})\dot{\bm{q}}, \quad -\bm{1} \leq \dot{\bm{q}} \leq \bm{1} \}
 \end{equation}
 
-Figure 1. illustrates the difference between the manipulability ellipsoid and polytope for a planar robot with two joints. The manipulability ellipsoid is an underestimation of the true robot's capacity, as it considers that the robot's velocity limits have the shape of a sphere, while in reality the robot's velocity limits $-\bm{1} \leq {\dot{\bm{q}}}\leq \bm{1}$ define a cube. The manipulability polytope is a more accurate representation of the robot's capacity, as it considers the true shape of the robot's velocity limits. 
+\Cref{fig:ellip_poly_dif_revisit} illustrates the difference between the manipulability ellipsoid and polytope for a planar robot with two joints. The manipulability ellipsoid is an underestimation of the true robot's capacity, as it considers that the robot's velocity limits have the shape of a sphere, while in reality the robot's velocity limits $-\bm{1} \leq {\dot{\bm{q}}}\leq \bm{1}$ define a cube. The manipulability polytope is a more accurate representation of the robot's capacity, as it considers the true shape of the robot's velocity limits. 
 
 More generally, polytope based representations of different physical abilities present the exact solution both for robots and for human musculoskeletal models, while ellipsoids present an approximation. 
-Figure 2. shows the difference between the force ellipsoid and polytope \cite{chiacchio_evaluation_1996} for one configuration of the Franka Emika Panda robot.
+\Cref{fig:force_polytope_robot_ellip_revisit} shows the difference between the force ellipsoid and polytope \cite{chiacchio_evaluation_1996} for one configuration of the Franka Emika Panda robot.
 
 Ellipsoids, however, are much more present in the literature, as their computation is much faster than the computation of polytopes. 
 
 \subsection{Evaluating ellipsoids}
 
-Evaluating ellipsoids is a computationally efficient task, as it can be done using the \gls{svd} \cite{yoshikawa1985manipulability}. Ellipsoids can be fully defined using their principal axis and principal axis lengths. Once they are known, the ellipsoid can be easily visualized and used for further analysis.
+Evaluating ellipsoids is a computationally efficient task, as it can be done using the \gls{svd} \cite{yoshikawa1985manipulability}. Ellipsoids can be fully defined using their principal axis and principal axis lengths. Once they are known, the ellipsoid can be easily visualised and used for further analysis.
 
 \codet{pycapacity} provides tools for evaluating several common ellipsoid metrics for robots and humans, such as velocity (manipulability), force and acceleration, and it provides a set of tools for their easy visualisation implemented in the module \codet{pycapacity.visual}. All the ellipsoid manipulation is implemented within the generic object \codet{Ellipsoid}, available as a part of \codet{pycapacity.objects} module
 
@@ -80,19 +80,19 @@ As described more in detail in \Cref{ch:transformin_polytopes}, evaluating polyt
 
 However, finding the $\repr{V}$-representation or the $\repr{H}$-representation of a polytope is a computationally expensive task, relying on different vertex and facet enumeration algorithms \cite{fukuda2004frequently}. The computational complexity of these algorithms depends on the polytope formulation, the dimensionality of the input (number of robot's joints or human muscles) and output spaces (1D, 2D, 3D or 6D Cartesian space) and the complexity of the polytope geometry (number of vertices and faces). 
 
-Therefore, polytope evaluation is often a bottleneck in the computation of different physical ability metrics, especially for human musculoskeletal models, which have a large number of degrees of freedom and a large number of muscles. Furthermore, due to the inherent complexity of the polytope evaluation algorithms, finding the appropriate algorithm for a given polytope formulation and dimension ablity of the input and output spaces is not a trivial task.
+Therefore, polytope evaluation is often a bottleneck in the computation of different physical ability metrics, especially for human musculoskeletal models, which have a large number of degrees of freedom and a large number of muscles. Furthermore, due to the inherent complexity of the polytope evaluation algorithms, finding the appropriate algorithm for a given polytope formulation and dimension ability of the input and output spaces is not a trivial task.
 
 
-\codet{Pycapcity} package aims to provide a selection of algorithms for polytope evaluation, capable of evaluating common physical ability polytopes in an easy to use and efficient way.  These algorithms are implemented in Python and can be used as standalone tools as well. 
+\codet{pycapcity} package aims to provide a selection of algorithms for polytope evaluation, capable of evaluating common physical ability polytopes in an easy to use and efficient way.  These algorithms are implemented in Python and can be used as standalone tools as well. 
 Additionally, \codet{pycapacity} implements several common polytope manipulation operations such as: 
 \begin{itemize}
-    \item Transforming polytope form $\repr{H}$ to  $\repr{V}$-representation
-    \item Transforming polytope form $\repr{V}$ to  $\repr{H}$-representation
+    \item Transforming polytope from $\repr{H}$ to  $\repr{V}$-representation
+    \item Transforming polytope from $\repr{V}$ to  $\repr{H}$-representation
     \item Triangulating the polytope's vertices (sometimes called face or $\repr{F}$-representation) 
     \item Creating polytope form the Convex-Hull of a point cloud
     \item Minkowski sum of polytopes, as described in \Cref{ch:operations_over_poly_stategies}
     \item Intersection of polytopes, as described in \Cref{ch:operations_over_poly_stategies}
-    \item Chabyshev ball
+    \item Chebyshev ball
 \end{itemize}
 All these operations are implemented within the generic class \codet{Polytope} and can be used to perform additional operations on any physical ability polytope of humans and robots. Moreover, this class and all the above operations can be used as a standalone library as well for the use-cases outside of the scope of physical ability polytopes. The \codet{Polytope} class and its functionalities can be accessed through the module \codet{pycapacity.objects}. Finally, the package provides tools for easy visualisation the 2D and 3D polytopes implemented in the module \codet{pycapacity.visual}.
 
@@ -107,7 +107,7 @@ For robotic manipulators the package implement several velocity, force and accel
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=0.7\linewidth]{Papers/images/polytope_ellipsoid.png}
+    \includegraphics[width=0.8\linewidth]{Papers/images/polytope_ellipsoid.png}
     \caption{2D and 3D force polytopes and their ellipsoid counterparts for a 7 degrees of freedom (DOF) Franka Emika Panda robot. Both polytopes and ellipsoids are calculated separately for the 3D and for each of the 2D reduced task-space cases. Both polytopes and ellipsoids take in consideration the true joint torque limits provided by the manufacturer. The underestimation of the true force capabilities of the robot by ellipsoids appears clearly.}
     \label{fig:force_polytope_robot_ellip_revisit}
 \end{figure}
@@ -130,7 +130,7 @@ For robotic manipulators the package implement several velocity, force and accel
 \end{equation}
 \end{itemize}
 
-Where $J$ is the robot's Jacobian matrix, $M$ is its mass matrix, $\bm{f}$ is the vector of \gls{cs} forces, $\dot{\bm{x}}$ and $\ddot{\bm{x}}$ are vectors of \gls{cs} velocities and accelerations, $\dot{\bm{q}}$ is the vector of the joint velocities and $\bm{\tau}$ is the vector of \gls{js} torques.
+In the above definitions, $J$ is the robot Jacobian matrix, $M$ is the inertia matrix, $f$ is the vector of \gls{cs} forces, $\dot{x}$ and $\ddot{x}$ are vectors for \gls{cs} velocities and accelerations, $q$ is the vector of \gls{js} positions, $\dot{q}$ is the vector of the \gls{js} velocities and $\tau$ is the vector of \gls{js} torques. Matrix $W$ is a scaling matrix that normalises the \gls{js} limits.
 
 \subsubsection*{Polytopes}
 
@@ -168,7 +168,7 @@ P_x = \{\Delta \bm{x}~ |~ \Delta \bm{x} &= JM^{-1}\bm{\tau} \frac{\Delta t_{h}^2
 \end{equation}
 \end{itemize}
 
-Where $J$ is the robot's Jacobian matrix, $M$ is its mass matrix, $\bm{f}$ is the vector of \gls{cs} forces, $\dot{\bm{x}}$ and $\ddot{\bm{x}}$ are vectors of \gls{cs} velocities and accelerations, $\dot{\bm{q}}$ is the vector of the joint velocities and $\bm{\tau}$ is the vector of \gls{js} torques.
+% Where $J$ is the robot's Jacobian matrix, $M$ is its mass matrix, $\bm{f}$ is the vector of \gls{cs} forces, $\dot{\bm{x}}$ and $\ddot{\bm{x}}$ are vectors of \gls{cs} velocities and accelerations, $\dot{\bm{q}}$ is the vector of the joint velocities and $\bm{\tau}$ is the vector of \gls{js} torques.
 
 \subsection{Human musculoskeletal model metrics}
 \label{sec:pycapacity_human}
@@ -206,7 +206,9 @@ As well as its more complete formulation including muscular stretching velocitie
 \mathcal{E}_{f} = \{\bm{f}~ |~ N\bm{F}  = J^T\bm{f},\quad ||W^{-1}\bm{F}|| \leq 1\}, \qquad W = \text{diag}(\bm{F}_{max})
 \end{equation}
 \end{itemize}
-Where $J$ is the model's Jacobian matrix, $L$ is the muscle length Jacobian matrix, $N= -L^T$ is the moment arm matrix, $\bm{f}$ is the vector of \gls{cs} forces, $\dot{\bm{x}}$ and $\ddot{\bm{x}}$ are vectors of \gls{cs} velocities and accretions, $\dot{\bm{q}}$ is the vector of the \gls{js} velocities, $\bm{\tau}$ is the vector of \gls{js} torques, $\dot{\bm{l}}$ is the vector of the muscle stretching velocities and $\bm{F}$ is the vector of muscular forces. 
+
+In the above definitions, $J$ is the robot Jacobian matrix, $M$ is the inertia matrix, $L$ is the muscle length Jacobian matrix and $N= -L^T$ is the moment arm matrix. $f$ is the vector of \gls{cs} forces, $\dot{x}$ and $\ddot{x}$ are vectors for \gls{cs} velocities and accelerations, $q$ is the vector of \gls{js} positions, $\dot{q}$ is the vector of the \gls{js} velocities and $\tau$ is the vector of \gls{js} torques, $\dot{l}$ is the vector of the muscle stretching velocities and $F$ is the vector of muscular forces.  Matrix $W$ is a scaling matrix that normalises the \gls{js} space limits.
+
 
 \subsubsection*{Polytopes}
 
@@ -228,7 +230,7 @@ Where $J$ is the model's Jacobian matrix, $L$ is the muscle length Jacobian matr
 \end{equation}
 \end{itemize}
 
-Where $J$ is the model's Jacobian matrix, $L$ is the muscle length Jacobian matrix, $N= -L^T$ is the moment arm matrix, $\bm{f}$ is the vector of \gls{cs} forces, $\dot{\bm{x}}$ and $\ddot{\bm{x}}$ are vectors of \gls{cs} velocities and accretions, $\dot{\bm{q}}$ is the vector of the \gls{js} velocities, $\bm{\tau}$ is the vector of \gls{js} torques, $\dot{\bm{l}}$ is the vector of the muscle stretching velocities and $\bm{F}$ is the vector of muscular forces. 
+% Where $J$ is the model's Jacobian matrix, $L$ is the muscle length Jacobian matrix, $N= -L^T$ is the moment arm matrix, $\bm{f}$ is the vector of \gls{cs} forces, $\dot{\bm{x}}$ and $\ddot{\bm{x}}$ are vectors of \gls{cs} velocities and accretions, $\dot{\bm{q}}$ is the vector of the \gls{js} velocities, $\bm{\tau}$ is the vector of \gls{js} torques, $\dot{\bm{l}}$ is the vector of the muscle stretching velocities and $\bm{F}$ is the vector of muscular forces. 
 
 \section{Implemented polytope evaluation algorithms}
 \label{sec:pycapacity_algos}
@@ -308,7 +310,7 @@ Reachable space & ICHM & $\bm{x}=B\bm{y},~ \bm{y} \in P_{y}$ & 30.5 $\pm$ 6.6 (7
 % Force sum |  VEPOLI$^2$ | $A\bm{x}=\bm{b},~\bm{b} \in [\bm{b}_{min}, ~\bm{b}_{max}]$ | 17.1 $\pm$ 3.4 (44.9)
 % Reachable space |  ICHM | $\bm{x}=B\bm{y},~  y \in P_{y}$ | 30.5 $\pm$ 6.6 (76.7)
 
-The average execution time is calculated for 1000 random configuration of a 7 DOF Franka Emika panda robot, the model was used with \codet{pinocchio} \cite{pinocchio2021} library. All the experiments are run on a computer equipped with a 1.90GHz Intel i7-8650U processor. The results are obtained using the benchmarking script provided in the by the repository in the \codet{examples} folder\footref{note:benchmarking_examples}.  The reachable space polytope is calculated using the ICHM algorithm with the precision $\varepsilon=1$mm. 
+The average execution time is calculated for 1000 random configuration of a 7 DOF Franka Emika panda robot, the model was used with \codet{pinocchio} \cite{pinocchio2021} library. All the experiments are run on a computer equipped with a 1.90GHz Intel i7-8650U processor. The results are obtained using the benchmarking script provided by the repository in the \codet{examples} folder\footref{note:benchmarking_examples}.  The reachable space polytope is calculated using the ICHM algorithm with the precision $\varepsilon=1$mm. 
 
 \subsection{Musculoskeletal models}
 
@@ -333,17 +335,19 @@ Velocity & ICHM & $\bm{x}=B\bm{y},~ \bm{y} \in P_{y}$ & 223.1 $\pm$ 60.4 (389.1)
 % Acceleration |  HPSM or ICHM | $x=By,~ \bm{y} \in [\bm{y}_{min}, ~\bm{y}_{max}]$ |  378.8 $\pm$ 62.3 (643.7)
 % Velocity | ICHM | $x=By,~ y \in P_{y}$ | 223.1 $\pm$ 60.4 (389.1)
 
-The average execution time is calculated for 1000 random configuration of a 50 muscle 7 DOF musculoskeletal model described by \citet{holzbaur2005model}, the model was used with \codet{biorbd} \cite{Michaud2021} biomechanics library. The experiments are run on a computer equipped with a 1.90GHz Intel i7-8650U processor. The results are obtained using the benchmarking script provided in the by the repository in the \codet{examples} folder\footref{note:benchmarking_examples}. All the polytopes are calculated using the ICHM algorithm with the precision $\varepsilon=10$ (N, m/s$^2$ and m/s).
+The average execution time is calculated for 1000 random configuration of a 50 muscle 7 DOF musculoskeletal model described by \citet{holzbaur2005model}, the model was used with \codet{biorbd} \cite{Michaud2021} biomechanics library. The experiments are run on a computer equipped with a 1.90GHz Intel i7-8650U processor. The results are obtained using the benchmarking script provided by the repository in the \codet{examples} folder\footref{note:benchmarking_examples}. All the polytopes are calculated using the ICHM 
+algorithm with the precision $\varepsilon=10$ (N, m/s$^2$ and m/s). 
 
-\qrimg{qrcodes/pycapacity.png}{https://auctus-team.github.io/pycapacity/}{\codet{pycapacity}}
+
+{\qrimg{qrcodes/pycapacity.png}{https://auctus-team.github.io/pycapacity/}{\codet{pycapacity}}
 \section{Package overview}
 \label{sec:pycapacity_package_overview}
 Python package \codet{pycapacity} is publicly available both as a GitHub repository\footnote{GitHub repo: \url{https://github.com/auctus-team/pycapacity}} and as a \codet{pip} package\footnote{\codet{pip} package: \url{https://pypi.org/project/pycapacity/}}. Furthermore, the package has up-to-date and comprehensive documentation\footnote{Documentation: \url{https://auctus-team.github.io/pycapacity/}} including many examples, showing both the package's functionalities and how to integrate it with other libraries. 
-
 Installing the package can be done using a single line of code, using \codet{pip} package manager 
 \begin{minted}{bash}
 > pip install pycapacity
 \end{minted}
+}
 
 \subsubsection*{Package structure}
 The package is divided in 6 modules which can be used as standalone tools as well
@@ -356,18 +360,26 @@ The package is divided in 6 modules which can be used as standalone tools as wel
     \item \codet{pycapacity.examples} - Module implementing different toy models for fast prototyping
 \end{itemize}
 
+\subsubsection*{Supported libraries}
+The package is modular and can be easily integrated with different robotics and biomechanics libraries. The documentation provides tutorials helping to jump start practical applications\footnote{Tutorials: \url{https://auctus-team.github.io/pycapacity/examples/index.html}}.
+\begin{itemize}
+    \item \texttt{OpenSim}\cite{opensim} - \url{https://github.com/opensim-org}
+    \item \texttt{biorbd}\cite{Michaud2021} - \url{https://github.com/pyomeca/biorbd}
+    \item \texttt{pinocchio}\cite{pinocchio2021} - \url{https://github.com/stack-of-tasks/pinocchio}
+    \item \texttt{roboticstoolbox}\cite{rtb} - \url{https://github.com/petercorke/robotics-toolbox-python}
+\end{itemize}
 
-
-\subsubsection*{Example code}
-To demonstrate the user-friendly nature of \codet{pycpacity}, this section provides an illustrative example involving the computation of a \gls{cs} force for a $m=3$ polytope $\mathcal{P}_f$. This polytope is associated with a randomised robot manipulator featuring $n=6$ degrees of freedom.  Furthermore, the obtained polytope $\mathcal{P}_f$ is intersected with a generic cube $\mathcal{C}_f$ and visualised. The resulting program output is displayed in \Cref{fig:pycapacity_example} for reference.
-{\begin{wrapfigure}{r}{0.5\linewidth}
+\subsubsection*{Example program}
+{
+To demonstrate the user-friendly nature of \codet{pycpacity}, this section provides an illustrative example involving the computation of a \gls{cs} force for a $m=3$ polytope $\mathcal{P}_f$. This polytope is associated with a randomised robot manipulator featuring $n=6$ degrees of freedom.  Furthermore, the obtained polytope $\mathcal{P}_f$ is intersected with a generic cube $\mathcal{C}_f$ and visualised. 
+The resulting program output is displayed in \Cref{fig:pycapacity_example} for reference.
+\begin{wrapfigure}{r}{0.5\linewidth}
 \vspace{7.5cm}
     \centering
     \includegraphics[width=\linewidth]{Papers/images/polytope_example.png}
     \caption{Output of the example program.}
     \label{fig:pycapacity_example}
 \end{wrapfigure}
-
 \begin{minted}[fontsize=\footnotesize, linenos]{python}
 # robot capacity module
 from pycapacity import robot, visual, objects
@@ -414,7 +426,6 @@ plt.show()
 \end{minted}
 }
 
-
 \section{Conclusion}
 
 
@@ -424,4 +435,4 @@ Moreover, \codet{pycapacity} has several additional features facilitating its us
 
 In summary, \codet{pycapacity} aims to provide a versatile set of tools for robotics and biomechanics communities, enabling them to efficiently evaluate, manipulate and visualise different physical ability metrics based on polytopes and ellipsoids. The package is implemented in an user-friendly fashion, enabling an easy setup of user applications and having the potential to bring these metrics to the wider community. 
 
-\todos{This work has been published in \citet{pycapacity}}
+Article \citet{pycapacity}, introducing the \codet{pycapacity} package, has been recently published in Journal of Open Source Software (JOSS)\footnote{Journal of Open Source Software (JOSS): \url{https://joss.theoj.org/}}.

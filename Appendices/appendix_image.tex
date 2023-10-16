@@ -3,11 +3,17 @@
 \section{The pseudo-inverse as the unique inverse} 
 \label{ch:pseudoinverse_unique}
 
+
+
 Considering the linear transformation 
 \begin{equation}
     \bm{y} = A\bm{x}
 \end{equation}
-where $x\in\mathbb{R}^m$ and  $y\in\mathbb{R}^n$, aw well as the $n>m$.  For a given $\bm{y}$, the pseudo-inverse finds the optimal $\bm{x}_o=A^+\bm{y}$ that minimises the distance $A\bm{x}_o-\bm{y}$
+where $x\in\mathbb{R}^m$ is a output vector,  $y\in\mathbb{R}^n$ is an input vector and $A\in\mathbb{R}^{n\times m}$ is a transformation matrix from the output to the input space. In this section the dimension of the output space $m$ is considered to be lower than the dimension of the input space $n$: $n>m$. In this case calculating the inverse relation ship $\bm{x}=A^{-1}\bm{y}$ is not possible as the matrix $A$ is not inevitable. 
+
+A possible workaround is using the pseudo-inverse $A^+=(AA^T)^{-1}A^T$ 
+$$\bm{x}_o=A^+\bm{y}$$
+Calculating the inverse relationship using the pseudo-inverse $\bm{x}_o = A^+\bm{y}$, produces the output vector $\bm{x}_o$ that minimises the distance $A\bm{x}_o-\bm{y}$
 \begin{equation}
     \bm{x}_o = \min_{\bm{x}} ~|| \underbrace{A\bm{x}}_{\bm{y}_o} - \bm{y}||^2 
     \label{eq:pseudoinverse_opt}

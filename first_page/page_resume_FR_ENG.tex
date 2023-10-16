@@ -9,46 +9,60 @@
 
 \begin{document}
 \thispagestyle{empty}
-\vspace*{0pt}
-\vfill
+\vspace*{\fill}
 \begin{small}
 \begin{center}
 \textbf{Une vue couplée des capacités physiques de la dyade humain-robot pour l'évaluation quantitative en ligne des besoins d'assistance}
 \end{center}    
 \textbf{Résumé :} 
-L'objectif de ce travail est de développer une vision unifiée des différentes mesures de capacité physique pour les robots, les humains et leurs capacités communes lorsqu'ils collaborent, dans le but d'améliorer les performances et la qualité de leur collaboration. La famille de mesures sur laquelle repose ce travail est celle des mesures de capacité physique exprimées sous forme de polytopes convexes. Les polytopes convexes sont particulièrement adaptés aux scénarios de collaboration car ils peuvent être facilement visualisés (représentés sous la forme d'un maillage triangulé de sommets) et intégrés aisément dans différents problèmes d'optimisation (représentés comme un ensemble de contraintes linéaires). De plus, la possibilité d'effectuer efficacement des opérations sur les polytopes (telles que la somme, l'intersection et l'union), en utilisant l'algèbre des polytopes, permet de caractériser les capacités physiques de plusieurs robots et humains dans des scénarios de collaboration.
+Cette thèse repose sur une vision de l'avenir où la robotique et l'industrie sont centrées autour des humains, mettant l'accent sur la collaboration entre les humains et les robots plutôt que sur une stricte automatisation. Dans ce futur collaboratif, les robots servent de collaborateurs actifs, coexistant étroitement avec les humains et participant à des interactions physiques pour exécuter des tâches. De tels systèmes symbiotiques exploitent les capacités uniques des humains et des robots, améliorant l'efficacité et donnant la priorité à la sécurité et au bien-être des humains grâce à une assistance robotique personnalisée.
 
-Deux algorithmes capables de calculer en temps réel le polytope de force des manipulateurs robotiques et des modèles musculo-squelettiques humains ont été développés. Le potentiel de ces mesures en temps réel pour être utilisées dans des stratégies de commande flexible des robots dans des scénarios de collaboration (robot-robot et humain-robot) est démontré dans le contexte du transport collaboratif d'objets. Enfin, ces mesures sont utilisées pour quantifier les capacités physiques communes dans les scénarios de collaboration.
+La réalisation de cette vision nécessite la capacité de quantifier les diverses capacités des humains et des robots dans une façon unifiée, ainsi que leurs capacités conjointes lors de la collaboration. De plus, cela nécessite la capacité de mesurer l'assistance requise par les opérateurs afin de garantir leur sécurité et leur bien-être. Par conséquent, cette thèse préconise l'utilisation de mesures de capacité physique, en particulier de leurs représentations par des polytopes, pour répondre à ces questions. Les polytopes sont particulièrement adaptées aux scénarios de collaboration, car les différents outils efficaces de l'algèbre permettent de réaliser des opérations sur les polytopes (telles que la somme de Minkowski, l'intersection et l'union) et de caractériser les capacités physiques de plusieurs robots et humains sous forme de polytopes.
 
-Une nouvelle mesure, sous la forme d'un polytope convexe, est introduite pour l'approximation de l'espace de travail atteignable du manipulateur robotique. Cette mesure permet de calculer l'espace de travail atteignable du robot dans un horizon temporel d'intérêt et tient compte de la dynamique du robot, de sa charge utile et de ses limites d'actionnement.
+Cette thèse propose une vue structurée des polytopes de capacité physique communs pour les humains et les robots, ainsi qu'un aperçu des méthodes d'evaluation applicables. Deux nouveaux algorithmes d'évaluation de polytopes sont proposés, particulièrement adaptés à l'évaluation des polytopes de force (wrench) des manipulateurs robotiques et des humains basés sur des modèles musculosquelettiques. Ces algorithmes réduisent considérablement la complexité des méthodes de l'état de l'art et permettent des applications en temps réel.
 
-Enfin, une approche de planification de trajectoire dans l'espace cartésien exploitant la capacité de mouvement du robot basée sur les polytopes est présentée. Cette approche utilise l'algèbre des polytopes pour évaluer efficacement la capacité de mouvement du robot dans la direction de la trajectoire en temps réel et exploite pleinement sa capacité de mouvement en mettant à jour la trajectoire planifiée en temps réel.\\
-\textbf{Mots-clés :} interaction humain robot,robotique collaborative, analyse des performances, géométrie computationnelle, commande\\
-%\noindent\rule{\textwidth}{1pt}
+Ensuite, la thèse explore l'utilisation des polytopes comme source d'informations en temps réel sur les capacités physiques changeantes des humains et des robots et leur potentiel pour améliorer différents aspects de la collaboration homme-robot.
+
+Dans le contexte de la collaboration physique homme-robot, la thèse présente l'utilisation des informations en temps réel sur les capacités changeantes des humains et des robots pour créer des stratégies de contrôle de robot adaptables. Les stratégies développées sont validées expérimentalement dans le cadre du transport collaboratif d'objets.
+
+De plus, la thèse explore la visualisation des polytopes de capacité physique comme source d'information en temps réel pour les opérateurs. Elle introduit une nouvelle formulation de polytope, l'espace atteignable dans un horizon temporel, qui offre des informations intuitives sur l'état actuel d'un robot et ses capacités physiques.
+
+De plus, une nouvelle approche de planification de trajectoire basée sur les polytopes dans l'espace cartésien est introduite. Cette approche exploite l'algèbre des polytopes pour évaluer efficacement la capacité de mouvement du robot dans la direction de la trajectoire et exploite la pleine capacité de mouvement du robot en mettant à jour la trajectoire planifiée en temps réel.
+
+Enfin, cette thèse présente le package 'pycapacity', un logiciel efficace et intitif pour calculer les mesures de capacité physique des humains et des robots, ouvrant la voie à leur utilisation dans la communauté élargie.\\
 \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
+\textbf{Mots-clés :} interaction humain robot, robotique collaborative, analyse des performances, géométrie computationnelle, commande\\
+%\noindent\rule{\textwidth}{1pt}
 
+\vspace*{\fill}
+\newpage
+
+\vspace*{\fill}
 \selectlanguage{english}
 \begin{center}
-\textbf{A coupled view of the physical abilities of human-robot dyad for theonline quantitative evaluation of assistance needs}
+\textbf{A coupled view of the physical abilities of human-robot dyad for the online quantitative evaluation of assistance needs}
 \end{center}
 \textbf{Abstract:} 
-The goal of this work is to develop an unifying view of different physical ability metrics for robots, humans and their common abilities when collaborating, with the aim to improve the performance and the quality of their collaboration. The family of metrics this work is based on are the physical ability metrics expressed in a form of convex polytopes. Convex polytopes are particularly suitable for collaborative scenarios as they can be easily visualised (represented as a triangulated mesh of vertices) and can be easily integrated in different optimisation problems (represented as a set of linear constraints). Additionally, being able to do operations over polytopes efficiently (such as sum, intersection and unions), using the polytope algebra, enables characterisation of physical abilities of multiple robots and humans in collaborative scenarios.
+This thesis is based on vision of the future where robotics and industry are centred around humans, emphasising collaboration between humans and robots rather than mere automation. 
+In this collaborative future, robots serve as active assistants, coexisting closely with humans and engaging in physical interactions to execute tasks. 
+Such symbiotic systems leverage the unique abilities of both humans and robots, enhancing efficiency and prioritising human safety and well-being through personalised robotic assistance. 
 
-Two algorithms capable of calculating the real-time force polytope of robotic manipulators and human's based on the musculoskeltal models are developed. The potential of these real-time metrics to be used for flexible robot control strategies in collaborative scenarios (robot-robot and human-robot) is demonstrated within the collaborative object carrying setting. Finally, these metrics are used to quantify the common physical abilities in the collaboration scenarios. 
+Realising this vision requires being able to quantify the diverse abilities of humans and robots in a unified view, as well as their joint abilities when collaborating. Additionally, it requires being able to measure the assistance required by operators in order to ensure their safety and well-being. Therefore, this thesis advocates for the use of physical ability metrics, particularly their polytope representations, to address these questions. Polytope representations are particularly well suited for collaborative scenarios, as the different efficient tools from polytope algebra permit making operations over polytopes (such as Minkowski sum, intersection and unions) and characterising the physical abilities of multiple robots and humans in the polytope form as well. 
 
-A new metric for the approximation of the robotic manipulator's reachable workspace in a form of a convex polytope is introduced. This metric calculates the reachable workspace of the robot within a time horizon of interest and is capable of taking in consideration the robot's dynamics, payload and its actuation limits. 
+This thesis proposes a structured view on common physical ability polytopes for humans and robots along with an overview of their applicable evaluation methods. Two new polytope evaluation algorithms are proposed, particularly well suited for evaluating wrench polytopes of robotic manipulators and human's based on the musculoskeletal models. The algorithms significantly reduce the complexity of the state of the art methods and enable real-time applications. 
 
-Finally, a cartesian space trajectory planning approach that exploits robot's polytope based motion capacity is introduced. This approach leverages the polytope algebra to efficiently evaluate the robot's movement capacity in the trajectory direction online and exploits the robot's full movement capacity by updating the planned trajectory in real-time.\\
-\textbf{Keywords:} human robot interaction, collaborative robotics, performance analysis, computational geometry, control \\
+The thesis then explores the use of polytopes as a source of real-time information about human's and robot's changing physical abilities and their potential to enhance different aspects of human-robot collaboration.
+
+In the context of human-robot physical collaboration, the thesis showcases the use of the real-time information about human's and robot's changing abilities for creating adaptable robot control strategies. The developed strategies are experimentally validated in the collaborative object carrying setting. 
+
+Furthermore, the thesis explores the visualisation of physical ability polytopes as real-time feedback for operators. It introduces a novel polytope formulation, the reachable space within a time horizon, which offers intuitive insights into a robot's current state and physical abilities. 
+
+Additionally, a new polytope based Cartesian Space trajectory planning approach is introduced. This approach leverages the polytope algebra to efficiently evaluate the robot's movement capacity in the trajectory direction and exploits the robot's full movement capacity by updating the planned trajectory in real-time. 
+
+Finally, this thesis presents the 'pycapacity' package, an efficient and user-friendly framework for calculating physical ability metrics of humans and robots, opening doors to their use in the wider community.\\
 \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
+\textbf{Keywords:} human robot interaction, collaborative robotics, performance analysis, computational geometry, control \\
 
-\vfill
-\selectlanguage{french}
-\begin{center}
-    \textbf{INRIA de l'Université de Bordeaux}\\
-%UMR xxxx 
-Université, 33000 Bordeaux, France.
-\end{center}
 \end{small}
 \vfill
 \end{document}

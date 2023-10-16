@@ -16,7 +16,7 @@ As discussed in \Cref{ch:phisical_ability_metrics}, polytopes can be efficiently
 Using these new set of tools, several works have been recently proposed in the literature visualising the physical ability polytopes to the operator in the human-robot collaboration context. Recently, \citet{Weistroffer2022Using} proposed an approach, based on \gls{mr}, that improves safety in collaborative workstations by visualising several different robot's physical ability characterisations to the operator, force polytopes being one of them. \citet{Zolotas2021}, on the other hand, focused more precisely on the constrained velocity polytopes, proposed by \citet{long_constrained_2020}. In their study the polytopes are visualised to the human subjects while teleoperating the robot using the \gls{vr} tools. The authors study several polytope visualisation strategies. The study results show that the pure triangulated mesh visualisation, in the case of their task, is not the most intuitive to the operators.
 
 One of the possible reasons why subjects found polytopes not intuitive might be the abundance of information within the polytope. Polytopes can have many hundreds of vertices and faces, which can increase the operator's cognitive load required to isolate the important information. 
-Additionally, determining the appropriate (intuitive) physical ability to be visualised to the operator is a challenging scientific problem, as this highly depend on the nature of the task and potentially on the preferences of the operator as well. This is especially true since the physical ability polytopes often represent different abstract physical quantities, such as forces or accelerations. In order to be visualised they are scaled and transformed to the \gls{cs} (space of \gls{cs} positions), which possibly adds to the operator's confusion. 
+Additionally, determining the appropriate (intuitive) physical ability to be visualised to the operator is a challenging scientific problem, as this highly depends on the nature of the task and potentially on the preferences of the operator as well. This is especially true since the physical ability polytopes often represent different abstract physical quantities, such as forces or accelerations. In order to be visualised they are scaled and transformed to the \gls{cs} (space of \gls{cs} positions), which possibly adds to the operator's confusion. 
 
 To answer some of these challenges, this chapter brings a new polytope formulation able to incorporate multiple robot's actuation limits within one single polytope representation, while remaining easy to interpret. This new polytope formulation represents the \gls{cs} reachable by the robot's within a given time horizon and is particularly aimed to be used as a visualisation tool to the operators. Furthermore, the chapter brings a preliminary work on the development of the testing setup for evaluating the efficiency of different polytopes and their visualisation modalities for sharing information with the operators. 
 
@@ -111,7 +111,7 @@ Considering a constant joint acceleration $\ddot{\bm{q}}_{o}$ during a given hor
 \end{equation}
 This linear numerical integration (\ref{eq:joint_vel_pos}) considers the robot's dynamics (\ref{eq:robot_model}), and the applied joint torque $\bm{\tau}$, fixed during the horizon time $t_h$. Such assumption is reasonable only for short horizon times $t_h$ which in term represents a limitation of the proposed method.
 
-The relationship between the $m$-dimensional task space velocity $\dot{\bm{x}}$ and acceleration $\ddot{\bm{x}}$ of certain frame on the robot (for example end-effector frame) and the $n$-dimensional \gls{js} equivalents is defined through the corresponding Jacobian matrix $J(\bm{q})\in\mathbb{R}^{m\times n}$ and its time derivative $\dot{J}(\bm{q})\in\mathbb{R}^{m\times n}$
+The relationship between the $m$-dimensional task space velocity $\dot{\bm{x}}$ and acceleration $\ddot{\bm{x}}$ of a certain frame on the robot (for example end-effector frame) and the $n$-dimensional \gls{js} equivalents is defined through the corresponding Jacobian matrix $J(\bm{q})\in\mathbb{R}^{m\times n}$ and its time derivative $\dot{J}(\bm{q})\in\mathbb{R}^{m\times n}$
 \begin{equation}
     \dot{\bm{x}} = J \dot{\bm{q}}, \qquad  \ddot{\bm{x}} = J \ddot{\bm{q}} + \dot{J} \dot{\bm{q}}
 \end{equation}
@@ -234,7 +234,7 @@ and then included in the $\mathcal{P}_x$ calculation (\ref{eq:polytope_simple})
    \quad \bm{\tau} &\in \left[\bm{\tau}_{min},\bm{\tau}_{max}\right],\\
     M_o^{-1}t_h (\bm{\tau} -\bm{\tau}_{d,o})+ \dot{\bm{q}}_o &\in \left[\dot{\bm{q}}_{min},\dot{\bm{q}}_{max}\right],\\
    M_o^{-1}\frac{t_h^2}{2}(\bm{\tau} -\bm{\tau}_{d,o}) +  \dot{\bm{q}}_ot_h + \bm{q}_o &\in \left[\bm{q}_{min},\bm{q}_{max}\right],\\
-   A_e J_o M_o^{-1}\frac{t_h^2}{2} \bm{\tau}  + A_e \bm{x}^*_h &\leq b_e ~~\}
+   A_e J_o M_o^{-1}\frac{t_h^2}{2} \bm{\tau}  + A_e \hat{\bm{x}}_{h} &\leq b_e ~~\}
 \end{split} 
 \label{eq:env}
 \end{equation}
@@ -254,7 +254,7 @@ For example, if a robot link $l_i$ is modelled as a line segment, the polytope $
 \end{equation}
 \Cref{fig:minkowski_line} shows the construction of  the reachable space polytope of the Panda robot's link 3, modelled as a line segment.
 
-If, instead of a straight line, a space captured by a robot's link $l_i$ can be expressed as a convex set of constraints or a polytope ($\repr{H}$-representation)
+If, instead of a straight line, the space captured by a robot's link $l_i$ is expressed as a convex set of constraints or a polytope ($\repr{H}$-representation)
 \begin{equation}
     \mathcal{L}_i = \Big \{ \bm{x}_{l_i} ~ |~ A_{l_i} \bm{x}_{l_i} \leq b_{l_i} \Big\}
 \end{equation}
@@ -282,7 +282,7 @@ An interactive visualisation of the reachable space approximation for the robot'
 \begin{figure}[!t]
     \centering
     \includegraphics[width=\linewidth]{Papers/images/minkowski_block_nomath_withmath.jpg}
-    \caption{ First two images show the construction of the reachable space polytope of the panda robot's link 3, $\mathcal{P}_{x,\mathcal{L}_3}$. The left figure shows the link 3 $\mathcal{L}_3$, modelled as a box (in red). Followed by the visualisation of its reachable space polytope $\mathcal{P}_{x,\mathcal{L}_3}$, calculated as a Convex-Hull of the polytopes of each one of its 8 vertices (in yellow).
+    \caption{ First two images show the construction of the reachable space polytope of the panda robot's link 3, $\mathcal{P}_{x,\mathcal{L}_3}$. The left figure shows the link 3, modelled as a box $\mathcal{L}_3$ (in red). Followed by the visualisation of its reachable space polytope $\mathcal{P}_{x,\mathcal{L}_3}$, calculated as a Convex-Hull of the polytopes of each one of its 8 vertices (in yellow).
     Last two images show 4 enveloping spaces $\mathcal{L}_i$ for each one of the robot's links, and their reachable space polytopes $\mathcal{P}_{x,\mathcal{L}_i}$. Robot is in its initial configuration, and the horizon time used is 150ms.}
     \label{fig:minkowski_block}
 \end{figure}
@@ -307,7 +307,7 @@ This polytope has the projection formulation with polytope input set, as describ
 \end{equation}
 This polytope is then projected to the, usually much lower dimensional ($m\leq3$), \gls{cs}, forming the reachable space polytope $\mathcal{P}_x$ (\ref{eq:polytope_family}). 
 
-As described more in detail in \Cref{ch:projection_algos}, and condensed in \Cref{tab:algorithms_table}, there are multiple ways to find the vertices and faces of this polytope. 
+As described more in detail in \Cref{ch:projection_algos}, and condensed in \Cref{tab:algorithms table}, there are multiple ways to find the vertices and faces of this polytope. 
 \Cref{tab:algorithms table} shows that if finding the $\repr{H}$-representation of the polytope $\mathcal{P}_x$, the most straight-forward methods are the \gls{fme}\cite{dantzig1973fourier} or \gls{esp}\cite{jones2004equality}. However, when searching for its $\repr{V}$-representation, no standard exact method can be directly applied. As described in \Cref{ch:proj_algos_v}, finding the $\repr{V}$-representation requires different multi-step approaches. 
 
 In order to avoid using the multi-step approaches and to find both the $\repr{H}$ and $\repr{V}$-representations of the polytope $\mathcal{P}_x$ at the same time, Iterative Convex-Hull Method (ICHM) is used. ICHM method, described in detail in \Cref{ch:algorihtm_ichm}, is defined for a generic family of sets
@@ -373,7 +373,7 @@ Based on the set of robot's \gls{cs} positions reached in the numerical simulati
 \begin{figure}[!h]
     \centering
     \includegraphics[width=0.8\textwidth]{Papers/images/metrics.pdf}
-    \caption{Depiction of the defined quantitative metrics for a simple 2 link planar robot. The notation $n\{\cdot\}$ represents to the number of points.}
+    \caption{Depiction of the defined quantitative metrics for a simple 2 link planar robot. The notation $n\{\cdot\}$ represents the number of points.}
     \label{fig:metrics_defintition}
 \end{figure}
 
@@ -462,7 +462,7 @@ t_h = [0.05s, ~ 0.15s, ~ 0.25s, ~ 0.5s,~ 0.75s,~ 1.0s,~ 1.5s, ~ 2.0s]
 $$
 and the simulation sample time has been set to $\Delta t$=5ms. 
 
-The proposed method's implementation as well as the code used for the experiments is open-source and can be found in the GitLab repository\footnote{GitLab: \url{https://gitlab.inria.fr/auctus-team/people/antunskuric/reachable_space/}}. The GitLab repository additionally contains a \gls{ros} \cite{ros} implementation of the proposed method for more interactive evaluation. Furthermore, an efficient implementation of the reachable space polytope can be found as a part of \codet{pycapacity} Python package as well. All the simulations are run on a computer with 1.90GHz Intel i7-8650U processor and 32Gb of RAM memory.
+The proposed method's implementation as well as the code used for the experiments is open-source and can be found in the GitLab repository\footnote{GitLab: \url{https://gitlab.inria.fr/auctus-team/people/antunskuric/reachable_space/}}. The GitLab repository additionally contains a \gls{ros} \cite{ros} implementation of the proposed method for more interactive evaluation. Furthermore, an efficient implementation of the reachable space polytope can be found as a part of \codet{pycapacity} Python package as well. All the simulations are run on a computer equipped with a 1.90GHz Intel i7-8650U processor and 32Gb of RAM memory.
  
 \subsubsection{Results of the numerical analysis}
 \label{ch:results}
@@ -683,7 +683,7 @@ Future refinements are needed to focus on addressing these limitations and to en
 
 
 In the context of this thesis an initial work on the development of a testing platform for the interactive visualisation of different polytopes is conducted.
-The long-term aim of the testing platform is to be enable comparing different modalities of polytope visualisation to the operators and help understand and evaluate their effectiveness in different human-robot collaboration scenarios. In this preliminary work the focus is put on real-time interactive visualisation of polytopes using the \gls{ar} devices. More specifically the initial setup is built around a Microsoft HoloLens 2 device, as one of the widely used, of-the-shelf and affordable \gls{ar} devices.
+The long-term aim of the testing platform is to be enable comparing different modalities of polytope visualisation to the operators and help to understand and evaluate their effectiveness in different human-robot collaboration scenarios. In this preliminary work the focus is put on real-time interactive visualisation of polytopes using the \gls{ar} devices. More specifically the initial setup is built around a Microsoft HoloLens 2 device, as one of the widely used, of-the-shelf and affordable \gls{ar} devices.
 
 
 % \todos{
@@ -790,7 +790,7 @@ Polytopes offer a convenient visualisation method due to their capacity to be tr
 % \end{itemize}
 % }
 
-This chapter, in \Cref{ch:polytope}, introduces a novel polytope formulation for robotic manipulators, which provides an approximation of the manipulator's reachable space within a given horizon time. This polytope formulation is particularly suitable for operator visualisation, as unlike traditional polytope formulations, it represents the set of robot's reachable positions, thereby simplifying interpretation for operators. Additionally, it has the capacity to integrate actuator constraints and robot's movement capacity at the same time. Moreover, it can be intuitively extended to include the environmental constraints as well as the robot's link geometry. Finally, with the execution time of around 50ms, for standard 7dof collaborative robot, it has a potential to be used for interactive visualisation. 
+This chapter, in \Cref{ch:polytope}, introduces a novel polytope formulation for robotic manipulators, which provides an approximation of the manipulator's reachable space within a given horizon time. This polytope formulation is particularly suitable for operator visualisation, as unlike traditional polytope formulations, it represents the set of robot's reachable positions, thereby simplifying interpretation for operators. Additionally, it has the capacity to integrate actuator constraints and robot's movement capacity at the same time. Moreover, it can be intuitively extended to include the environmental constraints as well as the robot's link geometry. Finally, with the execution time of around 50ms, for standard 7DOF collaborative robot, it has a potential to be used for interactive visualisation. 
 However, it's important to note that this formulation relies on a linearized robot model, consequently limiting its applicability to scenarios with shorter horizon times. The analysis conducted in \Cref{ch:analysis} shows that the accuracy of the approximation significantly diminishes for horizon times exceeding 250 milliseconds. 
 %While this formulation presents a valuable contribution, its constraints highlight the necessity for future work to address the limitations related to longer horizon times and nonlinear kinematic models, in order to enhance its robustness and applicability across diverse scenarios.
 The proposed convex polytope approximation approach have been published as a part of a scientific article \citet{Skuric2022hfr}.
@@ -816,7 +816,7 @@ To enhance the approximation accuracy, particularly for longer horizon times, an
 % \end{itemize}
 % }
 Finally, in the effort to evaluate the effectiveness of the real-time polytope visualisation to the operators, 
-\Cref{ch:claire} presents the preliminary work on the development of the testing setup based on \gls{ar} tools. In the context of this thesis an initial setup is developed capable of visualising different polytopes to the operator using Microsoft HoloLens. The polytopes are visualised at appropriate location on the real-robot (ex. end-effector), updated in real-time and synchronised with the movements of the robot. This setup presents the foundation for the future work on evaluating the information sharing potential of different polytope formulations and different visualisation modalities, in the context of the human-robot collaboration.
+\Cref{ch:claire} presents the preliminary work on the development of the testing setup based on \gls{ar} tools. In the context of this thesis an initial setup is developed capable of visualising different polytopes to the operator using Microsoft HoloLens. The polytopes are visualised at the appropriate location on the real-robot (ex. end-effector), updated in real-time and synchronised with the movements of the robot. This setup presents the foundation for the future work on evaluating the information sharing potential of different polytope formulations and different visualisation modalities, in the context of the human-robot collaboration.
 
 % \todos{
 % \begin{itemize}
