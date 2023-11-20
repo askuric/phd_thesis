@@ -132,7 +132,7 @@ citestyle=numeric-comp
 hypertexnames=true, % default is true since a long time
 colorlinks=true,% Set to false to disable coloring links
 citecolor=blue,% The color of citations
-linkcolor=red,% The color of references to document elements (sections, figures, etc)
+linkcolor=mdtRed,% The color of references to document elements (sections, figures, etc)
 urlcolor=mdtRed,% The color of hyperlinks (URLs)
 pdfstartview={FitV},
 ]{hyperref}
@@ -307,6 +307,13 @@ pdfstartview={FitV},
 \newcommand{\codet}[1]{\texttt{{#1}}}
 \usepackage{minted}
 
+\newcommand{\newpageforce}[0]{
+\newpage
+\thispagestyle{empty}
+\mbox{}
+\newpage
+}
+
 \usepackage{csquotes}
 
 
@@ -385,7 +392,8 @@ pdfstartview={FitV},
 % \rule[0.5em]{25em}{0.5pt} % This prints a line to write the date
 % \end{declaration}
 
-\cleardoublepage
+\newpageforce
+\newpageforce
 
 %----------------------------------------------------------------------------------------
 %	ABSTRACT PAGE
@@ -393,7 +401,7 @@ pdfstartview={FitV},
 
 \includepdf[pages={1,2},pagecommand={\thispagestyle{empty}}]{first_page/page_resume_FR_ENG.pdf}
 
-\cleardoublepage
+% \clearpage
 %----------------------------------------------------------------------------------------
 %	ACKNOWLEDGEMENTS
 %----------------------------------------------------------------------------------------
@@ -414,16 +422,16 @@ pdfstartview={FitV},
 %----------------------------------------------------------------------------------------
 {
 \hypersetup{linkcolor=black}
-% \setcounter{tocdepth}{2}
-\tableofcontents % Prints the main table of contents
+\let\cleardoublepage\clearpage\tableofcontents
 }
 
-\clearpage
+{
 % \printglossary[type=\acronymtype]
-\printglossary[type=\acronymtype]
-% \printunsrtglossary[type=\acronymtype]
-\clearpage
+\let\cleardoublepage\clearpage\printglossary[type=\acronymtype]
+}
 
+% \printunsrtglossary[type=\acronymtype]
+% \cleardoublepage
 % \listoffigures % Prints the list of figures
 
 % \listoftables 
